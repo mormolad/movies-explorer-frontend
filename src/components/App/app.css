@@ -1,2 +1,12 @@
-@import url(../../vendor/normalize.css);
-@import url(../../vendor/fonts/fonts.css);
+.page {
+  background-color: #000000;
+  min-height: 100vh;
+}
+
+.page__content {
+  margin: 0 auto;
+  font-family: 'Inter', Arial, sans-serif;
+  max-width: 1280px;
+  min-width: 320px;
+  width: 100%;
+}

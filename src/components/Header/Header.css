@@ -1,0 +1,99 @@
+.header {
+  max-width: 1280px;
+  min-height: 74px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 230px 170px;
+  align-content: center;
+  position: relative;
+  background-color: #073042;
+}
+
+.header__logo {
+  margin: auto auto auto 70px;
+}
+
+.header__links-films {
+  display: grid;
+  grid-template-columns: 58px 153px;
+  grid-column-gap: 20px;
+  align-content: center;
+}
+
+.header__button {
+  min-height: 18px;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 16px;
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.header__button:hover {
+  cursor: pointer;
+  opacity: 0.6;
+}
+
+.header__account-button {
+  width: 100px;
+  height: 32px;
+  margin-left: 50px;
+}
+
+.header__account-button:hover {
+  cursor: pointer;
+  opacity: 0.6;
+}
+
+.header__menu-button {
+  background-color: #073042;
+  border: none;
+  width: 44px;
+  height: 44px;
+  display: none;
+}
+
+.header__menu-button:hover {
+  cursor: pointer;
+  opacity: 0.6;
+}
+
+@media screen and (max-width: 1023px) {
+  .header {
+    grid-template-columns: 1fr min-content;
+  }
+
+  .header__logo {
+    margin-left: 30px;
+  }
+
+  .header__links-films {
+    display: none;
+  }
+
+  .header__account-button {
+    display: none;
+  }
+
+  .header__menu-button {
+    display: flex;
+    margin-right: 30px;
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .header {
+    padding: 0 14px;
+  }
+
+  .header__button-container {
+    gap: 14px;
+  }
+
+  .header__button {
+    min-height: 26px;
+    font-size: 10px;
+    line-height: 16px;
+  }
+}
