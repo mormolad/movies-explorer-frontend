@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import './App.css';
-import Header from '../Header/Header';
-import Main from '../Main/Main';
-import Footer from '../Footer/Footer';
-import Register from '../Register/Register';
-import Login from '../Login/Login';
-import Movies from '../Movies/Movies';
-import SavedMovies from '../SavedMovies/SavedMovies';
-import Profile from '../Profile/Profile';
-import NotFound from '../NotFound/NotFound';
+import Header from '../Header/Header.jsx';
+import Main from '../Main/Main.jsx';
+// import Footer from '../Footer/Footer';
+// import Register from '../Register/Register';
+// import Login from '../Login/Login';
+// import Movies from '../Movies/Movies';
+// import SavedMovies from '../SavedMovies/SavedMovies';
+// import Profile from '../Profile/Profile';
+// import NotFound from '../NotFound/NotFound';
 import * as movies from '../../utils/MoviesApi';
 
 function App() {
@@ -37,9 +37,9 @@ function App() {
           <Route exact path="/">
             <Header isLoggedIn={isLoggedIn} />
             <Main />
-            <Footer />
+            {/* <Footer /> */}
           </Route>
-          <Route path="/signin">
+          {/* <Route path="/signin">
             <Login />
           </Route>
           <Route path="/signup">
@@ -57,7 +57,7 @@ function App() {
           </Route>
           <Route path="/*">
             <NotFound />
-          </Route>
+          </Route> */}
         </Switch>
       </div>
     </div>

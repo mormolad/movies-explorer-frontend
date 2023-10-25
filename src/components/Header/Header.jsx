@@ -39,12 +39,18 @@ function Header(loggedIn) {
             <img src={logo} alt="логотип" />
           </Link>
           <nav className="header__links-films">
-            <Link to="/movies" className="header__button">
-              Фильмы
-            </Link>
-            <Link to="/saved-movies" className="header__button">
-              Сохранённые фильмы
-            </Link>
+            <ul className="header__menu-films-links">
+              <li>
+                <Link to="/movies" className="header__button">
+                  Фильмы
+                </Link>
+              </li>
+              <li>
+                <Link to="/saved-movies" className="header__button">
+                  Сохранённые фильмы
+                </Link>
+              </li>
+            </ul>
           </nav>
           <div className="header__button-container">
             <Link to="/profile" className="header__account-button">
