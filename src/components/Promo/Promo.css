@@ -1,12 +1,12 @@
 .promo {
   box-sizing: border-box;
   position: relative;
+  background-color: #073042;
 }
 
 .promo__container {
   height: auto;
   min-height: 493px;
-  background-color: #073042;
   color: #ffffff;
   display: grid;
   grid-template-areas: 'b a' 'c a' 'd a';
@@ -34,7 +34,7 @@
   text-align: left;
   margin-left: 70px;
   margin-top: 0;
-  color: #ffffff80
+  color: #ffffff80;
 }
 
 .promo__button {
@@ -60,27 +60,73 @@
 
 @media screen and (max-width: 1290px) {
   .promo {
-    vertical-align: middle;
+    display: block;
+    align-items: center;
+    justify-content: center;
   }
+  .promo__container {
+    width: 1024px;
+    min-height: 834px;
+    grid-template-columns: 640px 380px;
+    grid-template-rows: 200px 100px auto;
+    margin: 0 auto;
+  }
+  .promo__title {
+    max-width: 640px;
+    font-size: 40px;
+    line-height: 50px;
+    margin: 70px auto 0 0;
+  }
+  .promo__subtitle {
+    margin-left: 0;
+  }
+  .promo__button {
+    margin: 0 auto 0 0;
+  }
+  .promo__landing-logo {
+    margin-left: 70px;
+  }
+}
 
+@media screen and (max-width: 1023px) {
   .promo__container {
     min-height: 834px;
+    max-width: 768px;
     grid-template-areas: 'a' 'b' 'c' 'd';
     grid-template-columns: 768px;
-    grid-template-rows: 280px 178px auto;
-    justify-items:center;
+    grid-template-rows: 492px 125px auto;
+    justify-items: center;
+  }
+  .promo__landing-logo {
+    margin: 140px auto 48px auto;
   }
   .promo__title {
     max-width: 680px;
     font-size: 40px;
-    line-height: 52px;
+    line-height: 50px;
+    margin: auto;
+    text-align: center;
+  }
+  .promo__subtitle {
+    margin-left: 0;
+    text-align: center;
+  }
+  .promo__button {
+    display: block;
+    margin: 10px auto 0 auto;
   }
 }
 
-@media screen and (max-width: 576px) {
-  .promo {
-    padding: 14px 14px 0 14px;
+/* @media screen and (max-width: 576px) {
+  .promo__container {
+    width: 1024px;
+    min-height: 834px;
+    grid-template-columns: 640px 300px;
+    margin: 0 auto;
   }
+} */
+
+@media screen and (max-width: 576px) {
   .promo__container {
     min-height: 586px;
   }
