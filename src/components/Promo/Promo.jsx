@@ -6,10 +6,10 @@ function Promo() {
     <section className="promo" id="promo">
       <div className="promo__container">
         <h1 className="promo__title">
-          Учебный проект студента факультета Веб-разработки.</h1>
+          Учебный проект студента факультета Веб-разработки.
+        </h1>
         <h2 className="promo__subtitle">
-          Листайте ниже, чтобы узнать больше про этот
-          <br /> проект и его создателя.
+          Листайте ниже, чтобы узнать больше про этот проект и его создателя.
         </h2>
         <button className="promo__button">Узнать больше</button>
         <div className="promo__landing-logo"></div>

@@ -110,6 +110,7 @@
   .promo__subtitle {
     margin-left: 0;
     text-align: center;
+    width: 260px;
   }
   .promo__button {
     display: block;
@@ -117,22 +118,38 @@
   }
 }
 
-/* @media screen and (max-width: 576px) {
+@media screen and (max-width: 800px) {
   .promo__container {
-    width: 1024px;
-    min-height: 834px;
-    grid-template-columns: 640px 300px;
+    width: min-content;
+    min-height: min-content;
+    grid-template-rows: 320px 125px min-content min-content;
+    grid-template-columns: min-content;
     margin: 0 auto;
   }
-} */
-
-@media screen and (max-width: 576px) {
-  .promo__container {
-    min-height: 586px;
+  .promo__landing-logo {
+    width: 210px;
+    height: 206px;
+    margin: 70px auto 44px auto;
+    background-size: contain;
+    background-repeat: no-repeat;
   }
   .promo__title {
-    max-width: 292px;
-    font-size: 29px;
-    line-height: 37px;
+    max-width: 300px;
+    font-size: 30px;
+    line-height: 38px;
+    font-weight: 400;
+    letter-spacing: -0.04em;
+    margin: auto;
+    text-align: center;
+  }
+  .promo__subtitle {
+    margin-top: 15px;
+    width: 260px;
+    height: min-content;
+    margin: 15px auto 70px auto;
+    text-align: center;
+  }
+  .promo__button {
+    margin: 10px auto 30px auto;
   }
 }
