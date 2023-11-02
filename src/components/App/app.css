@@ -1,6 +1,7 @@
 .page {
     background-color: #202020;
     min-height: 100vh;
+    color: #ffffff;
 }
 
 .page__content {

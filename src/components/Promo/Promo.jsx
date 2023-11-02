@@ -8,9 +8,9 @@ function Promo() {
         <h1 className="promo__title">
           Учебный проект студента факультета Веб-разработки.
         </h1>
-        <h2 className="promo__subtitle">
+        <h3 className="promo__subtitle">
           Листайте ниже, чтобы узнать больше про этот проект и его создателя.
-        </h2>
+        </h3>
         <button className="promo__button">Узнать больше</button>
         <div className="promo__landing-logo"></div>
       </div>
