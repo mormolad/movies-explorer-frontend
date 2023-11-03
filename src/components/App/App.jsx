@@ -3,7 +3,7 @@ import { Route, Switch } from 'react-router-dom';
 import './App.css';
 import Header from '../Header/Header.jsx';
 import Main from '../Main/Main.jsx';
-// import Footer from '../Footer/Footer';
+import Footer from '../Footer/Footer';
 // import Register from '../Register/Register';
 // import Login from '../Login/Login';
 // import Movies from '../Movies/Movies';
@@ -37,7 +37,7 @@ function App() {
           <Route exact path="/">
             <Header isLoggedIn={isLoggedIn} />
             <Main />
-            {/* <Footer /> */}
+             <Footer /> 
           </Route>
           {/* <Route path="/signin">
             <Login />
