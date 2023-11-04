@@ -9,7 +9,7 @@ import NoAuthPage from '../NoAuthPage/NoAuthPage.jsx';
 // import Movies from '../Movies/Movies';
 // import SavedMovies from '../SavedMovies/SavedMovies';
 // import Profile from '../Profile/Profile';
-// import NotFound from '../NotFound/NotFound';
+import NotFound from '../NotFound/NotFound';
 //import * as movies from '../../utils/MoviesApi';
 
 function App() {
@@ -104,10 +104,10 @@ function App() {
           <Route path="/profile">
             <Header />
             <Profile />
-          </Route>
+          </Route>*/}
           <Route path="/*">
             <NotFound />
-          </Route> */}
+          </Route>
         </Switch>
       </div>
     </div>
