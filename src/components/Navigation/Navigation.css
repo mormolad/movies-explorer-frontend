@@ -9,15 +9,14 @@
     left: 0;
     display: flex;
     position: fixed;
-    justify-content: space-between;    
+    justify-content: space-between;
     background-color: rgba(32, 32, 32, 0.3);
     z-index: 2;
-    
   }
   .navigation__container {
     padding-top: 159px;
     width: 520px;
-    min-height: 100vh;
+    min-height: calc(100vh - 159px);
     display: flex;
     flex-direction: column;
     background-color: #202020;
@@ -81,7 +80,6 @@
   .navigation__container {
     width: 100%;
     padding: 144px 10px 46px 10px;
-   ;
   }
   .navigation__container-empty {
     display: none;
