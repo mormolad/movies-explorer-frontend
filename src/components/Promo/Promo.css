@@ -44,7 +44,7 @@
   font-size: 12px;
   width: 129px;
   height: 36px;
-  border: 2px solid #ffffff;
+  border: 2px solid #ffffff99;
   border-radius: 3px;
   margin-left: 70px;
   margin-bottom: 75px;
@@ -150,6 +150,6 @@
     text-align: center;
   }
   .promo__button {
-    margin: 10px auto 30px auto;
+    margin: 10px auto 76px auto;
   }
 }

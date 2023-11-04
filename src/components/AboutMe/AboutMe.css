@@ -55,7 +55,7 @@
   font-style: normal;
   font-weight: 400;
   font-size: 14px;
-  line-height: 20px;
+  line-height: 22px;
   flex: 1 1 auto;
 }
 
@@ -67,7 +67,7 @@
   font-style: normal;
   font-weight: 500;
   font-size: 14px;
-  line-height: 17px;
+  line-height: 16.94px;
 }
 
 .about-me__link:hover {
@@ -90,7 +90,6 @@
   }
 
   .about-me__content {
-    /* max-width: 364px; */
     margin-right: 49px;
   }
 

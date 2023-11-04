@@ -4,18 +4,18 @@
 
 @media screen and (max-width: 1023px) {
   .navigation__overlay {
-    display: flex;
-    position: fixed;
     width: 100%;
     top: 0;
     left: 0;
+    display: flex;
+    position: fixed;
+    justify-content: space-between;    
     background-color: rgba(32, 32, 32, 0.3);
-    z-index: 42;
-    justify-content: space-between;
+    z-index: 2;
+    
   }
   .navigation__container {
-    box-sizing: border-box;
-    padding: 159px 90px 90px 90px;
+    padding-top: 159px;
     width: 520px;
     min-height: 100vh;
     display: flex;
@@ -30,12 +30,12 @@
     background-color: #00000080;
   }
   .navigation__close-button {
+    width: 22px;
+    height: 22px;
     position: absolute;
     top: 22px;
     right: 22px;
     background-image: url('../../images/close-button.svg');
-    width: 22px;
-    height: 22px;
     border: none;
     background-position: center;
     background-repeat: no-repeat;
@@ -52,6 +52,7 @@
     gap: 22px;
   }
   .navigation__link {
+    width: max-content;
     text-decoration: none;
     font-style: normal;
     font-weight: 500;
@@ -59,7 +60,6 @@
     line-height: 22px;
     text-align: center;
     color: #ffffff;
-    width: max-content;
     border-bottom: 2px solid transparent;
   }
   .navigation__link:hover {
@@ -79,8 +79,9 @@
 
 @media screen and (max-width: 576px) {
   .navigation__container {
-    padding: 144px 10px 46px 10px;
     width: 100%;
+    padding: 144px 10px 46px 10px;
+   ;
   }
   .navigation__container-empty {
     display: none;
