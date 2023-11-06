@@ -12,7 +12,6 @@
 
 .techs__title {
   margin: 0;
-  padding: 0;
   padding-bottom: 23px;
   font-style: normal;
   font-weight: 400;
@@ -22,9 +21,8 @@
   border-bottom: 1px solid #DADADA;
 }
 
-.techs__title_tech {
+.techs__title-tech {
   margin: 0;
-  padding: 0;
   margin: 90px auto 26px;
   font-style: normal;
   font-weight: 400;
@@ -35,14 +33,14 @@
   max-width: 730px;
 }
 
-.techs__subtitle {
+.techs__subtitle-tech {
   margin: 0 auto;
   padding: 0;
   padding-bottom: 100px;
   max-width: 460px;
   font-style: normal;
   font-weight: 400;
-  font-size: 14px;
+  font-size: 12px;
   line-height: 20px;
   text-align: center;
 }
@@ -58,16 +56,19 @@
 }
 
 .techs__list-item {
-  margin: 0;
-  padding: 0;
   width: 90px;
   height: 60px;
+  margin: 0; 
   border-radius: 10px;
   background-color: #303030;
   display: flex;
   justify-content: center;
   align-items: center;
+  font-size: 14px;
+  letter-spacing: -0.04em;
+  line-height: 16.94px;
   text-decoration: none;
+
 }
 
 @media screen and (max-width: 1023px) {
@@ -79,12 +80,12 @@
     min-height: 387px;
   }
 
-  .techs__title_tech {
+  .techs__title-tech {
     margin: 80px auto 22px;
     max-width: 600px;
   }
 
-  .techs__subtitle {
+  .techs__subtitle-tech {
     padding-bottom: 83px;
     font-size: 12px;
     line-height: 18px;
@@ -115,7 +116,7 @@
     line-height: 22px;
   }
 
-  .techs__title_tech {
+  .techs__title-tech {
     margin: 0 auto;
  
     margin-top: 60px;
@@ -125,7 +126,7 @@
     max-width: 292px;
   }
 
-  .techs__subtitle {
+  .techs__subtitle-tech {
     margin: 0 auto;
     padding: 0;
     padding-bottom: 50px;
