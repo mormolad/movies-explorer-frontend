@@ -10,12 +10,17 @@
   align-items: center;
 }
 
+.header_black {
+  background: #202020;
+}
+
 .header__logo {
-  margin: auto auto auto 70px;
+  margin: 18px auto 18px 70px;
 }
 
 .header__links-films {
-  align-content: center;
+  /* align-content: center; */
+  margin-top: 0;
 }
 
 .header__menu-films-links {
@@ -25,7 +30,7 @@
   grid-template-columns: 58px 170px;
   grid-column-gap: 20px;
   padding-left: 47px;
-  margin-top: 5px;
+  margin: 0;
 }
 
 .header__menu-films-links li {
@@ -48,13 +53,44 @@
 }
 
 .header__account-button {
-  width: 100px;
-  height: 32px;
+  display: flex;
+  gap: 13px;
 }
 
 .header__account-button:hover {
   cursor: pointer;
   opacity: 0.6;
+}
+
+.header__accoutn-title {
+  color: #ffffff;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 16px;
+  text-decoration: none;
+  margin: 0;
+}
+
+.header__img-account-button {
+  display: block;
+  margin: 9.5px auto 9.5px auto;
+}
+
+.header__ico-account-button {
+  width: 30px;
+  height: 30px;
+  background-color: #0f4157;
+  border-radius: 6px;
+}
+
+.header__ico-account-button_black {
+  background-color: #313131;
+}
+
+.header__button-container {
+  height: 74px;
+  margin: 0;
 }
 
 .header__menu-button {

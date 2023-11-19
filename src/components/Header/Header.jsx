@@ -3,10 +3,10 @@ import { Link } from 'react-router-dom';
 import './Header.css';
 import Navigation from '../Navigation/Navigation';
 import logo from '../../images/logo.svg';
-import account from '../../images/ico_user_button.svg';
+import account from '../../images/ico_account.svg';
 import menu from '../../images/menu-button.svg';
 
-function Header(loggedIn) {
+function Header({ isLoggedIn, theme }) {
   const [isClicked, setIsClicked] = useState(false);
 
   function handleOpen() {
@@ -19,8 +19,8 @@ function Header(loggedIn) {
 
   return (
     <>
-      {!loggedIn ? (
-        <header className="header" id="header">
+      {!isLoggedIn ? (
+        <header className={theme ? `header header_${theme}` : 'header'}>
           <Link to="/" className="header__logo">
             <img src={logo} alt="логотип" />
           </Link>
@@ -34,7 +34,7 @@ function Header(loggedIn) {
           </div>
         </header>
       ) : (
-        <header className="header" id="header">
+        <header className={theme ? `header header_${theme}` : 'header'}>
           <Link to="/" className="header__logo">
             <img src={logo} alt="логотип" />
           </Link>
@@ -54,7 +54,20 @@ function Header(loggedIn) {
           </nav>
           <div className="header__button-container">
             <Link to="/profile" className="header__account-button">
-              <img src={account} alt="аккаунт" />
+              <p className="header__accoutn-title">Аккаунт</p>
+              <div
+                className={
+                  theme
+                    ? `header__ico-account-button header__ico-account-button_${theme}`
+                    : 'header__ico-account-button'
+                }
+              >
+                <img
+                  src={account}
+                  alt="аккаунт"
+                  className="header__img-account-button"
+                />
+              </div>
             </Link>
             <button onClick={handleOpen} className="header__menu-button">
               <img src={menu} alt="меню" />

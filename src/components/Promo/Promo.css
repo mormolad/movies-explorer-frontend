@@ -66,7 +66,7 @@
   }
   .promo__container {
     width: 1024px;
-    min-height: 834px;
+    min-height: 493px;
     grid-template-columns: 640px 380px;
     grid-template-rows: 200px 100px auto;
     margin: 0 auto;
@@ -88,7 +88,7 @@
   }
 }
 
-@media screen and (max-width: 1023px) {
+@media screen and (max-width: 1050px) {
   .promo__container {
     min-height: 834px;
     max-width: 768px;
