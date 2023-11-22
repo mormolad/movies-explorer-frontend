@@ -69,7 +69,14 @@ function Header({ isLoggedIn, theme }) {
                 />
               </div>
             </Link>
-            <button onClick={handleOpen} className="header__menu-button">
+            <button
+              onClick={handleOpen}
+              className={
+                theme
+                  ? `header__menu-button header__menu-button_${theme}`
+                  : 'header__menu-button'
+              }
+            >
               <img src={menu} alt="меню" />
             </button>
           </div>

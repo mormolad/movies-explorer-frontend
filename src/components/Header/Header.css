@@ -54,6 +54,7 @@
 
 .header__account-button {
   display: flex;
+  align-items: center;
   gap: 13px;
 }
 
@@ -63,6 +64,8 @@
 }
 
 .header__accoutn-title {
+  align-items: center;
+  height: 16px;
   color: #ffffff;
   font-style: normal;
   font-weight: 500;
@@ -89,7 +92,7 @@
 }
 
 .header__button-container {
-  height: 74px;
+  height: 30px;
   margin: 0;
 }
 
@@ -99,6 +102,10 @@
   width: 44px;
   height: 44px;
   display: none;
+}
+
+.header__menu-button_black {
+  background-color: #202020;
 }
 
 .header__menu-button:hover {
