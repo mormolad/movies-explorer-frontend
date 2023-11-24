@@ -3,8 +3,7 @@ import Main from '../Main/Main.jsx';
 import Footer from '../Footer/Footer.jsx';
 import React from 'react';
 
-function UserPage() {
-  const isLoggedIn = true;
+function UserPage({ isLoggedIn }) {
   return (
     <>
       <Header isLoggedIn={isLoggedIn} />

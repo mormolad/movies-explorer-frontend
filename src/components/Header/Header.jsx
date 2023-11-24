@@ -11,6 +11,7 @@ function Header({ isLoggedIn, theme }) {
 
   function handleOpen() {
     setIsClicked(true);
+    console.log('isClicked =', isClicked);
   }
 
   function handleClose() {
@@ -20,15 +21,24 @@ function Header({ isLoggedIn, theme }) {
   return (
     <>
       {!isLoggedIn ? (
-        <header className={theme ? `header header_${theme}` : 'header'}>
+        <header
+          className={
+            theme
+              ? `header header_onAuth header_${theme}`
+              : 'header header_onAuth'
+          }
+        >
           <Link to="/" className="header__logo">
             <img src={logo} alt="логотип" />
           </Link>
-          <div className="header__button-container">
-            <Link to="/signup" className="header__button">
+          <div className="header__button-container header__button-container_noAuth">
+            <Link to="/signup" className="header__button header__button_noAuth">
               Регистрация
             </Link>
-            <Link to="/signin" className="header__button header__button-black">
+            <Link
+              to="/signin"
+              className="header__button header__button_noAuth header__button_green"
+            >
               Войти
             </Link>
           </div>

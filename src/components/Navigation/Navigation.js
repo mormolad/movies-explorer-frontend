@@ -6,38 +6,47 @@ import account from '../../images/profile.svg';
 function Navigation({ handleClose }) {
   return (
     <div className="navigation__overlay">
-      <div onClick={handleClose} className="navigation__container-empty">
-        {' '}
-      </div>{' '}
+      <div onClick={handleClose} className="navigation__container-empty"></div>
       <div className="navigation__container">
         <button
           className="navigation__close-button"
           onClick={handleClose}
-        ></button>{' '}
+        ></button>
         <nav className="navigation__nav">
-          {' '}
-          <Link to="/" onClick={handleClose} className="navigation__link">
-            Главная{' '}
-          </Link>{' '}
-          <Link to="/movies" onClick={handleClose} className="navigation__link">
-            Фильмы{' '}
-          </Link>{' '}
-          <Link
-            to="/saved-movies"
-            onClick={handleClose}
-            className="navigation__link"
-          >
-            Сохранённые фильмы{' '}
-          </Link>{' '}
-        </nav>{' '}
+          <ul className="navigation__menu-links">
+            <li>
+              <Link to="/" onClick={handleClose} className="navigation__link">
+                Главная
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/movies"
+                onClick={handleClose}
+                className="navigation__link"
+              >
+                Фильмы
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/saved-movies"
+                onClick={handleClose}
+                className="navigation__link"
+              >
+                Сохранённые фильмы
+              </Link>
+            </li>
+          </ul>
+        </nav>
         <Link
           to="/profile"
           onClick={handleClose}
           className="navigation__account-button"
         >
           <img src={account} alt="аккаунт" />
-        </Link>{' '}
-      </div>{' '}
+        </Link>
+      </div>
     </div>
   );
 }

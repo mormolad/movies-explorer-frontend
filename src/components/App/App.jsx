@@ -1,35 +1,36 @@
-//import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import './App.css';
 import UserPage from '../UserPage/UserPage.jsx';
 //import Register from '../Register/Register.jsx';
 import NoAuthPage from '../NoAuthPage/NoAuthPage.jsx';
-// import Movies from '../Movies/Movies';
+import Movies from '../Movies/Movies.jsx';
 // import SavedMovies from '../SavedMovies/SavedMovies';
 import Profile from '../Profile/Profile';
 import NotFound from '../NotFound/NotFound';
-//import * as movies from '../../utils/MoviesApi';
+import * as movies from '../../utils/MoviesApi';
 
 function App() {
-  //const [cards, setCards] = useState([]);
-  // useEffect(() => {
-  //   if (isLoggedIn) {
-  //     movies
-  //       .getCards()
-  //       .then((cardsData) => {
-  //         setCards(cardsData);
-  //       })
-  //       .catch((err) => {
-  //         console.log(err);
-  //       });
-  //   }
-  // }, [isLoggedIn]);
+  const isLoggedIn = true;
+  const [cards, setCards] = useState([]);
+  useEffect(() => {
+    if (isLoggedIn) {
+      movies
+        .getCards()
+        .then((cardsData) => {
+          setCards(cardsData);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [isLoggedIn]);
 
   return (
     <div className="page">
       <div className="page__content">
         <Routes>
-          <Route path="/" element={<UserPage />} />
+          <Route path="/" element={<UserPage isLoggedIn={isLoggedIn} />} />
           <Route
             path="/signin"
             element={
@@ -94,9 +95,11 @@ function App() {
             }
           />
 
-          {/*   <Route path="/movies">
-            <Movies movies={cards} />
-          </Route>
+          <Route
+            path="/movies"
+            element={<Movies movies={cards} isLoggedIn={isLoggedIn} />}
+          />
+          {/*
           <Route path="/saved-movies">
             <SavedMovies />
           </Route>  */}

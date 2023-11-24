@@ -13,6 +13,14 @@
     background-color: rgba(32, 32, 32, 0.3);
     z-index: 2;
   }
+  .navigation__menu-links {
+    list-style-type: none;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+  }
   .navigation__container {
     padding-top: 159px;
     width: 520px;
@@ -44,12 +52,7 @@
     cursor: pointer;
     opacity: 0.6;
   }
-  .navigation__nav {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 22px;
-  }
+
   .navigation__link {
     width: max-content;
     text-decoration: none;
@@ -57,7 +60,6 @@
     font-weight: 500;
     font-size: 18px;
     line-height: 22px;
-    text-align: center;
     color: #ffffff;
     border-bottom: 2px solid transparent;
   }
