@@ -48,7 +48,6 @@
   top: 6px;
   right: 6px;
   background: #fff;
-  content: '';
   border-radius: 50%;
   transition: 0.4s ease;
   transform: translate(16px);

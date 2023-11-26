@@ -9,8 +9,8 @@
   padding: 70px 70px 30px;
   list-style: none;
   display: grid;
-  grid-template-columns: repeat(4, 270px);
-  gap: 32px 20px;
+  grid-template-columns: repeat(3, 360px);
+  grid-gap: 32px 28px;
   justify-content: center;
 }
 
@@ -64,7 +64,6 @@
     grid-template-columns: repeat(1, 300px);
     gap: 20px;
   }
-
   .cards__button {
     width: 240px;
   }
