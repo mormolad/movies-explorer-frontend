@@ -1,18 +1,13 @@
 import React from 'react';
 import './MoviesCard.css';
+import duration from '../../utils/durationMovie.js';
 
 function MoviesCard({ card, isSavedFilms }) {
-  const cardSaveButtonClassName = `${
-    card.saved
-      ? 'card__save-button card__save-button_active'
-      : 'card__save-button'
-  }`;
-
   return (
     <li className="card">
       <div className="card__info">
         <h2 className="card__text">{card.nameRU}</h2>
-        <span className="card__time">{card.duration}</span>
+        <span className="card__time">{duration(card.duration)}</span>
       </div>
       <img
         className="card__image"
@@ -22,7 +17,13 @@ function MoviesCard({ card, isSavedFilms }) {
       {isSavedFilms ? (
         <button className="card__delete-button"></button>
       ) : (
-        <button className={cardSaveButtonClassName}></button>
+        <button
+          className={
+            card.saved
+              ? 'card__save-button card__save-button_active'
+              : 'card__save-button'
+          }
+        ></button>
       )}
     </li>
   );
