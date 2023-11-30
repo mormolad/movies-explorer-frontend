@@ -1,7 +1,9 @@
 .search {
-  padding: 68px 70px 48px;
+  margin: 68px 70px auto 70px;
+  padding-bottom: 44px;
   display: flex;
   flex-direction: column;
+  border-bottom: 1px solid #ffffff33;
 }
 
 .search__form {
@@ -11,9 +13,6 @@
   align-items: center;
   justify-content: space-between;
   height: 70px;
-}
-
-.search__label {
 }
 
 .search__input {
@@ -59,15 +58,12 @@
   .search {
     padding: 92px 14px 50px;
   }
-
   .search__form {
     margin-bottom: 42px;
   }
-
   .search__label {
     display: none;
   }
-
   .search__input {
     width: calc(100% - 80px);
     text-align: left;

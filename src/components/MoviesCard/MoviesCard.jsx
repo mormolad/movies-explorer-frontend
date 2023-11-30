@@ -6,7 +6,7 @@ function MoviesCard({ card, isSavedFilms }) {
   return (
     <li className="card">
       <div className="card__info">
-        <h2 className="card__text">{card.nameRU}</h2>
+        <h2 className="card__title">{card.nameRU}</h2>
         <span className="card__time">{duration(card.duration)}</span>
       </div>
       <img

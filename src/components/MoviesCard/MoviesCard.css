@@ -1,8 +1,8 @@
 .card {
-  box-shadow: 0px 16px 24px rgba(0, 0, 0, 0.05);
   border-radius: 10px;
   height: 319px;
   width: 360px;
+  background-color: #222222;
 }
 
 .card__image {
@@ -33,34 +33,32 @@
   justify-content: space-between;
 }
 
-.card__text {
+.card__title {
+  max-width: 240px;
+  height: 18px;
   margin: 0;
   font-style: normal;
   font-weight: 500;
   font-size: 15px;
   line-height: 18px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .card__save-button {
-  margin: 0 auto;
+  background: #313131;
+  padding: 0;
+  margin: 13px 130px 18px 130px;
   border: none;
-  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.09);
   border-radius: 50px;
-  background-image: url(../../images/save-button.svg);
-  background-position: center;
-  background-repeat: no-repeat;
+  background-image: url(../../images/no-save-button.svg);
   width: 100px;
   height: 29px;
   cursor: pointer;
 }
 
-.card__save-button:hover {
-  box-shadow: 0px 0px 9px 7px rgba(43, 224, 128, 0.8);
-  opacity: 0.6;
-}
-
 .card__save-button_active {
-  background: #2be080;
   background-image: url(../../images/save-button.svg);
 }
 
@@ -79,14 +77,24 @@
   opacity: 0.6;
 }
 
-@media screen and (max-width: 1023px) {
+@media screen and (max-width: 1150px) {
+  .card {
+    width: 342px;
+    height: 309px;
+  }
   .card__image {
     height: 190px;
+    width: 342px;
   }
 }
 
 @media screen and (max-width: 576px) {
   .card__image {
     height: 168px;
+    width: 300px;
+  }
+  .card {
+    width: 300px;
+    height: 271px;
   }
 }
