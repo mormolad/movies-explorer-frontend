@@ -19,7 +19,7 @@
   font-size: 22px;
   line-height: 27px;
   letter-spacing: -0.04em;
-  border-bottom: 1px solid #DADADA;
+  border-bottom: 1px solid #dadada;
 }
 
 .about-project__content {
@@ -68,7 +68,6 @@
   margin: 0;
   padding: 0;
   min-height: 36px;
-  background-color: #303030;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -77,10 +76,11 @@
   font-size: 14px;
   line-height: 16.94px;
   text-align: center;
+  background-color: #303030;
 }
 
 .about-project__duration-title_green {
-  background-color:  #3DDC84;  
+  background-color: #3ddc84;
   color: #000000;
 }
 
@@ -92,7 +92,7 @@
   font-size: 14px;
   line-height: 17px;
   text-align: center;
-  color: #A0A0A0;
+  color: #a0a0a0;
 }
 
 @media screen and (max-width: 1023px) {

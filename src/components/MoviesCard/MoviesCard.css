@@ -46,35 +46,32 @@
   overflow: hidden;
 }
 
-.card__save-button {
-  background: #313131;
-  padding: 0;
+.card__button {
   margin: 13px 130px 18px 130px;
-  border: none;
-  border-radius: 50px;
-  background-image: url(../../images/no-save-button.svg);
+  padding: 0;
   width: 100px;
   height: 29px;
+  border: none;
+  border-radius: 50px;
+  background: #313131;
   cursor: pointer;
 }
 
-.card__save-button_active {
+.card__button:hover {
+  cursor: pointer;
+  opacity: 0.6;
+}
+
+.card__button_no-saved {
+  background-image: url(../../images/no-save-button.svg);
+}
+
+.card__button_saved {
   background-image: url(../../images/save-button.svg);
 }
 
-.card__delete-button {
-  background-image: url('../../images/delete-button.svg');
-  width: 16px;
-  height: 16px;
-  border: none;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-color: transparent;
-}
-
-.card__delete-button:hover {
-  cursor: pointer;
-  opacity: 0.6;
+.card__button_delete {
+  background-image: url(../../images/del-button.svg);
 }
 
 @media screen and (max-width: 1150px) {
@@ -96,5 +93,10 @@
   .card {
     width: 300px;
     height: 271px;
+  }
+  .card__button {
+    margin: 14px 100px 14px 100px;
+    width: 100px;
+    height: 29px;
   }
 }

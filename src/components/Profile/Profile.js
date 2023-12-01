@@ -7,7 +7,7 @@ function Profile() {
     <>
       <Header theme="black" isLoggedIn={true} />
       <section className="profile">
-        <h3 className="profile__title">Привет, Виталий!</h3>
+        <h3 className="profile__title">Привет, Антон!</h3>
         <form className="profile__form">
           <label className="profile__field profile__field_border">
             Имя
@@ -17,7 +17,7 @@ function Profile() {
               type="text"
               minLength="2"
               maxLength="40"
-              value="Виталий"
+              value="Антон"
               required
             />
           </label>

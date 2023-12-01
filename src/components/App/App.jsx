@@ -94,15 +94,28 @@ function App() {
               />
             }
           />
-
           <Route
             path="/movies"
-            element={<Movies movies={cards} isLoggedIn={isLoggedIn} />}
+            element={
+              <Movies
+                movies={cards}
+                isLoading={false}
+                isSavedFilms={false}
+                isLoggedIn={isLoggedIn}
+              />
+            }
           />
-          {/*
-          <Route path="/saved-movies">
-            <SavedMovies />
-          </Route>  */}
+          <Route
+            path="/saved-movies"
+            element={
+              <Movies
+                movies={cards}
+                isLoading={false}
+                isSavedFilms={true}
+                isLoggedIn={isLoggedIn}
+              />
+            }
+          />
           <Route path="/profile" element={<Profile />} />
           <Route path="/*" element={<NotFound />} />
         </Routes>

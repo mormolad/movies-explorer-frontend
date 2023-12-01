@@ -15,13 +15,13 @@ function MoviesCard({ card, isSavedFilms }) {
         src={`https://api.nomoreparties.co/${card.image.url}`}
       />
       {isSavedFilms ? (
-        <button className="card__delete-button"></button>
+        <button className="card__button card__button_delete"></button>
       ) : (
         <button
           className={
             card.saved
-              ? 'card__save-button card__save-button_active'
-              : 'card__save-button'
+              ? 'card__button  card__button_saved'
+              : 'card__button card__button_no-saved'
           }
         ></button>
       )}
