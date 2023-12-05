@@ -3,6 +3,11 @@ import './SearchForm.css';
 import FilterCheckbox from '../FilterCheckbox/FilterCheckbox.jsx';
 
 function SearchForm() {
+  const [value, setValue] = React.useState('');
+  //обработка поля имени
+  function handleChangValue(e) {
+    setValue(e.target.value);
+  }
   return (
     <section className="search">
       <form className="search__form">
@@ -13,6 +18,10 @@ function SearchForm() {
           type="text"
           placeholder="Фильм"
           required
+          minLength="2"
+          maxLength="200"
+          onChange={handleChangValue}
+          value={value ?? 'Фильмы'} // что бы компонент сразу был управляемым
         ></input>
         <button className="search__button" type="submit">
           Поиск
