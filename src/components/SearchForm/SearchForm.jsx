@@ -23,6 +23,7 @@ function SearchForm() {
           onChange={handleChangValue}
           value={value ?? 'Фильмы'} // что бы компонент сразу был управляемым
         ></input>
+        {/* <span className="search__message-error"></span> */}
         <button className="search__button" type="submit">
           Поиск
         </button>
