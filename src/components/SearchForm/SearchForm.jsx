@@ -1,16 +1,29 @@
 import React from 'react';
 import './SearchForm.css';
 import FilterCheckbox from '../FilterCheckbox/FilterCheckbox.jsx';
+import ErrorSearch from '../ErrorSearch/ErrorSearch';
 
 function SearchForm() {
   const [value, setValue] = React.useState('');
+  const [inputError, setInputError] = React.useState(false);
   //обработка поля имени
   function handleChangValue(e) {
     setValue(e.target.value);
   }
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!value) {
+      setInputError(true);
+      return;
+    }
+    setInputError(false);
+    onSearch(movieName, shortFilms);
+  };
+
   return (
     <section className="search">
-      <form className="search__form">
+      <form className="search__form" onSubmit={handleSubmit}>
         <label className="search__label" htmlFor="search-input"></label>
         <input
           className="search__input"
@@ -23,10 +36,17 @@ function SearchForm() {
           onChange={handleChangValue}
           value={value ?? 'Фильмы'} // что бы компонент сразу был управляемым
         ></input>
-        {/* <span className="search__message-error"></span> */}
         <button className="search__button" type="submit">
           Поиск
         </button>
+        {inputError ? (
+          <ErrorSearch
+            className="search__message-error"
+            text="Нужно ввести ключевое слово"
+          />
+        ) : (
+          ''
+        )}
       </form>
       <FilterCheckbox />
     </section>
