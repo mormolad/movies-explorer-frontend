@@ -1,0 +1,182 @@
+.header {
+  max-width: 1280px;
+  min-height: 74px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 326px 170px;
+  align-content: center;
+  position: relative;
+  background-color: #073042;
+  align-items: center;
+}
+
+.header_onAuth {
+  grid-template-columns: 1fr 253px;
+}
+
+.header_black {
+  background: #202020;
+}
+
+.header__logo {
+  margin: 18px auto 18px 70px;
+}
+
+.header__links-films {
+  margin-top: 0;
+}
+
+.header__menu-films-links {
+  text-decoration: none;
+  list-style-type: none;
+  display: grid;
+  grid-template-columns: 58px 170px;
+  grid-column-gap: 20px;
+  padding-left: 47px;
+  margin: 0;
+}
+
+.header__menu-films-links li {
+  display: inline;
+}
+
+.header__button {
+  min-height: 18px;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 16px;
+  color: #ffffff;
+  text-decoration: none;
+}
+.header__button_noAuth {
+  font-size: 12px;
+  height: 16px;
+}
+
+.header__button:hover {
+  cursor: pointer;
+  opacity: 0.6;
+}
+
+.header__account-button {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+}
+
+.header__account-button:hover {
+  cursor: pointer;
+  opacity: 0.6;
+}
+
+.header__accoutn-title {
+  margin: 0;
+  align-items: center;
+  height: 16px;
+  color: #ffffff;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 16px;
+  text-decoration: none;
+}
+
+.header__img-account-button {
+  margin: 9.5px auto 9.5px auto;
+  display: block;
+}
+
+.header__ico-account-button {
+  width: 30px;
+  height: 30px;
+  background-color: #0f4157;
+  border-radius: 6px;
+}
+
+.header__ico-account-button_black {
+  background-color: #313131;
+}
+
+.header__button-container {
+  height: 30px;
+  margin: 0;
+}
+.header__button-container_noAuth {
+  margin-right: 70px;
+  height: 32px;
+  display: flex;
+  gap: 30px;
+  align-items: center;
+}
+
+.header__menu-button {
+  width: 44px;
+  height: 44px;
+  background-color: #073042;
+  border: none;
+  display: none;
+}
+
+.header__menu-button_black {
+  background: #202020;
+}
+
+.header__button_green {
+  margin-top: -3px;
+  color: #000;
+  background-color: #3ddc84;
+  width: 76px;
+  height: 32px;
+  border-radius: 3px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.header__menu-button:hover {
+  cursor: pointer;
+  opacity: 0.6;
+}
+
+@media screen and (max-width: 1150px) {
+  .header {
+    grid-template-columns: 1fr min-content;
+  }
+  .header__logo {
+    margin-left: 30px;
+  }
+
+  .header__links-films {
+    display: none;
+  }
+
+  .header__account-button {
+    display: none;
+  }
+
+  .header__menu-button {
+    display: flex;
+    margin-right: 30px;
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .header__logo {
+    margin: auto auto auto 14px;
+  }
+
+  .header__button-container {
+    gap: 14px;
+  }
+
+  .header__button {
+    min-height: 26px;
+    font-size: 10px;
+    line-height: 16px;
+  }
+
+  .header__menu-button {
+    margin-right: 14px;
+  }
+}

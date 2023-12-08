@@ -1,0 +1,92 @@
+.navigation__overlay {
+  display: none;
+}
+
+@media screen and (max-width: 1055px) {
+  .navigation__overlay {
+    width: 100%;
+    top: 0;
+    left: 0;
+    display: flex;
+    position: fixed;
+    justify-content: space-between;
+    background-color: rgba(32, 32, 32, 0.3);
+    z-index: 2;
+  }
+  .navigation__menu-links {
+    list-style-type: none;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+  }
+  .navigation__container {
+    padding-top: 159px;
+    width: 520px;
+    min-height: calc(100vh - 159px);
+    display: flex;
+    flex-direction: column;
+    background-color: #202020;
+    justify-content: space-between;
+    position: relative;
+    align-items: center;
+  }
+  .navigation__container-empty {
+    flex: 1 1 auto;
+    background-color: #00000080;
+  }
+  .navigation__close-button {
+    width: 22px;
+    height: 22px;
+    position: absolute;
+    top: 22px;
+    right: 22px;
+    background-image: url('../../images/close-button.svg');
+    border: none;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: transparent;
+  }
+  .navigation__close-button:hover {
+    cursor: pointer;
+    opacity: 0.6;
+  }
+
+  .navigation__link {
+    width: max-content;
+    text-decoration: none;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 22px;
+    color: #ffffff;
+    border-bottom: 2px solid transparent;
+  }
+  .navigation__link:hover {
+    border-bottom: 2px solid #ffffff;
+  }
+  .navigation__account-button {
+    width: 100px;
+    height: 32px;
+    background: #202020;
+    border-radius: 40px;
+  }
+  .navigation__account-button:hover {
+    cursor: pointer;
+    opacity: 0.6;
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .navigation__container {
+    width: 100%;
+    padding: 144px 10px 46px 10px;
+  }
+  .navigation__container-empty {
+    display: none;
+  }
+  .navigation__nav {
+    gap: 15px;
+  }
+}
