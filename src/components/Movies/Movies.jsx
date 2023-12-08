@@ -10,7 +10,7 @@ function Movies({ onSearchMovies, movies, isLoggedIn }) {
     <>
       <Header isLoggedIn={isLoggedIn} theme="black" />
       <section className="movies">
-        <SearchForm onSearchMovies={onSearchMovies} />
+        <SearchForm onSearch={onSearchMovies} />
         <MoviesCardList cards={movies} isSavedFilms={false} />
       </section>
       <Footer />
