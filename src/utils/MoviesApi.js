@@ -1,4 +1,4 @@
-import checkResponse from './utils';
+import checkResponse from './utils.js';
 import BASE_URL from '../constants/constForApi';
 
 export function getCards() {

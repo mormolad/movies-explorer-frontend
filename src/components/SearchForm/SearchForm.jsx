@@ -18,7 +18,7 @@ function SearchForm() {
       return;
     }
     setInputError(false);
-    onSearch(movieName, shortFilms);
+    // onSearch(movieName, shortFilms);
   };
 
   return (

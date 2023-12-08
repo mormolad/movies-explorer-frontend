@@ -1,0 +1,13 @@
+import React from 'react';
+import { Navigate } from 'react-router-dom';
+
+// этот компонент принимает другой компонент в качестве пропса
+// он также может взять неограниченное число пропсов и передать их новому компоненту
+const ProtectedRoute = ({ element: Component, ...props }) => {
+  if (props.loggedIn) {
+    return <Component {...props} />;
+  } else {
+    return <Navigate to="/signin" replace />;
+  }
+};
+export default ProtectedRoute;
