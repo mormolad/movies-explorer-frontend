@@ -1,47 +1,31 @@
-import checkResponse from './utils';
+import checkResponse from './checkResponse';
+import { URL_MY_API, headers } from '../constants/constForApi';
 
-class Auth extends checkResponse.СheckResponse {
-  constructor(configFetch) {
-    super();
-    this.url = configFetch.url;
-    this.headers = configFetch.headers;
-    this._creckResponse = super._creckResponse;
-  }
-  //зарегистрировать пользователя и войти в акк
-  requestUser({ email, password, endPoint }) {
-    return fetch(`${this.url}${endPoint}`, {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ password, email }),
-    }).then((res) => {
-      return this._checkResponse(res);
-    });
-  }
+//проверка токена
+export const chekTokenUser = (token) => {
+  return fetch(`${URL_MY_API}/users/me`, {
+    method: 'GET',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  }).then((res) => checkResponse(res));
+};
 
-  //проверка токена
-  chekTokenUser(token) {
-    return fetch(`${this.url}users/me`, {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-    }).then((res) => {
-      return this._checkResponse(res);
-    });
-  }
-}
+export const register = (name, email, password) => {
+  return fetch(`${URL_MY_API}/signup`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({ name, email, password }),
+  }).then((res) => checkResponse(res));
+};
 
-const auth = new Auth({
-  url: 'https://api.filmissio.nomoredomainsmonster.ru/',
-  headers: {
-    Accept: 'application/json',
-    'Content-Type': 'application/json',
-  },
-});
-
-export default auth;
+export const authorize = (email, password) => {
+  console.log({ email, password });
+  return fetch(`${URL_MY_API}/signin`, {
+    method: 'POST',
+    headers: headers,
+    body: JSON.stringify({ email, password }),
+  }).then((res) => checkResponse(res));
+};

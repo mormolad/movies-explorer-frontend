@@ -1,13 +1,12 @@
 import React from 'react';
 import './Form.css';
 
-function Form({ fields, buttonText, onSubmit }) {
-  console.log(typeof fields[0].onChange);
+function Form({ fields, buttonText, onSubmit, isValid }) {
+  console.log(onSubmit);
   let valuesForm = {};
-  fields.map((item, i, arr) => (valuesForm[item.type] = item.valueInput));
+  fields.map((item) => (valuesForm[item.type] = item.valueInput));
 
   function handleSubmit(e) {
-    console.log(valuesForm);
     e.preventDefault();
     onSubmit(valuesForm);
   }
@@ -24,12 +23,21 @@ function Form({ fields, buttonText, onSubmit }) {
               id={item.id}
               type={item.type}
               onChange={item.onChange}
+              onBlur={item.onBlur}
               required
             />
-            <span className="form__input-error">Что-то пошло не так...</span>
+            <span className="form__input-error">
+              {item.inputDitry && item.inputError ? item.inputError : ''}
+            </span>
           </label>
         ))}
-        <button type="submit" className="form__button-save">
+        <button
+          type="submit"
+          className={`form__button-save ${
+            isValid ? '' : 'form__button-save_inactive'
+          }`}
+          disabled={!isValid}
+        >
           {buttonText}
         </button>
       </form>
