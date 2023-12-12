@@ -6,6 +6,7 @@ import MoviesCardList from '../MoviesCardList/MoviesCardList.jsx';
 import Footer from '../Footer/Footer.jsx';
 
 function Movies({ onSearchMovies, movies, isLoggedIn }) {
+  console.log(onSearchMovies, movies, isLoggedIn);
   return (
     <>
       <Header isLoggedIn={isLoggedIn} theme="black" />

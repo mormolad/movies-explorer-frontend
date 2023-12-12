@@ -2,7 +2,6 @@ import React from 'react';
 import './Form.css';
 
 function Form({ fields, buttonText, onSubmit, isValid }) {
-  console.log(onSubmit);
   let valuesForm = {};
   fields.map((item) => (valuesForm[item.type] = item.valueInput));
 
@@ -23,14 +22,16 @@ function Form({ fields, buttonText, onSubmit, isValid }) {
               id={item.id}
               type={item.type}
               onChange={item.onChange}
-              onBlur={item.onBlur}
               required
             />
             <span className="form__input-error">
-              {item.inputDitry && item.inputError ? item.inputError : ''}
+              {item.inputError ? item.inputError : ''}
             </span>
           </label>
         ))}
+        {/* {<span className="form__input-error">
+              {item.inputError ? item.inputError : ''}
+            </span>}        */}
         <button
           type="submit"
           className={`form__button-save ${

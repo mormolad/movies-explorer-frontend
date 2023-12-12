@@ -11,7 +11,6 @@ function Header({ isLoggedIn, theme }) {
 
   function handleOpen() {
     setIsClicked(true);
-    console.log('isClicked =', isClicked);
   }
 
   function handleClose() {

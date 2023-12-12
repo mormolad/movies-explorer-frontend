@@ -16,16 +16,23 @@ export const chekTokenUser = (token) => {
 export const register = (name, email, password) => {
   return fetch(`${URL_MY_API}/signup`, {
     method: 'POST',
-    headers,
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
     body: JSON.stringify({ name, email, password }),
-  }).then((res) => checkResponse(res));
+  }).then((res) => {
+    checkResponse(res);
+  });
 };
 
 export const authorize = (email, password) => {
-  console.log({ email, password });
   return fetch(`${URL_MY_API}/signin`, {
     method: 'POST',
-    headers: headers,
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
     body: JSON.stringify({ email, password }),
   }).then((res) => checkResponse(res));
 };

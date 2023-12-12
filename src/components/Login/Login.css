@@ -27,6 +27,7 @@
 }
 
 .login__link {
+  margin-left: 10px;
   font-size: 14px;
   font-weight: 400;
   line-height: 17px;
@@ -49,11 +50,9 @@
     padding-top: 56px;
     width: 260px;
   }
-
   .login__logo {
     margin: 0 auto;
   }
-
   .login__title {
     margin: 50px auto 80px auto;
     font-size: 24px;
@@ -66,7 +65,6 @@
     font-size: 12px;
     line-height: 14.52px;
   }
-
   .login__link {
     font-size: 12px;
     line-height: 14.52px;

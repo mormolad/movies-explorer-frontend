@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react';
-import '../Login/Login.css';
+import './Login.css';
 import Form from '../Form/Form.jsx';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import logo from '../../images/logo.svg';
 import { EMAIL_REGEXP } from '../../constants/regexp';
 
-function Login({ isLoggedIn, onSubmit }) {
+function Login({ onSubmit, isLoggedIn }) {
+  const navigate = useNavigate();
   const link = '/signup';
   //стайт переменный для страницы логин
   const [email, setEmail] = React.useState('');
@@ -50,8 +51,9 @@ function Login({ isLoggedIn, onSubmit }) {
       ? setPasswordError('короткий пароль')
       : setPasswordError('');
   }
-
-  return (
+  return isLoggedIn ? (
+    navigate('/movies', { replace: true })
+  ) : (
     <div className="login">
       <Link to="/" className="login__logo">
         <img src={logo} alt="логотип" />
@@ -87,9 +89,9 @@ function Login({ isLoggedIn, onSubmit }) {
         isValid={formValid}
       />
       <p className="login__text">
-        "Еще не зарегистрированы?"
+        Еще не зарегистрированы?
         <Link to={link} className="login__link">
-          " Регистрация"
+          Регистрация
         </Link>
       </p>
     </div>
