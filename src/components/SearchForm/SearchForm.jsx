@@ -3,10 +3,10 @@ import './SearchForm.css';
 import FilterCheckbox from '../FilterCheckbox/FilterCheckbox.jsx';
 import ErrorSearch from '../ErrorSearch/ErrorSearch';
 
-function SearchForm() {
+function SearchForm({ onSearch }) {
   const [value, setValue] = React.useState('');
   const [inputError, setInputError] = React.useState(false);
-  //обработка поля имени
+  //обработка поля поискового запроса
   function handleChangValue(e) {
     setValue(e.target.value);
   }
@@ -14,11 +14,11 @@ function SearchForm() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!value) {
-      setInputError(true);
+      setInputError('onSearch');
       return;
     }
-    setInputError(false);
-    // onSearch(movieName, shortFilms);
+    setInputError('');
+    onSearch(value);
   };
 
   return (

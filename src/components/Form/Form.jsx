@@ -1,10 +1,9 @@
 import React from 'react';
 import './Form.css';
 
-function Form({ fields, buttonText, onSubmit, isValid }) {
+function Form({ fields, buttonText, onSubmit, isValid, requestError }) {
   let valuesForm = {};
   fields.map((item) => (valuesForm[item.type] = item.valueInput));
-
   function handleSubmit(e) {
     e.preventDefault();
     onSubmit(valuesForm);
@@ -29,18 +28,20 @@ function Form({ fields, buttonText, onSubmit, isValid }) {
             </span>
           </label>
         ))}
-        {/* {<span className="form__input-error">
-              {item.inputError ? item.inputError : ''}
-            </span>}        */}
-        <button
-          type="submit"
-          className={`form__button-save ${
-            isValid ? '' : 'form__button-save_inactive'
-          }`}
-          disabled={!isValid}
-        >
-          {buttonText}
-        </button>
+        <div className="form__conteiner-button">
+          <span className="form__request-error">
+            {requestError.length > 0 ? requestError : ''}
+          </span>
+          <button
+            type="submit"
+            className={`form__button-save ${
+              isValid ? '' : 'form__button-save_inactive'
+            }`}
+            disabled={!isValid}
+          >
+            {buttonText}
+          </button>
+        </div>
       </form>
     </>
   );

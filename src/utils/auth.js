@@ -1,5 +1,5 @@
 import checkResponse from './checkResponse';
-import { URL_MY_API, headers } from '../constants/constForApi';
+import { URL_MY_API } from '../constants/constForApi';
 
 //проверка токена
 export const chekTokenUser = (token) => {
@@ -21,9 +21,7 @@ export const register = (name, email, password) => {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({ name, email, password }),
-  }).then((res) => {
-    checkResponse(res);
-  });
+  }).then((res) => checkResponse(res));
 };
 
 export const authorize = (email, password) => {

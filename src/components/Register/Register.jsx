@@ -129,7 +129,7 @@ import { EMAIL_REGEXP, NAME_REGEXP } from '../../constants/regexp';
 //     </div>
 //   );
 // }
-function Register({ onSubmit }) {
+function Register({ onSubmit, requestError, setRequestError }) {
   const link = '/signin';
   //стайт переменный для страницы логин
   const [email, setEmail] = React.useState('');
@@ -219,6 +219,7 @@ function Register({ onSubmit }) {
         buttonText={'Зарегистрироваться'}
         onSubmit={onSubmit}
         isValid={formValid}
+        requestError={requestError}
       />{' '}
       <p className="register__text">
         Уже зарегистрированы?

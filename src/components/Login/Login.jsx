@@ -5,7 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import logo from '../../images/logo.svg';
 import { EMAIL_REGEXP } from '../../constants/regexp';
 
-function Login({ onSubmit, isLoggedIn }) {
+function Login({ onSubmit, isLoggedIn, requestError, setRequestError }) {
   const navigate = useNavigate();
   const link = '/signup';
   //стайт переменный для страницы логин
@@ -87,6 +87,7 @@ function Login({ onSubmit, isLoggedIn }) {
         buttonText={'Войти'}
         onSubmit={onSubmit}
         isValid={formValid}
+        requestError={requestError}
       />
       <p className="login__text">
         Еще не зарегистрированы?

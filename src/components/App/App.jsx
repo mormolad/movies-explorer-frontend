@@ -12,20 +12,18 @@ import { chekTokenUser, register, authorize } from '../../utils/auth.js';
 import Register from '../Register/Register.jsx';
 
 function App() {
-  const [loggedIn, setLoggedIn] = React.useState(false);
+  const [loggedIn, setLoggedIn] = useState(false);
   const [cards, setCards] = useState([]);
-  const [emailCurrentUser, setEmailCurrentUser] = React.useState('');
+  const [emailCurrentUser, setEmailCurrentUser] = useState('');
   const navigate = useNavigate();
+  const [requestError, setRequestError] = useState('');
 
   //проверка токена
   function chekToken(jwt) {
     chekTokenUser(jwt)
       .then((res) => {
         setLoggedIn(true);
-        getCards().then((ress) => {
-          setCards(ress);
-          localStorage.setItem('cards', JSON.stringify(cards));
-        });
+        hanlerCards();
       })
       .catch((err) => {
         console.log('ошибка проверки токена', err);
@@ -33,28 +31,46 @@ function App() {
       });
   }
 
+  const hanlerCards = () => {
+    getCards().then((res) => {
+      setCards(res);
+      localStorage.setItem('cards', JSON.stringify(cards));
+    });
+  };
+
   function handleSubmitLogin({ email, password }) {
     return authorize(email, password)
       .then((data) => {
-        console.log(data);
         localStorage.setItem('jwt', data.message);
         setEmailCurrentUser(email);
         setLoggedIn(true);
+        hanlerCards();
         navigate('/movies', { replace: true });
       })
       .catch((err) => {
+        setRequestError(err);
         console.log(err);
       });
   }
 
   function handleSubmitRegister({ name, email, password }) {
-    register(name, email, password)
+    return register(name, email, password)
       .then(() => {
         handleSubmitLogin({ email, password });
       })
       .catch((err) => {
-        console.log(err.status);
+        setRequestError(err);
+        console.log(err);
       });
+  }
+
+  function handlerSearchRequest(searchWord) {
+    const foundMovies = JSON.parse(localStorage.getItem('movies')).filter(
+      (movie) =>
+        movie.nameRU.toLowerCase().includes(searchWord.toLowerCase()) ||
+        movie.nameEN.toLowerCase().includes(searchWord.toLowerCase())
+    );
+    localStorage.setItem('foundMovies', JSON.stringify(foundMovies));
   }
 
   useEffect(() => {
@@ -72,13 +88,23 @@ function App() {
           <Route
             path="/signin"
             element={
-              <Login isLoggedIn={loggedIn} onSubmit={handleSubmitLogin} />
+              <Login
+                isLoggedIn={loggedIn}
+                onSubmit={handleSubmitLogin}
+                requestError={requestError}
+                setRequestError={setRequestError}
+              />
             }
           />
           <Route
             path="/signup"
             element={
-              <Register isLoggedIn={loggedIn} onSubmit={handleSubmitRegister} />
+              <Register
+                isLoggedIn={loggedIn}
+                onSubmit={handleSubmitRegister}
+                requestError={requestError}
+                setRequestError={setRequestError}
+              />
             }
           />
           <Route
@@ -89,6 +115,7 @@ function App() {
                 isLoggedIn={loggedIn}
                 setLoggedIn={setLoggedIn}
                 movies={cards}
+                onSearch={handlerSearchRequest}
               />
             }
           />

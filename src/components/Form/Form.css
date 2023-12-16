@@ -5,8 +5,13 @@
   width: 100%;
 }
 
-.form__button-save {
+.form__conteiner-button {
+  text-align: center;
   margin: auto auto 0 auto;
+}
+
+.form__button-save {
+  margin-top: 10px;
   width: 396px;
   height: 45px;
   border: none;
@@ -85,6 +90,14 @@
   left: 0;
 }
 
+.form__request-error {
+  font-style: normal;
+  font-weight: 400;
+  font-size: 10px;
+  line-height: 12px;
+  color: #ee3465;
+}
+
 .form__input-error_active {
   visibility: visible;
 }
@@ -93,7 +106,6 @@
   .form {
     min-height: 467px;
   }
-
   .form__button-save {
     width: 260px;
     font-size: 12px;
