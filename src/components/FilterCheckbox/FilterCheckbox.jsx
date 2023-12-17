@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
 import './FilterCheckbox.css';
 
 function FilterCheckbox({ setIsShortFilms }) {

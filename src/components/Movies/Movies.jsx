@@ -14,18 +14,22 @@ function Movies({ onSearch, isLoggedIn }) {
   const hanleCards = () => {
     getCards().then((res) => {
       setCards(res);
+    });
+  };
+
+  hanleCards();
+
+  useEffect(() => {
+    if (cards.length > 0) {
       localStorage.setItem('cards', JSON.stringify(cards));
       localStorage.setItem(
         'cardsShortFilms',
         JSON.stringify(cards.filter((film) => film.duration <= 40))
       );
-      setIsLoading(false);
-    });
-  };
-
-  useEffect(() => {
-    hanleCards();
-  }, []);
+    }
+    setIsLoading(false);
+    console.log(cards);
+  }, [cards]);
 
   return (
     <>
