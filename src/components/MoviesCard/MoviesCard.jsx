@@ -2,9 +2,9 @@ import React from 'react';
 import './MoviesCard.css';
 import duration from '../../utils/durationMovie.js';
 
-function MoviesCard({ card, isSavedFilms }) {
+function MoviesCard({ card, isSavedFilms, key }) {
   return (
-    <li className="card">
+    <li className="card" key={key}>
       <div className="card__info">
         <h2 className="card__title">{card.nameRU}</h2>
         <span className="card__time">{duration(card.duration)}</span>

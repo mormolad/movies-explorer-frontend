@@ -7,14 +7,12 @@ import Movies from '../Movies/Movies.jsx';
 import Profile from '../Profile/Profile';
 import NotFound from '../NotFound/NotFound';
 import Login from '../Login/Login';
-import getCards from '../../utils/MoviesApi';
+
 import { chekTokenUser, register, authorize } from '../../utils/auth.js';
 import Register from '../Register/Register.jsx';
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
-  const [cards, setCards] = useState([]);
-  const [emailCurrentUser, setEmailCurrentUser] = useState('');
   const navigate = useNavigate();
   const [requestError, setRequestError] = useState('');
 
@@ -23,7 +21,6 @@ function App() {
     chekTokenUser(jwt)
       .then((res) => {
         setLoggedIn(true);
-        hanlerCards();
       })
       .catch((err) => {
         console.log('ошибка проверки токена', err);
@@ -31,20 +28,11 @@ function App() {
       });
   }
 
-  const hanlerCards = () => {
-    getCards().then((res) => {
-      setCards(res);
-      localStorage.setItem('cards', JSON.stringify(cards));
-    });
-  };
-
   function handleSubmitLogin({ email, password }) {
     return authorize(email, password)
       .then((data) => {
         localStorage.setItem('jwt', data.message);
-        setEmailCurrentUser(email);
         setLoggedIn(true);
-        hanlerCards();
         navigate('/movies', { replace: true });
       })
       .catch((err) => {
@@ -65,12 +53,13 @@ function App() {
   }
 
   function handlerSearchRequest(searchWord) {
-    const foundMovies = JSON.parse(localStorage.getItem('movies')).filter(
+    const foundMovies = JSON.parse(localStorage.getItem('cards')).filter(
       (movie) =>
         movie.nameRU.toLowerCase().includes(searchWord.toLowerCase()) ||
         movie.nameEN.toLowerCase().includes(searchWord.toLowerCase())
     );
     localStorage.setItem('foundMovies', JSON.stringify(foundMovies));
+    navigate('/movies', { replace: true });
   }
 
   useEffect(() => {
@@ -84,7 +73,6 @@ function App() {
       <div className="page__content">
         <Routes>
           <Route path="/" element={<UserPage isLoggedIn={loggedIn} />} />
-
           <Route
             path="/signin"
             element={
@@ -113,9 +101,8 @@ function App() {
               <ProtectedRoute
                 element={Movies}
                 isLoggedIn={loggedIn}
-                setLoggedIn={setLoggedIn}
-                movies={cards}
                 onSearch={handlerSearchRequest}
+                path="/movies"
               />
             }
           />
@@ -125,8 +112,7 @@ function App() {
               <ProtectedRoute
                 element={Movies}
                 isLoggedIn={loggedIn}
-                setLoggedIn={setLoggedIn}
-                movies={cards}
+                path="/saved-movies"
               />
             }
           />
@@ -137,6 +123,7 @@ function App() {
                 element={Profile}
                 isLoggedIn={loggedIn}
                 setLoggedIn={setLoggedIn}
+                path="/profile"
               />
             }
           />

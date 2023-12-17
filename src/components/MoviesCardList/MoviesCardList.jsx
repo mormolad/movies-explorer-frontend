@@ -3,9 +3,7 @@ import './MoviesCardList.css';
 import MoviesCard from '../MoviesCard/MoviesCard';
 import Preloader from '../Preloader/Preloader';
 
-function MoviesCardList({ cards, isSavedFilms }) {
-  const isLoading = false;
-
+function MoviesCardList({ cards, isLoading }) {
   return (
     <section className="cards">
       {isLoading ? (
@@ -14,11 +12,11 @@ function MoviesCardList({ cards, isSavedFilms }) {
         <>
           <ul className="cards__list">
             {cards.map((card) => (
-              <MoviesCard key={card._id} card={card} isSavedFilms={isSavedFilms} />
+              <MoviesCard key={card._id} card={card} />
             ))}
           </ul>
           <div className="cards__button-container">
-            {isSavedFilms ? '' : <button className="cards__button">Ещё</button>}
+            <button className="cards__button">Ещё</button>
           </div>
         </>
       )}

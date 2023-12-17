@@ -3,7 +3,7 @@ import './SearchForm.css';
 import FilterCheckbox from '../FilterCheckbox/FilterCheckbox.jsx';
 import ErrorSearch from '../ErrorSearch/ErrorSearch';
 
-function SearchForm({ onSearch }) {
+function SearchForm({ onSearch, setIsShortFilms }) {
   const [value, setValue] = React.useState('');
   const [inputError, setInputError] = React.useState(false);
   //обработка поля поискового запроса
@@ -48,7 +48,7 @@ function SearchForm({ onSearch }) {
           ''
         )}
       </form>
-      <FilterCheckbox />
+      <FilterCheckbox setIsShortFilms={setIsShortFilms} />
     </section>
   );
 }

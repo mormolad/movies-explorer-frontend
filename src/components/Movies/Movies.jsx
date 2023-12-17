@@ -4,15 +4,42 @@ import Header from '../Header/Header.jsx';
 import SearchForm from '../SearchForm/SearchForm.jsx';
 import MoviesCardList from '../MoviesCardList/MoviesCardList.jsx';
 import Footer from '../Footer/Footer.jsx';
+import { useState } from 'react';
+import getCards from '../../utils/MoviesApi';
+import { useEffect } from 'react';
+function Movies({ onSearch, isLoggedIn }) {
+  const [cards, setCards] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isShortFilms, setIsShortFilms] = useState(false);
+  const hanleCards = () => {
+    getCards().then((res) => {
+      setCards(res);
+      localStorage.setItem('cards', JSON.stringify(cards));
+      localStorage.setItem(
+        'cardsShortFilms',
+        JSON.stringify(cards.filter((film) => film.duration <= 40))
+      );
+      setIsLoading(false);
+    });
+  };
 
-function Movies({ onSearchMovies, movies, isLoggedIn }) {
-  console.log(onSearchMovies, movies, isLoggedIn);
+  useEffect(() => {
+    hanleCards();
+  }, []);
+
   return (
     <>
       <Header isLoggedIn={isLoggedIn} theme="black" />
       <section className="movies">
-        <SearchForm onSearch={onSearchMovies} />
-        <MoviesCardList cards={movies} isSavedFilms={false} />
+        <SearchForm onSearch={onSearch} setIsShortFilms={setIsShortFilms} />
+        <MoviesCardList
+          cards={
+            isShortFilms
+              ? JSON.parse(localStorage.getItem('cardsShortFilms'))
+              : JSON.parse(localStorage.getItem('cards'))
+          }
+          isLoading={isLoading}
+        />
       </section>
       <Footer />
     </>
