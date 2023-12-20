@@ -5,3 +5,27 @@ export const headers = {
   Accept: 'application/json',
   'Content-Type': 'application/json',
 };
+
+export const DEVICE_PARAMS = {
+  desktop: {
+    width: 1153,
+    cards: {
+      total: 12,
+      more: 3,
+    },
+  },
+  tablet: {
+    width: 785,
+    cards: {
+      total: 8,
+      more: 2,
+    },
+  },
+  mobile: {
+    width: 583,
+    cards: {
+      total: 5,
+      more: 2,
+    },
+  },
+};

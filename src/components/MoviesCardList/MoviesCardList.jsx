@@ -3,7 +3,10 @@ import './MoviesCardList.css';
 import MoviesCard from '../MoviesCard/MoviesCard';
 import Preloader from '../Preloader/Preloader';
 
-function MoviesCardList({ cards, isLoading }) {
+function MoviesCardList({ cards, isLoading, hanleMore, endCollection }) {
+  const onClick = (e) => {
+    hanleMore();
+  };
   return (
     <section className="cards">
       {isLoading ? (
@@ -16,7 +19,13 @@ function MoviesCardList({ cards, isLoading }) {
             ))}
           </ul>
           <div className="cards__button-container">
-            <button className="cards__button">Ещё</button>
+            {!endCollection ? (
+              <button className="cards__button" onClick={onClick}>
+                Ещё
+              </button>
+            ) : (
+              ''
+            )}
           </div>
         </>
       )}

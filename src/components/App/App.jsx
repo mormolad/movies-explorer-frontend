@@ -7,7 +7,6 @@ import Movies from '../Movies/Movies.jsx';
 import Profile from '../Profile/Profile';
 import NotFound from '../NotFound/NotFound';
 import Login from '../Login/Login';
-
 import { chekTokenUser, register, authorize } from '../../utils/auth.js';
 import Register from '../Register/Register.jsx';
 
@@ -15,19 +14,22 @@ function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const navigate = useNavigate();
   const [requestError, setRequestError] = useState('');
-
+  const [isChekToken, setIsChekToken] = useState(false);
   //проверка токена
   function chekToken(jwt) {
     chekTokenUser(jwt)
       .then((res) => {
         setLoggedIn(true);
+        setIsChekToken(true);
       })
       .catch((err) => {
         console.log('ошибка проверки токена', err);
         setLoggedIn(false);
+        setIsChekToken(true);
       });
   }
 
+  //обработчик кнопки логин
   function handleSubmitLogin({ email, password }) {
     return authorize(email, password)
       .then((data) => {
@@ -40,7 +42,7 @@ function App() {
         console.log(err);
       });
   }
-
+  // обработчик кнопки зарегисторироваться
   function handleSubmitRegister({ name, email, password }) {
     return register(name, email, password)
       .then(() => {
@@ -52,19 +54,10 @@ function App() {
       });
   }
 
-  function handlerSearchRequest(searchWord) {
-    const foundMovies = JSON.parse(localStorage.getItem('cards')).filter(
-      (movie) =>
-        movie.nameRU.toLowerCase().includes(searchWord.toLowerCase()) ||
-        movie.nameEN.toLowerCase().includes(searchWord.toLowerCase())
-    );
-    localStorage.setItem('foundMovies', JSON.stringify(foundMovies));
-    navigate('/movies', { replace: true });
-  }
-
   useEffect(() => {
     if (localStorage.getItem('jwt')) {
       chekToken(localStorage.jwt);
+      console.log(localStorage.getItem('jwt'));
     }
   }, []);
 
@@ -101,8 +94,8 @@ function App() {
               <ProtectedRoute
                 element={Movies}
                 isLoggedIn={loggedIn}
-                onSearch={handlerSearchRequest}
                 path="/movies"
+                isChekToken={isChekToken}
               />
             }
           />
@@ -113,6 +106,7 @@ function App() {
                 element={Movies}
                 isLoggedIn={loggedIn}
                 path="/saved-movies"
+                isChekToken={isChekToken}
               />
             }
           />
@@ -124,6 +118,7 @@ function App() {
                 isLoggedIn={loggedIn}
                 setLoggedIn={setLoggedIn}
                 path="/profile"
+                isChekToken={isChekToken}
               />
             }
           />

@@ -15,8 +15,17 @@
   height: 70px;
 }
 
+.search__input-error {
+  font-style: normal;
+  font-weight: 400;
+  font-size: 10px;
+  line-height: 12px;
+  color: #ee3465;
+}
+
 .search__input {
   background: #202020;
+  color: #8b8b8b;
   min-height: 34px;
   border: none;
   width: calc(100% - 160px);

@@ -24,10 +24,11 @@
 
 .cards__button {
   box-sizing: border-box;
-  width: 320px;
+  width: 90%;
   height: 36px;
-  background-color: transparent;
-  border: 1px solid #e8e8e8;
+  background: #2f2f2f;
+  color: #ffffff;
+  border: none;
   border-radius: 5px;
   font-style: normal;
   font-weight: 500;
@@ -39,7 +40,7 @@
 }
 
 .cards__button:hover {
-  border: 1px solid #2be080;
+  border: 1px solid #616161;
   cursor: pointer;
   opacity: 0.6;
 }
