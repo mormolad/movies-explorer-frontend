@@ -17,9 +17,8 @@ function SaveMovies({ isLoggedIn }) {
   const [parametrsForView, setParametrsForView] = useState(
     DEVICE_PARAMS.desktop
   );
-  const [additionalMovis, setAdditionalMovies] = useState(0);
+
   const isSize = useResize();
-  const [endCollection, setEndCollection] = useState(false);
   const [isNotFound, setIsNotFound] = useState(false);
 
   function handlerSearchRequest(searchWord) {
@@ -36,8 +35,6 @@ function SaveMovies({ isLoggedIn }) {
 
   // инициализация страницы
   useEffect(() => {
-    setAdditionalMovies(0);
-    setEndCollection(false);
     if (JSON.parse(localStorage.getItem('foundMovies')) === null) {
       setOnReqSearch(false);
       // getCards()
@@ -58,7 +55,9 @@ function SaveMovies({ isLoggedIn }) {
       //     console.log(err);
       //     setBedInternet(true);
       //   });
-    } else if (JSON.parse(localStorage.getItem('foundMovies')).length === 0) {
+    } else if (
+      JSON.parse(localStorage.getItem('foundSaveMovies')).length === 0
+    ) {
       setIsLoading(false);
       setIsNotFound(true);
       setOnReqSearch(true);
@@ -67,23 +66,23 @@ function SaveMovies({ isLoggedIn }) {
       setOnReqSearch(true);
       setIsNotFound(false);
       makeCollectionCards(
-        JSON.parse(localStorage.getItem('foundMovies')),
+        JSON.parse(localStorage.getItem('foundSaveMovies')),
         parametrsForView
       );
     }
   }, []);
 
   function makeCollectionCards(cardsForCollection, paramsCollection) {
-    const arrCards = [];
-    setEndCollection(false);
-    for (let i = 0; i < paramsCollection.cards.total + additionalMovis; i++) {
-      if (!cardsForCollection[i]) {
-        setEndCollection(true);
-        break;
-      }
-      arrCards[i] = cardsForCollection[i];
-    }
-    setCards(arrCards);
+    // const arrCards = [];
+    // setEndCollection(false);
+    // for (let i = 0; i < paramsCollection.cards.total + additionalMovis; i++) {
+    //   if (!cardsForCollection[i]) {
+    //     setEndCollection(true);
+    //     break;
+    //   }
+    //   arrCards[i] = cardsForCollection[i];
+    // }
+    // setCards(arrCards);
   }
 
   useEffect(() => {
@@ -110,7 +109,7 @@ function SaveMovies({ isLoggedIn }) {
         parametrsForView
       );
     }
-  }, [isShortFilms, onReqSearch, isSize, additionalMovis]);
+  }, [isShortFilms, onReqSearch, isSize]);
 
   useEffect(() => {
     if (isSize > DEVICE_PARAMS.desktop.width) {
@@ -121,10 +120,6 @@ function SaveMovies({ isLoggedIn }) {
       setParametrsForView(DEVICE_PARAMS.mobile);
     }
   }, [isSize]);
-
-  const hanleMore = () => {
-    setAdditionalMovies(additionalMovis + parametrsForView.cards.more);
-  };
 
   return (
     <>
@@ -138,12 +133,7 @@ function SaveMovies({ isLoggedIn }) {
         {bedInternet ? (
           <Preloader text="Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз/" />
         ) : !isNotFound ? (
-          <MoviesCardList
-            cards={cards}
-            isLoading={isLoading}
-            hanleMore={hanleMore}
-            endCollection={endCollection}
-          />
+          <MoviesCardList cards={cards} isLoading={isLoading} />
         ) : (
           <Preloader className="not-found" text="Ничего не найдено" />
         )}
