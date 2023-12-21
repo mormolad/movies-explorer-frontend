@@ -22,14 +22,16 @@ function SaveMovies({ isLoggedIn }) {
   const [isNotFound, setIsNotFound] = useState(false);
 
   function handlerSearchRequest(searchWord) {
-    const foundMovies = JSON.parse(localStorage.getItem('cards')).filter(
+    const foundMovies = JSON.parse(localStorage.getItem('cardsSave')).filter(
       (movie) =>
         movie.nameRU.toLowerCase().includes(searchWord.toLowerCase()) ||
         movie.nameEN.toLowerCase().includes(searchWord.toLowerCase())
     );
-    localStorage.setItem('foundMovies', JSON.stringify(foundMovies));
-    localStorage.setItem('shortFilmStatusSwitch', JSON.stringify(isShortFilms));
-    localStorage.setItem('searchWord', JSON.stringify(searchWord));
+    localStorage.setItem('foundSaveMovies', JSON.stringify(foundMovies));
+    localStorage.setItem(
+      'shortSaveFilmStatusSwitch',
+      JSON.stringify(isShortFilms)
+    );
     setOnReqSearch(true);
   }
 
@@ -128,7 +130,6 @@ function SaveMovies({ isLoggedIn }) {
         <SearchForm
           onSearch={handlerSearchRequest}
           setIsShortFilms={setIsShortFilms}
-          searchWord={JSON.parse(localStorage.getItem('searchWord'))}
         />
         {bedInternet ? (
           <Preloader text="Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз/" />
