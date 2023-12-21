@@ -86,3 +86,12 @@
   background: #2be080;
   animation: preloader-inside-red 1s ease-in-out infinite;
 }
+
+.preloader__not-found {
+  margin: 246px auto 0 auto;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 140px;
+  line-height: 169px;
+  text-align: center;
+}

@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import './Movies.css';
+import './SaveMovies.css';
 import Header from '../Header/Header.jsx';
 import SearchForm from '../SearchForm/SearchForm.jsx';
 import MoviesCardList from '../MoviesCardList/MoviesCardList.jsx';
 import Footer from '../Footer/Footer.jsx';
 import Preloader from '../Preloader/Preloader.jsx';
-import getCards from '../../utils/MoviesApi';
 import { DEVICE_PARAMS } from '../../constants/constForApi.js';
 import { useResize } from '../../hooks/useResize.js';
 
-function Movies({ isLoggedIn }) {
+function SaveMovies({ isLoggedIn }) {
   const [isLoading, setIsLoading] = useState(true);
   const [isShortFilms, setIsShortFilms] = useState(false);
   const [cards, setCards] = useState([]);
@@ -41,24 +40,24 @@ function Movies({ isLoggedIn }) {
     setEndCollection(false);
     if (JSON.parse(localStorage.getItem('foundMovies')) === null) {
       setOnReqSearch(false);
-      getCards()
-        .then((res) => {
-          setBedInternet(false);
-          setIsLoading(false);
-          localStorage.setItem('cards', JSON.stringify(res));
-          localStorage.setItem(
-            'cardsShortFilms',
-            JSON.stringify(res.filter((film) => film.duration <= 40))
-          );
-          makeCollectionCards(
-            JSON.parse(localStorage.getItem('cards')),
-            parametrsForView
-          );
-        })
-        .catch((err) => {
-          console.log(err);
-          setBedInternet(true);
-        });
+      // getCards()
+      //   .then((res) => {
+      //     setBedInternet(false);
+      //     setIsLoading(false);
+      //     localStorage.setItem('cards', JSON.stringify(res));
+      //     localStorage.setItem(
+      //       'cardsShortFilms',
+      //       JSON.stringify(res.filter((film) => film.duration <= 40))
+      //     );
+      //     makeCollectionCards(
+      //       JSON.parse(localStorage.getItem('cards')),
+      //       parametrsForView
+      //     );
+      //   })
+      //   .catch((err) => {
+      //     console.log(err);
+      //     setBedInternet(true);
+      //   });
     } else if (JSON.parse(localStorage.getItem('foundMovies')).length === 0) {
       setIsLoading(false);
       setIsNotFound(true);
@@ -154,4 +153,4 @@ function Movies({ isLoggedIn }) {
   );
 }
 
-export default Movies;
+export default SaveMovies;

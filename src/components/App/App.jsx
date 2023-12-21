@@ -9,7 +9,7 @@ import NotFound from '../NotFound/NotFound';
 import Login from '../Login/Login';
 import { chekTokenUser, register, authorize } from '../../utils/auth.js';
 import Register from '../Register/Register.jsx';
-
+import SaveMovies from '../SaveMovies/SaveMovies.jsx';
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const navigate = useNavigate();
@@ -57,7 +57,6 @@ function App() {
   useEffect(() => {
     if (localStorage.getItem('jwt')) {
       chekToken(localStorage.jwt);
-      console.log(localStorage.getItem('jwt'));
     }
   }, []);
 
@@ -103,7 +102,7 @@ function App() {
             path="/saved-movies"
             element={
               <ProtectedRoute
-                element={Movies}
+                element={SaveMovies}
                 isLoggedIn={loggedIn}
                 path="/saved-movies"
                 isChekToken={isChekToken}
