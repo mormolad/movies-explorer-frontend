@@ -7,6 +7,11 @@ import Footer from '../Footer/Footer.jsx';
 import Preloader from '../Preloader/Preloader.jsx';
 import { DEVICE_PARAMS } from '../../constants/constForApi.js';
 import { useResize } from '../../hooks/useResize.js';
+import {
+  getSavedMovies,
+  saveMovie,
+  deleteMovies,
+} from '../../utils/myAPIMovies.js';
 
 function SaveMovies({ isLoggedIn }) {
   const [isLoading, setIsLoading] = useState(true);
@@ -27,7 +32,8 @@ function SaveMovies({ isLoggedIn }) {
         movie.nameRU.toLowerCase().includes(searchWord.toLowerCase()) ||
         movie.nameEN.toLowerCase().includes(searchWord.toLowerCase())
     );
-    localStorage.setItem('foundSaveMovies', JSON.stringify(foundMovies));
+    localStorage.setItem('foundSaveMovies', JSON.stringify(foundMovies)); //заменить на cardsFound
+
     localStorage.setItem(
       'shortSaveFilmStatusSwitch',
       JSON.stringify(isShortFilms)
@@ -37,41 +43,44 @@ function SaveMovies({ isLoggedIn }) {
 
   // инициализация страницы
   useEffect(() => {
-    if (JSON.parse(localStorage.getItem('foundMovies')) === null) {
-      setOnReqSearch(false);
-      // getCards()
-      //   .then((res) => {
-      //     setBedInternet(false);
-      //     setIsLoading(false);
-      //     localStorage.setItem('cards', JSON.stringify(res));
-      //     localStorage.setItem(
-      //       'cardsShortFilms',
-      //       JSON.stringify(res.filter((film) => film.duration <= 40))
-      //     );
-      //     makeCollectionCards(
-      //       JSON.parse(localStorage.getItem('cards')),
-      //       parametrsForView
-      //     );
-      //   })
-      //   .catch((err) => {
-      //     console.log(err);
-      //     setBedInternet(true);
-      //   });
-    } else if (
-      JSON.parse(localStorage.getItem('foundSaveMovies')).length === 0
-    ) {
-      setIsLoading(false);
-      setIsNotFound(true);
-      setOnReqSearch(true);
-    } else {
-      setIsLoading(false);
-      setOnReqSearch(true);
-      setIsNotFound(false);
-      makeCollectionCards(
-        JSON.parse(localStorage.getItem('foundSaveMovies')),
-        parametrsForView
-      );
-    }
+    setOnReqSearch(false);
+    getSavedMovies()
+      .then((res) => {
+        console.log(res);
+        JSON.parse(localStorage.setItem('cardsSave', JSON.stringify(res)));
+      })
+      .catch((err) => console.log(err.message, 'fgdfgds'));
+
+    // getCards()
+    //   .then((res) => {
+    //     setBedInternet(false);
+    //     setIsLoading(false);
+    //     localStorage.setItem('cards', JSON.stringify(res));
+    //     localStorage.setItem(
+    //       'cardsShortFilms',
+    //       JSON.stringify(res.filter((film) => film.duration <= 40))
+    //     );
+    //     makeCollectionCards(
+    //       JSON.parse(localStorage.getItem('cards')),
+    //       parametrsForView
+    //     );
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //     setBedInternet(true);
+    //   });
+
+    //   setIsLoading(false);
+    //   setIsNotFound(true);
+    //   setOnReqSearch(true);
+    // } else {
+    //   setIsLoading(false);
+    //   setOnReqSearch(true);
+    //   setIsNotFound(false);
+    //   makeCollectionCards(
+    //     JSON.parse(localStorage.getItem('foundSaveMovies')),
+    //     parametrsForView
+    //   );
   }, []);
 
   function makeCollectionCards(cardsForCollection, paramsCollection) {
@@ -130,11 +139,17 @@ function SaveMovies({ isLoggedIn }) {
         <SearchForm
           onSearch={handlerSearchRequest}
           setIsShortFilms={setIsShortFilms}
+          searchWord={JSON.parse(localStorage.getItem('searchWord'))}
         />
         {bedInternet ? (
           <Preloader text="Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз/" />
         ) : !isNotFound ? (
-          <MoviesCardList cards={cards} isLoading={isLoading} />
+          <MoviesCardList
+            cards={cards}
+            isLoading={isLoading}
+            hanleMore={() => {}}
+            endCollection={true}
+          />
         ) : (
           <Preloader className="not-found" text="Ничего не найдено" />
         )}

@@ -22,6 +22,7 @@ function Movies({ isLoggedIn }) {
   const isSize = useResize();
   const [endCollection, setEndCollection] = useState(false);
   const [isNotFound, setIsNotFound] = useState(false);
+  // const [isLike, setIsLike] = useState(false);
 
   function handlerSearchRequest(searchWord) {
     const foundMovies = JSON.parse(localStorage.getItem('cards')).filter(
@@ -34,6 +35,14 @@ function Movies({ isLoggedIn }) {
     localStorage.setItem('searchWord', JSON.stringify(searchWord));
     setOnReqSearch(true);
   }
+  // function handleLikeClick(e) {
+
+  //   setIsLike(true);
+  // }
+
+  // function handleDelClick() {
+  //   setIsLike(false);
+  // }
 
   // инициализация страницы
   useEffect(() => {

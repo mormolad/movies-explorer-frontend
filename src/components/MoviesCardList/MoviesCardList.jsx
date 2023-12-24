@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './MoviesCardList.css';
 import MoviesCard from '../MoviesCard/MoviesCard';
 import Preloader from '../Preloader/Preloader';
@@ -7,6 +7,7 @@ function MoviesCardList({ cards, isLoading, hanleMore, endCollection }) {
   const onClick = (e) => {
     hanleMore();
   };
+
   return (
     <section className="cards">
       {isLoading ? (
