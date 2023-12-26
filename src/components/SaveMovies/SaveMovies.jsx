@@ -7,14 +7,9 @@ import Footer from '../Footer/Footer.jsx';
 import Preloader from '../Preloader/Preloader.jsx';
 import { DEVICE_PARAMS } from '../../constants/constForApi.js';
 import { useResize } from '../../hooks/useResize.js';
-import {
-  getSavedMovies,
-  saveMovie,
-  deleteMovies,
-} from '../../utils/myAPIMovies.js';
+import { getSavedMovies, deleteMovies } from '../../utils/myAPIMovies.js';
 
 function SaveMovies({ isLoggedIn }) {
-  const [isLoading, setIsLoading] = useState(true);
   const [isShortFilms, setIsShortFilms] = useState(false);
   const [cards, setCards] = useState([]);
   const [bedInternet, setBedInternet] = useState(false);
@@ -33,7 +28,6 @@ function SaveMovies({ isLoggedIn }) {
         movie.nameEN.toLowerCase().includes(searchWord.toLowerCase())
     );
     localStorage.setItem('foundSaveMovies', JSON.stringify(foundMovies)); //заменить на cardsFound
-
     localStorage.setItem(
       'shortSaveFilmStatusSwitch',
       JSON.stringify(isShortFilms)
@@ -46,60 +40,40 @@ function SaveMovies({ isLoggedIn }) {
     setOnReqSearch(false);
     getSavedMovies()
       .then((res) => {
-        console.log(res);
-        JSON.parse(localStorage.setItem('cardsSave', JSON.stringify(res)));
+        console.log(
+          JSON.parse(
+            localStorage.setItem('cardsSave', JSON.stringify(res.message))
+          )
+        );
+
+        setIsNotFound(false);
+        localStorage.setItem(
+          'cardsSaveShortFilms',
+          JSON.stringify(res.filter((film) => film.duration <= 40))
+        );
+        makeCollectionCards(
+          JSON.parse(localStorage.getItem('cardsSave')),
+          parametrsForView
+        );
       })
-      .catch((err) => console.log(err.message, 'fgdfgds'));
-
-    // getCards()
-    //   .then((res) => {
-    //     setBedInternet(false);
-    //     setIsLoading(false);
-    //     localStorage.setItem('cards', JSON.stringify(res));
-    //     localStorage.setItem(
-    //       'cardsShortFilms',
-    //       JSON.stringify(res.filter((film) => film.duration <= 40))
-    //     );
-    //     makeCollectionCards(
-    //       JSON.parse(localStorage.getItem('cards')),
-    //       parametrsForView
-    //     );
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //     setBedInternet(true);
-    //   });
-
-    //   setIsLoading(false);
-    //   setIsNotFound(true);
-    //   setOnReqSearch(true);
-    // } else {
-    //   setIsLoading(false);
-    //   setOnReqSearch(true);
-    //   setIsNotFound(false);
-    //   makeCollectionCards(
-    //     JSON.parse(localStorage.getItem('foundSaveMovies')),
-    //     parametrsForView
-    //   );
+      .catch((err) => setIsNotFound(true));
   }, []);
 
   function makeCollectionCards(cardsForCollection, paramsCollection) {
-    // const arrCards = [];
-    // setEndCollection(false);
-    // for (let i = 0; i < paramsCollection.cards.total + additionalMovis; i++) {
-    //   if (!cardsForCollection[i]) {
-    //     setEndCollection(true);
-    //     break;
-    //   }
-    //   arrCards[i] = cardsForCollection[i];
-    // }
-    // setCards(arrCards);
+    const arrCards = [];
+    for (let i = 0; i < paramsCollection.cards.total; i++) {
+      if (!cardsForCollection[i]) {
+        break;
+      }
+      arrCards[i] = cardsForCollection[i];
+    }
+    setCards(arrCards);
   }
 
   useEffect(() => {
     if (!isShortFilms && !onReqSearch) {
       makeCollectionCards(
-        JSON.parse(localStorage.getItem('cards')),
+        JSON.parse(localStorage.getItem('cardsSave')),
         parametrsForView
       );
     } else if (isShortFilms && !onReqSearch) {
@@ -109,12 +83,12 @@ function SaveMovies({ isLoggedIn }) {
       );
     } else if (!isShortFilms && onReqSearch) {
       makeCollectionCards(
-        JSON.parse(localStorage.getItem('foundMovies')),
+        JSON.parse(localStorage.getItem('foundSaveMovies')),
         parametrsForView
       );
     } else if (isShortFilms && onReqSearch) {
       makeCollectionCards(
-        JSON.parse(localStorage.getItem('foundMovies')).filter(
+        JSON.parse(localStorage.getItem('foundSaveMovies')).filter(
           (film) => film.duration <= 40
         ),
         parametrsForView
@@ -146,7 +120,7 @@ function SaveMovies({ isLoggedIn }) {
         ) : !isNotFound ? (
           <MoviesCardList
             cards={cards}
-            isLoading={isLoading}
+            isLoading={true}
             hanleMore={() => {}}
             endCollection={true}
           />

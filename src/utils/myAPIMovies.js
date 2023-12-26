@@ -9,7 +9,7 @@ export const getSavedMovies = () => {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${localStorage.getItem('jwt')}`,
     },
-  }).then((res) => checkResponse(res));
+  }).then((res) => (res.ok ? res.json() : []));
 };
 
 export const saveMovie = (movie) => {

@@ -22,7 +22,6 @@ function Movies({ isLoggedIn }) {
   const isSize = useResize();
   const [endCollection, setEndCollection] = useState(false);
   const [isNotFound, setIsNotFound] = useState(false);
-  // const [isLike, setIsLike] = useState(false);
 
   function handlerSearchRequest(searchWord) {
     const foundMovies = JSON.parse(localStorage.getItem('cards')).filter(
@@ -35,14 +34,6 @@ function Movies({ isLoggedIn }) {
     localStorage.setItem('searchWord', JSON.stringify(searchWord));
     setOnReqSearch(true);
   }
-  // function handleLikeClick(e) {
-
-  //   setIsLike(true);
-  // }
-
-  // function handleDelClick() {
-  //   setIsLike(false);
-  // }
 
   // инициализация страницы
   useEffect(() => {
@@ -54,6 +45,7 @@ function Movies({ isLoggedIn }) {
         .then((res) => {
           setBedInternet(false);
           setIsLoading(false);
+          console.log(JSON.stringify(res));
           localStorage.setItem('cards', JSON.stringify(res));
           localStorage.setItem(
             'cardsShortFilms',
@@ -83,7 +75,23 @@ function Movies({ isLoggedIn }) {
     }
   }, []);
 
+  function setLike(card) {
+    if (localStorage.getItem('cardsSave') === null) {
+      return false;
+    } else if (JSON.parse(localStorage.getItem('cardsSave')).length === 0) {
+      return false;
+    } else {
+      const like = JSON.parse(localStorage.getItem('cardsSave')).filter(
+        (movie) => card.nameRU === movie.nameRU
+      );
+      return like.length > 0;
+    }
+  }
+
   function makeCollectionCards(cardsForCollection, paramsCollection) {
+    if (cardsForCollection === null) {
+      return;
+    }
     const arrCards = [];
     setEndCollection(false);
     for (let i = 0; i < paramsCollection.cards.total + additionalMovis; i++) {
@@ -91,6 +99,7 @@ function Movies({ isLoggedIn }) {
         setEndCollection(true);
         break;
       }
+      cardsForCollection[i].like = setLike(cardsForCollection[i]);
       arrCards[i] = cardsForCollection[i];
     }
     setCards(arrCards);
