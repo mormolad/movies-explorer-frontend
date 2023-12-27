@@ -48,11 +48,11 @@
 
 .card__save-button {
   background: #313131;
+  background-image: url(../../images/no-save-button.svg);
   padding: 0;
   margin: 13px 130px 18px 130px;
   border: none;
   border-radius: 50px;
-  background-image: url(../../images/no-save-button.svg);
   width: 100px;
   height: 29px;
   cursor: pointer;
@@ -63,13 +63,17 @@
 }
 
 .card__delete-button {
+  background: #313131;
   background-image: url('../../images/delete-button.svg');
-  width: 16px;
-  height: 16px;
+  padding: 0;
+  margin: 13px 130px 18px 130px;
+  width: 100px;
+  height: 29px;
+  cursor: pointer;
   border: none;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-color: transparent;
+  border-radius: 50px;
+  padding: 0;
+  margin: 13px 130px 18px 130px;
 }
 
 .card__delete-button:hover {

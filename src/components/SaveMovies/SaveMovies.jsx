@@ -6,57 +6,41 @@ import MoviesCardList from '../MoviesCardList/MoviesCardList.jsx';
 import Footer from '../Footer/Footer.jsx';
 import Preloader from '../Preloader/Preloader.jsx';
 import { DEVICE_PARAMS } from '../../constants/constForApi.js';
-import { useResize } from '../../hooks/useResize.js';
 import { getSavedMovies, deleteMovies } from '../../utils/myAPIMovies.js';
+import ErrorSearch from '../ErrorSearch/ErrorSearch.jsx';
 
-function SaveMovies({ isLoggedIn }) {
+function SaveMovies({ isLoggedIn, parametrsForView, bedInternet, isLoading }) {
   const [isShortFilms, setIsShortFilms] = useState(false);
   const [cards, setCards] = useState([]);
-  const [bedInternet, setBedInternet] = useState(false);
   const [onReqSearch, setOnReqSearch] = useState(false);
-  const [parametrsForView, setParametrsForView] = useState(
-    DEVICE_PARAMS.desktop
-  );
 
-  const isSize = useResize();
   const [isNotFound, setIsNotFound] = useState(false);
 
   function handlerSearchRequest(searchWord) {
-    const foundMovies = JSON.parse(localStorage.getItem('cardsSave')).filter(
+    setIsNotFound(false);
+    const foundMovies = JSON.parse(localStorage.getItem('saveMovies')).filter(
       (movie) =>
         movie.nameRU.toLowerCase().includes(searchWord.toLowerCase()) ||
         movie.nameEN.toLowerCase().includes(searchWord.toLowerCase())
     );
-    localStorage.setItem('foundSaveMovies', JSON.stringify(foundMovies)); //заменить на cardsFound
+    localStorage.setItem('foundSaveMovies', JSON.stringify(foundMovies));
     localStorage.setItem(
       'shortSaveFilmStatusSwitch',
       JSON.stringify(isShortFilms)
     );
+    localStorage.setItem('searchWordSaveMovies', JSON.stringify(searchWord));
     setOnReqSearch(true);
+    if (foundMovies.length === 0) setIsNotFound(true);
   }
 
   // инициализация страницы
   useEffect(() => {
     setOnReqSearch(false);
-    getSavedMovies()
-      .then((res) => {
-        console.log(
-          JSON.parse(
-            localStorage.setItem('cardsSave', JSON.stringify(res.message))
-          )
-        );
-
-        setIsNotFound(false);
-        localStorage.setItem(
-          'cardsSaveShortFilms',
-          JSON.stringify(res.filter((film) => film.duration <= 40))
-        );
-        makeCollectionCards(
-          JSON.parse(localStorage.getItem('cardsSave')),
-          parametrsForView
-        );
-      })
-      .catch((err) => setIsNotFound(true));
+    setIsNotFound(false);
+    makeCollectionCards(
+      JSON.parse(localStorage.getItem('saveMovies')),
+      parametrsForView
+    );
   }, []);
 
   function makeCollectionCards(cardsForCollection, paramsCollection) {
@@ -65,20 +49,27 @@ function SaveMovies({ isLoggedIn }) {
       if (!cardsForCollection[i]) {
         break;
       }
+      console.log(cardsForCollection[i].image);
+      const image = { url: cardsForCollection[i].image.slice(29) };
+      delete cardsForCollection[i].image;
+      cardsForCollection[i] = { ...cardsForCollection[i], image };
+      console.log(cardsForCollection[i]);
       arrCards[i] = cardsForCollection[i];
     }
+
+    console.log(arrCards);
     setCards(arrCards);
   }
 
   useEffect(() => {
     if (!isShortFilms && !onReqSearch) {
       makeCollectionCards(
-        JSON.parse(localStorage.getItem('cardsSave')),
+        JSON.parse(localStorage.getItem('saveMovies')),
         parametrsForView
       );
     } else if (isShortFilms && !onReqSearch) {
       makeCollectionCards(
-        JSON.parse(localStorage.getItem('cardsShortFilms')),
+        JSON.parse(localStorage.getItem('saveMovieShort')),
         parametrsForView
       );
     } else if (!isShortFilms && onReqSearch) {
@@ -94,17 +85,7 @@ function SaveMovies({ isLoggedIn }) {
         parametrsForView
       );
     }
-  }, [isShortFilms, onReqSearch, isSize]);
-
-  useEffect(() => {
-    if (isSize > DEVICE_PARAMS.desktop.width) {
-      setParametrsForView(DEVICE_PARAMS.desktop);
-    } else if (isSize > DEVICE_PARAMS.tablet.width) {
-      setParametrsForView(DEVICE_PARAMS.tablet);
-    } else {
-      setParametrsForView(DEVICE_PARAMS.mobile);
-    }
-  }, [isSize]);
+  }, [isShortFilms, onReqSearch /*isSize*/]);
 
   return (
     <>
@@ -113,19 +94,23 @@ function SaveMovies({ isLoggedIn }) {
         <SearchForm
           onSearch={handlerSearchRequest}
           setIsShortFilms={setIsShortFilms}
-          searchWord={JSON.parse(localStorage.getItem('searchWord'))}
+          searchWord={JSON.parse(localStorage.getItem('searchWordSaveMovies'))}
         />
-        {bedInternet ? (
-          <Preloader text="Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз/" />
-        ) : !isNotFound ? (
-          <MoviesCardList
-            cards={cards}
-            isLoading={true}
-            hanleMore={() => {}}
-            endCollection={true}
-          />
+        {!isLoading ? (
+          bedInternet ? (
+            <Preloader text="Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз/" />
+          ) : !isNotFound ? (
+            <MoviesCardList
+              cards={cards}
+              isLoading={isLoading}
+              hanleMore={() => {}}
+              endCollection={true}
+            />
+          ) : (
+            <ErrorSearch className="not-found" text="Ничего не найдено" />
+          )
         ) : (
-          <Preloader className="not-found" text="Ничего не найдено" />
+          <Preloader />
         )}
       </section>
       <Footer />

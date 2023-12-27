@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router';
 import './MoviesCard.css';
 import duration from '../../utils/durationMovie.js';
 import {
@@ -6,11 +7,12 @@ import {
   getSavedMovies,
   deleteMovies,
 } from '../../utils/myAPIMovies.js';
+
 function MoviesCard({ card, key }) {
   const [isLike, setIsLike] = useState(false);
-
+  const location = useLocation();
+  console.log(location);
   const setLike = (bool) => {
-    console.log(bool);
     if (bool) {
       const respons = {
         country: card.country,
@@ -30,11 +32,7 @@ function MoviesCard({ card, key }) {
       saveMovie(respons)
         .then((res) => {
           setIsLike(true);
-        })
-        .then(() => {
-          getSavedMovies().then((res) =>
-            localStorage.setItem('saveMovies', JSON.stringify(res))
-          );
+          localStorage.setItem('saveMovies', JSON.stringify(res.message));
         })
         .catch((err) => {
           console.log(err);
@@ -43,11 +41,8 @@ function MoviesCard({ card, key }) {
       const filteredCard = JSON.parse(
         localStorage.getItem('saveMovies')
       ).filter((movie) => movie.movieId === card.id);
-      console.log(filteredCard);
       deleteMovies(filteredCard[0]._id).then((res) => {
-        getSavedMovies().then((res) =>
-          localStorage.setItem('saveMovies', JSON.stringify(res))
-        );
+        localStorage.setItem('saveMovies', JSON.stringify(res.message));
         setIsLike(false);
       });
     }
@@ -60,7 +55,6 @@ function MoviesCard({ card, key }) {
   }, [isLike]);
 
   useEffect(() => {
-    console.log(card.like, card.nameRU);
     setIsLike(card.like);
   }, []);
 
@@ -69,7 +63,7 @@ function MoviesCard({ card, key }) {
       ? setLike(true)
       : setLike(false);
   }
-
+  // console.log(card.image.slice(29));
   return (
     <li className="card" key={key}>
       <div className="card__info">
@@ -84,7 +78,9 @@ function MoviesCard({ card, key }) {
       {
         <button
           className={
-            isLike
+            location.pathname === '/saved-movies'
+              ? 'card__delete-button'
+              : isLike
               ? 'card__save-button card__save-button_active'
               : 'card__save-button'
           }

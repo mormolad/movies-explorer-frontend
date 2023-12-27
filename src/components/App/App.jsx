@@ -10,11 +10,27 @@ import Login from '../Login/Login';
 import { chekTokenUser, register, authorize } from '../../utils/auth.js';
 import Register from '../Register/Register.jsx';
 import SaveMovies from '../SaveMovies/SaveMovies.jsx';
+import {
+  saveMovie,
+  getSavedMovies,
+  deleteMovies,
+} from '../../utils/myAPIMovies.js';
+import getCards from '../../utils/MoviesApi';
+import { useResize } from '../../hooks/useResize.js';
+import { DEVICE_PARAMS } from '../../constants/constForApi.js';
+
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const navigate = useNavigate();
   const [requestError, setRequestError] = useState('');
   const [isChekToken, setIsChekToken] = useState(false);
+  const [bedInternet, setBedInternet] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const isSize = useResize();
+  const [parametrsForView, setParametrsForView] = useState(
+    DEVICE_PARAMS.desktop
+  );
+  const [bedInternetMy, setBedInternetMy] = useState(false);
   //проверка токена
   function chekToken(jwt) {
     chekTokenUser(jwt)
@@ -60,6 +76,57 @@ function App() {
     }
   }, []);
 
+  function getData() {
+    setIsLoading(true);
+    getCards()
+      .then((res) => {
+        setBedInternet(false);
+        setIsLoading(false);
+        localStorage.setItem('cards', JSON.stringify(res));
+        localStorage.setItem(
+          'cardsShortFilms',
+          JSON.stringify(res.filter((film) => film.duration <= 40))
+        );
+      })
+      .catch((err) => {
+        console.log(err);
+        setBedInternet(true); //написать ошибку нет соединения с сервером фильмов
+      });
+    getSavedMovies()
+      .then((res) => {
+        if (res.length === 0) {
+          return;
+        }
+        if (res.message.length > 0) {
+          localStorage.setItem('saveMovies', JSON.stringify(res.message));
+          localStorage.setItem(
+            'saveMovieShort',
+            JSON.stringify(res.message.filter((film) => film.duration <= 40))
+          );
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        setBedInternetMy(true);
+      });
+  }
+
+  useEffect(() => {
+    if (loggedIn) {
+      getData();
+    }
+  }, [loggedIn]);
+
+  useEffect(() => {
+    if (isSize > DEVICE_PARAMS.desktop.width) {
+      setParametrsForView(DEVICE_PARAMS.desktop);
+    } else if (isSize > DEVICE_PARAMS.tablet.width) {
+      setParametrsForView(DEVICE_PARAMS.tablet);
+    } else {
+      setParametrsForView(DEVICE_PARAMS.mobile);
+    }
+  }, [isSize]);
+
   return (
     <div className="page">
       <div className="page__content">
@@ -93,8 +160,11 @@ function App() {
               <ProtectedRoute
                 element={Movies}
                 isLoggedIn={loggedIn}
+                parametrsForView={parametrsForView}
                 path="/movies"
                 isChekToken={isChekToken}
+                bedInternet={bedInternet}
+                isLoading={isLoading}
               />
             }
           />
@@ -104,8 +174,11 @@ function App() {
               <ProtectedRoute
                 element={SaveMovies}
                 isLoggedIn={loggedIn}
+                parametrsForView={parametrsForView}
                 path="/saved-movies"
                 isChekToken={isChekToken}
+                bedInternet={bedInternetMy}
+                isLoading={isLoading}
               />
             }
           />
