@@ -74,6 +74,8 @@
   border-radius: 50px;
   padding: 0;
   margin: 13px 130px 18px 130px;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .card__delete-button:hover {

@@ -1,17 +1,16 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './MoviesCardList.css';
 import MoviesCard from '../MoviesCard/MoviesCard';
 
-function MoviesCardList({ cards, handleMore, endCollection }) {
+function MoviesCardList({ cards, handleMore, endCollection, setCards }) {
   const onClick = (e) => {
     handleMore();
   };
-
   return (
     <section className="cards">
       <ul className="cards__list">
         {cards.map((card) => (
-          <MoviesCard key={card._id} card={card} />
+          <MoviesCard card={card} key={card._id} setCards={setCards} />
         ))}
       </ul>
       <div className="cards__button-container">

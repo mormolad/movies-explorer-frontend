@@ -5,7 +5,6 @@ import SearchForm from '../SearchForm/SearchForm.jsx';
 import MoviesCardList from '../MoviesCardList/MoviesCardList.jsx';
 import Footer from '../Footer/Footer.jsx';
 import Preloader from '../Preloader/Preloader.jsx';
-import { DEVICE_PARAMS } from '../../constants/constForApi.js';
 import { getSavedMovies, deleteMovies } from '../../utils/myAPIMovies.js';
 import ErrorSearch from '../ErrorSearch/ErrorSearch.jsx';
 
@@ -49,15 +48,12 @@ function SaveMovies({ isLoggedIn, parametrsForView, bedInternet, isLoading }) {
       if (!cardsForCollection[i]) {
         break;
       }
-      console.log(cardsForCollection[i].image);
       const image = { url: cardsForCollection[i].image.slice(29) };
       delete cardsForCollection[i].image;
       cardsForCollection[i] = { ...cardsForCollection[i], image };
       console.log(cardsForCollection[i]);
       arrCards[i] = cardsForCollection[i];
     }
-
-    console.log(arrCards);
     setCards(arrCards);
   }
 
@@ -85,7 +81,7 @@ function SaveMovies({ isLoggedIn, parametrsForView, bedInternet, isLoading }) {
         parametrsForView
       );
     }
-  }, [isShortFilms, onReqSearch /*isSize*/]);
+  }, [isShortFilms, onReqSearch, parametrsForView]);
 
   return (
     <>
@@ -102,6 +98,7 @@ function SaveMovies({ isLoggedIn, parametrsForView, bedInternet, isLoading }) {
           ) : !isNotFound ? (
             <MoviesCardList
               cards={cards}
+              setCards={setCards}
               isLoading={isLoading}
               hanleMore={() => {}}
               endCollection={true}

@@ -8,10 +8,10 @@ import {
   deleteMovies,
 } from '../../utils/myAPIMovies.js';
 
-function MoviesCard({ card, key }) {
-  const [isLike, setIsLike] = useState(false);
+function MoviesCard({ card, key, setCards }) {
   const location = useLocation();
-  console.log(location);
+  const [isLike, setIsLike] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const setLike = (bool) => {
     if (bool) {
       const respons = {
@@ -36,22 +36,30 @@ function MoviesCard({ card, key }) {
         })
         .catch((err) => {
           console.log(err);
+        })
+        .finally(() => {
+          setIsLoading(false);
         });
     } else {
       const filteredCard = JSON.parse(
         localStorage.getItem('saveMovies')
       ).filter((movie) => movie.movieId === card.id);
       deleteMovies(filteredCard[0]._id).then((res) => {
+        console.log(res.message);
         localStorage.setItem('saveMovies', JSON.stringify(res.message));
+
         setIsLike(false);
       });
     }
   };
 
   useEffect(() => {
-    getSavedMovies().then((res) => {
-      localStorage.setItem('saveMovies', JSON.stringify(res.message));
-    });
+    getSavedMovies()
+      .then((res) => {
+        localStorage.setItem('saveMovies', JSON.stringify(res.message));
+      })
+      .catch((err) => console.log(err))
+      .finally(() => setIsLoading(false));
   }, [isLike]);
 
   useEffect(() => {
@@ -59,13 +67,30 @@ function MoviesCard({ card, key }) {
   }, []);
 
   function handleLikeClick(e) {
+    setIsLoading(true);
     JSON.stringify(e.target.classList).indexOf('active') === -1
       ? setLike(true)
       : setLike(false);
   }
-  // console.log(card.image.slice(29));
+
+  function handleDelClick(e) {
+    console.log(JSON.parse(localStorage.getItem('saveMovies')));
+    const filteredCard = JSON.parse(localStorage.getItem('saveMovies')).filter(
+      (movie) => movie.movieId === card.movieId
+    );
+    console.log(card, filteredCard);
+    deleteMovies(filteredCard[0]._id).then((res) => {
+      const newCollectionCardInLocalStorage = JSON.parse(
+        localStorage.getItem('saveMovies')
+      ).filter((movies) => movies.movieId === card.movieId);
+      localStorage.setItem('saveMovies', JSON.stringify());
+      setCards(newCollectionCardInLocalStorage);
+      console.log(filteredCard);
+    });
+  }
+
   return (
-    <li className="card" key={key}>
+    <li className="card" key={card._id}>
       <div className="card__info">
         <h2 className="card__title">{card.nameRU}</h2>
         <span className="card__time">{duration(card.duration)}</span>
@@ -84,7 +109,12 @@ function MoviesCard({ card, key }) {
               ? 'card__save-button card__save-button_active'
               : 'card__save-button'
           }
-          onClick={handleLikeClick}
+          onClick={
+            location.pathname === '/saved-movies'
+              ? handleDelClick
+              : handleLikeClick
+          }
+          disabled={isLoading}
         ></button>
       }
     </li>
