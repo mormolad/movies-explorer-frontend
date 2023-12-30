@@ -1,8 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Header from '../Header/Header.jsx';
 import Form from '../Form/Form.jsx';
 import { EMAIL_REGEXP } from '../../constants/regexp';
 import './Profile.css';
+import InfoUser from '../InfoUser/InfoUser.jsx';
 
 function Profile({ onSubmit, requestError }) {
   const [name, setName] = React.useState(
@@ -17,6 +18,8 @@ function Profile({ onSubmit, requestError }) {
   const [emailError, setEmailError] = React.useState('');
 
   const [formValid, setFormValid] = React.useState(false);
+
+  const [isEdit, setIsEdit] = useState(false);
 
   useEffect(() => {
     emailError || nameError ? setFormValid(false) : setFormValid(true);
@@ -43,7 +46,7 @@ function Profile({ onSubmit, requestError }) {
   const blurHandlerEmail = (e) => {
     setEmailDitry(true);
   };
-
+  console.log(isEdit);
   return (
     <>
       <Header theme="black" isLoggedIn={true} />
@@ -51,36 +54,45 @@ function Profile({ onSubmit, requestError }) {
         <h3 className="profile__title">
           Привет, {JSON.parse(localStorage.getItem('user')).name}!
         </h3>
-        <Form
-          fields={[
-            {
-              title: 'name',
-              type: 'text',
-              name: 'name',
-              id: 'profile-field-name',
-              onChange: handleChangeName,
-              valueInput: name,
-              inputDitry: nameDitry,
-              onBlur: blurHandlerName,
-              inputError: nameError,
-            },
-            {
-              title: 'email',
-              type: 'email',
-              name: 'email',
-              id: 'profiled-field-email',
-              onChange: handleChangeEmail,
-              valueInput: email,
-              inputDitry: emailDitry,
-              onBlur: blurHandlerEmail,
-              inputError: emailError,
-            },
-          ]}
-          buttonText={'Редактировать'}
-          onSubmit={onSubmit}
-          isValid={formValid}
-          requestError={requestError}
-        />
+        {isEdit ? (
+          <Form
+            fields={[
+              {
+                title: 'name',
+                type: 'text',
+                name: 'name',
+                id: 'profile-field-name',
+                onChange: handleChangeName,
+                valueInput: name,
+                inputDitry: nameDitry,
+                onBlur: blurHandlerName,
+                inputError: nameError,
+              },
+              {
+                title: 'email',
+                type: 'email',
+                name: 'email',
+                id: 'profiled-field-email',
+                onChange: handleChangeEmail,
+                valueInput: email,
+                inputDitry: emailDitry,
+                onBlur: blurHandlerEmail,
+                inputError: emailError,
+              },
+            ]}
+            buttonText={'Сохранить'}
+            onSubmit={onSubmit}
+            isValid={formValid}
+            requestError={requestError}
+          />
+        ) : (
+          <InfoUser
+            name={name}
+            email={email}
+            buttonText="Редактировать"
+            onSubmit={setIsEdit}
+          />
+        )}
         <button className="profile__logout">Выйти из аккаунта</button>
       </section>
     </>

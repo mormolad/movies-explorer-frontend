@@ -71,9 +71,11 @@ function App() {
   }
 
   function handleSubmitEditProfile({ name, email }) {
-    return editProfile(name, email).then((res) => {
-      localStorage.setItem('user', res.message);
-    });
+    return editProfile(name, email)
+      .then((res) => {
+        localStorage.setItem('user', res.message);
+      })
+      .catch((err) => console.log(err));
   }
 
   useEffect(() => {
