@@ -2,7 +2,13 @@ import React from 'react';
 import './MoviesCardList.css';
 import MoviesCard from '../MoviesCard/MoviesCard';
 
-function MoviesCardList({ cards, handleMore, endCollection, setCards }) {
+function MoviesCardList({
+  cards,
+  handleMore,
+  endCollection,
+  setCards,
+  setIsNotFound,
+}) {
   const onClick = (e) => {
     handleMore();
   };
@@ -10,7 +16,12 @@ function MoviesCardList({ cards, handleMore, endCollection, setCards }) {
     <section className="cards">
       <ul className="cards__list">
         {cards.map((card) => (
-          <MoviesCard card={card} key={card._id} setCards={setCards} />
+          <MoviesCard
+            card={card}
+            key={card.id}
+            setCards={setCards}
+            setIsNotFound={setIsNotFound}
+          />
         ))}
       </ul>
       <div className="cards__button-container">

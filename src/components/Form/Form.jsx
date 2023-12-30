@@ -1,9 +1,11 @@
 import React from 'react';
 import './Form.css';
-
+import { useLocation } from 'react-router';
 function Form({ fields, buttonText, onSubmit, isValid, requestError }) {
   let valuesForm = {};
+  const location = useLocation();
   fields.map((item) => (valuesForm[item.type] = item.valueInput));
+
   function handleSubmit(e) {
     e.preventDefault();
     onSubmit(valuesForm);
@@ -21,6 +23,7 @@ function Form({ fields, buttonText, onSubmit, isValid, requestError }) {
               id={item.id}
               type={item.type}
               onChange={item.onChange}
+              value={item.valueInput}
               required
             />
             <span className="form__input-error">

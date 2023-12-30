@@ -34,3 +34,26 @@ export const deleteMovies = (id) => {
     },
   }).then((res) => checkResponse(res));
 };
+
+export const editProfile = (name, email) => {
+  return fetch(`${URL_MY_API}/users/me`, {
+    method: 'patch',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${localStorage.getItem('jwt')}`,
+    },
+    body: JSON.stringify(name, email),
+  }).then((res) => checkResponse(res));
+};
+
+export const getUserInfo = () => {
+  return fetch(`${URL_MY_API}/users/me`, {
+    method: 'get',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${localStorage.getItem('jwt')}`,
+    },
+  }).then((res) => checkResponse(res));
+};

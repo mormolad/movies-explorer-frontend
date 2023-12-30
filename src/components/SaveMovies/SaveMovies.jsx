@@ -5,7 +5,6 @@ import SearchForm from '../SearchForm/SearchForm.jsx';
 import MoviesCardList from '../MoviesCardList/MoviesCardList.jsx';
 import Footer from '../Footer/Footer.jsx';
 import Preloader from '../Preloader/Preloader.jsx';
-import { getSavedMovies, deleteMovies } from '../../utils/myAPIMovies.js';
 import ErrorSearch from '../ErrorSearch/ErrorSearch.jsx';
 
 function SaveMovies({ isLoggedIn, parametrsForView, bedInternet, isLoading }) {
@@ -36,10 +35,22 @@ function SaveMovies({ isLoggedIn, parametrsForView, bedInternet, isLoading }) {
   useEffect(() => {
     setOnReqSearch(false);
     setIsNotFound(false);
-    makeCollectionCards(
-      JSON.parse(localStorage.getItem('saveMovies')),
-      parametrsForView
+    console.log(
+      localStorage.getItem('saveMovies'),
+      ' = localStorage.getItem(saveMovies)'
     );
+    if (
+      localStorage.getItem('saveMovies') === 'undefined' ||
+      localStorage.getItem('saveMovies') === '[]'
+    ) {
+      console.log('is not find');
+      setIsNotFound(true);
+    } else {
+      makeCollectionCards(
+        JSON.parse(localStorage.getItem('saveMovies')),
+        parametrsForView
+      );
+    }
   }, []);
 
   function makeCollectionCards(cardsForCollection, paramsCollection) {
@@ -51,35 +62,36 @@ function SaveMovies({ isLoggedIn, parametrsForView, bedInternet, isLoading }) {
       const image = { url: cardsForCollection[i].image.slice(29) };
       delete cardsForCollection[i].image;
       cardsForCollection[i] = { ...cardsForCollection[i], image };
-      console.log(cardsForCollection[i]);
       arrCards[i] = cardsForCollection[i];
     }
     setCards(arrCards);
   }
 
   useEffect(() => {
-    if (!isShortFilms && !onReqSearch) {
-      makeCollectionCards(
-        JSON.parse(localStorage.getItem('saveMovies')),
-        parametrsForView
-      );
-    } else if (isShortFilms && !onReqSearch) {
-      makeCollectionCards(
-        JSON.parse(localStorage.getItem('saveMovieShort')),
-        parametrsForView
-      );
-    } else if (!isShortFilms && onReqSearch) {
-      makeCollectionCards(
-        JSON.parse(localStorage.getItem('foundSaveMovies')),
-        parametrsForView
-      );
-    } else if (isShortFilms && onReqSearch) {
-      makeCollectionCards(
-        JSON.parse(localStorage.getItem('foundSaveMovies')).filter(
-          (film) => film.duration <= 40
-        ),
-        parametrsForView
-      );
+    if (!(localStorage.getItem('saveMovies') === 'undefined')) {
+      if (!isShortFilms && !onReqSearch) {
+        makeCollectionCards(
+          JSON.parse(localStorage.getItem('saveMovies')),
+          parametrsForView
+        );
+      } else if (isShortFilms && !onReqSearch) {
+        makeCollectionCards(
+          JSON.parse(localStorage.getItem('saveMovieShort')),
+          parametrsForView
+        );
+      } else if (!isShortFilms && onReqSearch) {
+        makeCollectionCards(
+          JSON.parse(localStorage.getItem('foundSaveMovies')),
+          parametrsForView
+        );
+      } else if (isShortFilms && onReqSearch) {
+        makeCollectionCards(
+          JSON.parse(localStorage.getItem('foundSaveMovies')).filter(
+            (film) => film.duration <= 40
+          ),
+          parametrsForView
+        );
+      }
     }
   }, [isShortFilms, onReqSearch, parametrsForView]);
 
@@ -102,6 +114,7 @@ function SaveMovies({ isLoggedIn, parametrsForView, bedInternet, isLoading }) {
               isLoading={isLoading}
               hanleMore={() => {}}
               endCollection={true}
+              setIsNotFound={setIsNotFound}
             />
           ) : (
             <ErrorSearch className="not-found" text="Ничего не найдено" />

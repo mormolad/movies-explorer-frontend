@@ -11,9 +11,9 @@ import { chekTokenUser, register, authorize } from '../../utils/auth.js';
 import Register from '../Register/Register.jsx';
 import SaveMovies from '../SaveMovies/SaveMovies.jsx';
 import {
-  saveMovie,
   getSavedMovies,
-  deleteMovies,
+  editProfile,
+  getUserInfo,
 } from '../../utils/myAPIMovies.js';
 import getCards from '../../utils/MoviesApi';
 import { useResize } from '../../hooks/useResize.js';
@@ -61,7 +61,7 @@ function App() {
   // обработчик кнопки зарегисторироваться
   function handleSubmitRegister({ name, email, password }) {
     return register(name, email, password)
-      .then(() => {
+      .then((res) => {
         handleSubmitLogin({ email, password });
       })
       .catch((err) => {
@@ -70,11 +70,25 @@ function App() {
       });
   }
 
+  function handleSubmitEditProfile({ name, email }) {
+    return editProfile(name, email).then((res) => {
+      localStorage.setItem('user', res.message);
+    });
+  }
+
   useEffect(() => {
     if (localStorage.getItem('jwt')) {
       chekToken(localStorage.jwt);
     }
   }, []);
+
+  useEffect(() => {
+    if (loggedIn) {
+      getUserInfo().then((res) => {
+        localStorage.setItem('user', JSON.stringify(res.message));
+      });
+    }
+  }, [loggedIn]);
 
   function getData() {
     setIsLoading(true);
@@ -190,7 +204,10 @@ function App() {
                 isLoggedIn={loggedIn}
                 setLoggedIn={setLoggedIn}
                 path="/profile"
-                isChekToken={isChekToken}
+                onSubmit={handleSubmitEditProfile}
+                requestError={requestError}
+                setRequestError={setRequestError}
+                isLoading={isLoading}
               />
             }
           />

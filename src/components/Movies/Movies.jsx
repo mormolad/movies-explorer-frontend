@@ -7,11 +7,6 @@ import Footer from '../Footer/Footer.jsx';
 import Preloader from '../Preloader/Preloader.jsx';
 import { useResize } from '../../hooks/useResize.js';
 import ErrorSearch from '../ErrorSearch/ErrorSearch.jsx';
-import {
-  saveMovie,
-  getSavedMovies,
-  deleteMovies,
-} from '../../utils/myAPIMovies.js';
 
 function Movies({ isLoggedIn, parametrsForView, bedInternet, isLoading }) {
   const [isShortFilms, setIsShortFilms] = useState(false);
