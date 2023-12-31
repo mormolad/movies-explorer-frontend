@@ -1,10 +1,16 @@
 import React from 'react';
 import './Form.css';
-import { useLocation } from 'react-router';
-function Form({ fields, buttonText, onSubmit, isValid, requestError }) {
+function Form({
+  fields,
+  buttonText,
+  onSubmit,
+  isValid,
+  requestError,
+  modifierCSS,
+}) {
   let valuesForm = {};
-  const location = useLocation();
-  fields.map((item) => (valuesForm[item.type] = item.valueInput));
+
+  fields.forEach((item) => (valuesForm[item.name] = item.valueInput));
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -14,12 +20,15 @@ function Form({ fields, buttonText, onSubmit, isValid, requestError }) {
   return (
     <>
       <form className="form" onSubmit={handleSubmit}>
-        {fields.map((item, i, arr) => (
-          <label className="form__field" key={item.name}>
+        {fields.map((item) => (
+          <label
+            className={true ? 'form__field_profile' : 'form__field'} //!!!!!!!!!!!!!!
+            key={item.name}
+          >
             {item.title}
             <input
               name={item.name}
-              className="form__input"
+              className={true ? 'form__input_profile' : 'form__input'}
               id={item.id}
               type={item.type}
               onChange={item.onChange}

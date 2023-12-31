@@ -36,17 +36,17 @@ export const deleteMovies = (id) => {
 };
 
 export const editProfile = (name, email) => {
+  console.log(name, email);
   return fetch(`${URL_MY_API}/users/me`, {
-    method: 'patch',
+    method: 'PATCH',
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
       Authorization: `Bearer ${localStorage.getItem('jwt')}`,
     },
-    body: JSON.stringify(name, email),
+    body: JSON.stringify({ name, email }),
   })
     .then((res) => {
-      console.log(res);
       checkResponse(res);
     })
     .catch((err) => console.log(err));
@@ -54,7 +54,7 @@ export const editProfile = (name, email) => {
 
 export const getUserInfo = () => {
   return fetch(`${URL_MY_API}/users/me`, {
-    method: 'get',
+    method: 'GET',
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',

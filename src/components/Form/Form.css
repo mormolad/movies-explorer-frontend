@@ -5,6 +5,44 @@
   width: 100%;
 }
 
+.form__field_profile {
+  display: flex;
+  justify-content: space-between;
+  color: #fff;
+  margin: 0;
+  padding: 5px 0 10px 0;
+  width: 100%;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 17px;
+  background-color: #202020;
+  border: none;
+  border-bottom: 1px solid #424242;
+  outline: none;
+}
+
+.form__field_profile:focus-within {
+  border: none;
+  border-bottom: 1px solid #3456f3;
+}
+
+.form__field_email {
+  border: none;
+}
+
+.form__input_profile {
+  color: #ffffff;
+  background-color: #202020;
+  border: none;
+  text-align: end;
+}
+
+.form__input_profile:focus {
+  outline: none;
+  border: none;
+}
+
 .form__conteiner-button {
   text-align: center;
   margin: auto auto 0 auto;

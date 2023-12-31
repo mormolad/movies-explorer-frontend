@@ -27,6 +27,7 @@ function App() {
   const [bedInternet, setBedInternet] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const isSize = useResize();
+  const [isLoadingInfoUser, setIsLoadingInfoUser] = useState(false);
   const [parametrsForView, setParametrsForView] = useState(
     DEVICE_PARAMS.desktop
   );
@@ -69,13 +70,18 @@ function App() {
         console.log(err);
       });
   }
-
+  //редактировать профиль
   function handleSubmitEditProfile({ name, email }) {
+    setIsLoadingInfoUser(true);
     return editProfile(name, email)
       .then((res) => {
-        localStorage.setItem('user', res.message);
+        localStorage.setItem('user', JSON.stringify({ name, email }));
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        setRequestError(err);
+        console.log(err);
+      })
+      .finally(() => setIsLoadingInfoUser(false));
   }
 
   useEffect(() => {
@@ -91,7 +97,7 @@ function App() {
       });
     }
   }, [loggedIn]);
-
+  //наполнение localStorage с обоих API
   function getData() {
     setIsLoading(true);
     getCards()
@@ -210,6 +216,7 @@ function App() {
                 requestError={requestError}
                 setRequestError={setRequestError}
                 isLoading={isLoading}
+                isLoadingInfoUser={isLoadingInfoUser}
               />
             }
           />
