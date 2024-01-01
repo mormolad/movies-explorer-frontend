@@ -27,6 +27,7 @@ function App() {
   const [bedInternet, setBedInternet] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const isSize = useResize();
+
   const [isLoadingInfoUser, setIsLoadingInfoUser] = useState(false);
   const [parametrsForView, setParametrsForView] = useState(
     DEVICE_PARAMS.desktop
@@ -75,6 +76,7 @@ function App() {
     setIsLoadingInfoUser(true);
     return editProfile(name, email)
       .then((res) => {
+        console.log(res.message);
         localStorage.setItem('user', JSON.stringify({ name, email }));
       })
       .catch((err) => {
@@ -97,23 +99,32 @@ function App() {
       });
     }
   }, [loggedIn]);
+
   //наполнение localStorage с обоих API
   function getData() {
     setIsLoading(true);
-    getCards()
+    Promise.all([getCards(), getCards()])
       .then((res) => {
-        setBedInternet(false);
-        setIsLoading(false);
-        localStorage.setItem('cards', JSON.stringify(res));
-        localStorage.setItem(
-          'cardsShortFilms',
-          JSON.stringify(res.filter((film) => film.duration <= 40))
-        );
+        console.log(res);
+        // setBedInternet(false);
+        // localStorage.setItem('cards', JSON.stringify(res));
+        // localStorage.setItem(
+        //   'cardsShortFilms',
+        //   JSON.stringify(res.filter((film) => film.duration <= 40))
+        // );
+
+        // localStorage.setItem('cards', JSON.stringify(res));
+        // localStorage.setItem(
+        //   'cardsShortFilms',
+        //   JSON.stringify(res.filter((film) => film.duration <= 40))
+        // );
+        // setBedInternet(false);
       })
       .catch((err) => {
         console.log(err);
         setBedInternet(true); //написать ошибку нет соединения с сервером фильмов
       });
+
     getSavedMovies()
       .then((res) => {
         if (res.length === 0) {
