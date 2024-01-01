@@ -36,7 +36,6 @@ export const deleteMovies = (id) => {
 };
 
 export const editProfile = (name, email) => {
-  console.log(name, email);
   return fetch(`${URL_MY_API}/users/me`, {
     method: 'PATCH',
     headers: {
@@ -46,9 +45,7 @@ export const editProfile = (name, email) => {
     },
     body: JSON.stringify({ name, email }),
   })
-    .then((res) => {
-      checkResponse(res);
-    })
+    .then((res) => res)
     .catch((err) => console.log(err));
 };
 
@@ -60,5 +57,7 @@ export const getUserInfo = () => {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${localStorage.getItem('jwt')}`,
     },
-  }).then((res) => checkResponse(res));
+  }).then((res) => {
+    return checkResponse(res);
+  });
 };

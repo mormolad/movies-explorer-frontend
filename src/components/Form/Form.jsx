@@ -13,6 +13,7 @@ function Form({
   fields.forEach((item) => (valuesForm[item.name] = item.valueInput));
 
   function handleSubmit(e) {
+    console.log(valuesForm);
     e.preventDefault();
     onSubmit(valuesForm);
   }
@@ -22,13 +23,13 @@ function Form({
       <form className="form" onSubmit={handleSubmit}>
         {fields.map((item) => (
           <label
-            className={true ? 'form__field_profile' : 'form__field'} //!!!!!!!!!!!!!!
+            className={modifierCSS ? 'form__field_profile' : 'form__field'} //!!!!!!!!!!!!!!
             key={item.name}
           >
             {item.title}
             <input
               name={item.name}
-              className={true ? 'form__input_profile' : 'form__input'}
+              className={modifierCSS ? 'form__input_profile' : 'form__input'}
               id={item.id}
               type={item.type}
               onChange={item.onChange}

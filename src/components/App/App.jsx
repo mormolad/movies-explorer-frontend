@@ -33,6 +33,10 @@ function App() {
     DEVICE_PARAMS.desktop
   );
   const [bedInternetMy, setBedInternetMy] = useState(false);
+
+  const [isEdit, setIsEdit] = useState(false);
+  const [formValid, setFormValid] = React.useState(false);
+
   //проверка токена
   function chekToken(jwt) {
     chekTokenUser(jwt)
@@ -56,7 +60,10 @@ function App() {
         navigate('/movies', { replace: true });
       })
       .catch((err) => {
-        setRequestError(err);
+        err === 'Error: 401'
+          ? setRequestError('Вы ввели неправильный логин или пароль.')
+          : setRequestError('При авторизации произошла ошибка');
+
         console.log(err);
       });
   }
@@ -67,7 +74,9 @@ function App() {
         handleSubmitLogin({ email, password });
       })
       .catch((err) => {
-        setRequestError(err);
+        err === 'Error: 409'
+          ? setRequestError('Пользователь с таким email уже существует.')
+          : setRequestError('При регистрации пользователя произошла ошибка.');
         console.log(err);
       });
   }
@@ -76,11 +85,19 @@ function App() {
     setIsLoadingInfoUser(true);
     return editProfile(name, email)
       .then((res) => {
-        console.log(res.message);
-        localStorage.setItem('user', JSON.stringify({ name, email }));
+        console.log(res.status);
+        if (res.status === 200) {
+          setIsEdit(false);
+          setRequestError('');
+          localStorage.setItem('user', JSON.stringify({ name, email }));
+        } else {
+          setFormValid(false);
+          res.status === 409
+            ? setRequestError('Пользователь с таким email уже существует.')
+            : setRequestError('При обновлении профиля произошла ошибка.');
+        }
       })
       .catch((err) => {
-        setRequestError(err);
         console.log(err);
       })
       .finally(() => setIsLoadingInfoUser(false));
@@ -92,61 +109,49 @@ function App() {
     }
   }, []);
 
-  useEffect(() => {
-    if (loggedIn) {
-      getUserInfo().then((res) => {
-        localStorage.setItem('user', JSON.stringify(res.message));
-      });
-    }
-  }, [loggedIn]);
-
   //наполнение localStorage с обоих API
   function getData() {
     setIsLoading(true);
-    Promise.all([getCards(), getCards()])
+    Promise.all([getCards(), getSavedMovies()])
       .then((res) => {
-        console.log(res);
-        // setBedInternet(false);
-        // localStorage.setItem('cards', JSON.stringify(res));
-        // localStorage.setItem(
-        //   'cardsShortFilms',
-        //   JSON.stringify(res.filter((film) => film.duration <= 40))
-        // );
-
-        // localStorage.setItem('cards', JSON.stringify(res));
-        // localStorage.setItem(
-        //   'cardsShortFilms',
-        //   JSON.stringify(res.filter((film) => film.duration <= 40))
-        // );
-        // setBedInternet(false);
-      })
-      .catch((err) => {
-        console.log(err);
-        setBedInternet(true); //написать ошибку нет соединения с сервером фильмов
-      });
-
-    getSavedMovies()
-      .then((res) => {
-        if (res.length === 0) {
+        setBedInternet(false);
+        localStorage.setItem('cards', JSON.stringify(res[0]));
+        localStorage.setItem(
+          'cardsShortFilms',
+          JSON.stringify(res.filter((film) => film.duration <= 40))
+        );
+        setBedInternetMy(false);
+        if (res[1].length === 0) {
           return;
         }
-        if (res.message.length > 0) {
-          localStorage.setItem('saveMovies', JSON.stringify(res.message));
+        if (res[1].message.length > 0) {
+          localStorage.setItem('saveMovies', JSON.stringify(res[1].message));
           localStorage.setItem(
             'saveMovieShort',
-            JSON.stringify(res.message.filter((film) => film.duration <= 40))
+            JSON.stringify(res[1].message.filter((film) => film.duration <= 40))
           );
         }
       })
       .catch((err) => {
         console.log(err);
+        setBedInternet(true); //написать ошибку нет соединения с сервером фильмов
         setBedInternetMy(true);
-      });
+      })
+      .finally(() => setIsLoading(false));
   }
+
+  const logout = () => {
+    localStorage.clear();
+    setLoggedIn(false);
+    navigate('/', { replace: true });
+  };
 
   useEffect(() => {
     if (loggedIn) {
       getData();
+      getUserInfo().then((res) => {
+        localStorage.setItem('user', JSON.stringify(res.message));
+      });
     }
   }, [loggedIn]);
 
@@ -228,6 +233,11 @@ function App() {
                 setRequestError={setRequestError}
                 isLoading={isLoading}
                 isLoadingInfoUser={isLoadingInfoUser}
+                isEdit={isEdit}
+                setIsEdit={setIsEdit}
+                formValid={formValid}
+                setFormValid={setFormValid}
+                handleExit={logout}
               />
             }
           />

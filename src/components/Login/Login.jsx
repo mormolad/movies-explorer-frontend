@@ -51,6 +51,11 @@ function Login({ onSubmit, isLoggedIn, requestError, setRequestError }) {
       ? setPasswordError('короткий пароль')
       : setPasswordError('');
   }
+
+  useEffect(() => {
+    setRequestError('');
+  }, []);
+
   return isLoggedIn ? (
     navigate('/movies', { replace: true })
   ) : (
@@ -64,7 +69,7 @@ function Login({ onSubmit, isLoggedIn, requestError, setRequestError }) {
           {
             title: 'E-mail',
             type: 'email',
-            name: 'login',
+            name: 'email',
             id: 'signin-field-login',
             onChange: handleChangeEmail,
             valueInput: email,
@@ -75,7 +80,7 @@ function Login({ onSubmit, isLoggedIn, requestError, setRequestError }) {
           {
             title: 'Пароль',
             type: 'password',
-            name: 'pass',
+            name: 'password',
             id: 'signin-field-pass',
             onChange: handleChangePassword,
             valueInput: password,
