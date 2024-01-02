@@ -28,7 +28,7 @@ function SaveMovies({ isLoggedIn, parametrsForView, bedInternet, isLoading }) {
     );
     localStorage.setItem('searchWordSaveMovies', JSON.stringify(searchWord));
     setOnReqSearch(true);
-    if (foundMovies.length === 0) setIsNotFound(true);
+    if (foundMovies.length === 0 || foundMovies === null) setIsNotFound(true);
   }
 
   // инициализация страницы

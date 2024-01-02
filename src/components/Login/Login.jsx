@@ -25,17 +25,10 @@ function Login({ onSubmit, isLoggedIn, requestError, setRequestError }) {
     emailError || passwordError ? setFormValid(false) : setFormValid(true);
   }, [emailError, passwordError]);
 
-  //проверка что поле email не было в фокусе
-  const blurHandlerEmail = (e) => {
-    setEmailDitry(true);
-  };
-  //проверка что поле password не было в фокусе
-  const blurHandlerPassword = (e) => {
-    setPasswordDitry(true);
-  };
   //обработка поля email
   function handleChangeEmail(e) {
     setEmail(e.target.value);
+    setEmailDitry(true);
     !e.target.value
       ? setEmailError('поле не может быть пустым')
       : !EMAIL_REGEXP.test(String(e.target.value).toLowerCase())
@@ -44,6 +37,7 @@ function Login({ onSubmit, isLoggedIn, requestError, setRequestError }) {
   }
   // обработака поля pass
   function handleChangePassword(e) {
+    setPasswordDitry(true);
     setPassword(e.target.value);
     !e.target.value
       ? setPasswordError('поле не может быть пустым')
@@ -74,7 +68,6 @@ function Login({ onSubmit, isLoggedIn, requestError, setRequestError }) {
             onChange: handleChangeEmail,
             valueInput: email,
             inputDitry: emailDitry,
-            onBlur: blurHandlerEmail,
             inputError: emailError,
           },
           {
@@ -85,7 +78,6 @@ function Login({ onSubmit, isLoggedIn, requestError, setRequestError }) {
             onChange: handleChangePassword,
             valueInput: password,
             inputDitry: passwordDitry,
-            onBlur: blurHandlerPassword,
             inputError: passwordError,
           },
         ]}

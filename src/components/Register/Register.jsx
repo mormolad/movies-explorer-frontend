@@ -7,10 +7,13 @@ import { EMAIL_REGEXP, NAME_REGEXP } from '../../constants/regexp';
 
 function Register({ onSubmit, requestError, setRequestError }) {
   const link = '/signin';
-  //стайт переменный для страницы логин
+  //стайт переменный для страницы
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [name, setName] = React.useState('');
+  const [emailDitry, setEmailDitry] = React.useState(false);
+  const [passwordDitry, setPasswordDitry] = React.useState(false);
+  const [nameDitry, setNameDitry] = React.useState(false);
   const [emailError, setEmailError] = React.useState(
     'Поле не может быть пустым'
   );
@@ -29,6 +32,7 @@ function Register({ onSubmit, requestError, setRequestError }) {
 
   //обработка поля email
   function handleChangeEmail(e) {
+    setEmailDitry(true);
     setEmail(e.target.value);
     !e.target.value
       ? setEmailError('поле не может быть пустым')
@@ -38,6 +42,7 @@ function Register({ onSubmit, requestError, setRequestError }) {
   }
   // обработака поля pass
   function handleChangePassword(e) {
+    setPasswordDitry(true);
     setPassword(e.target.value);
     !e.target.value
       ? setPasswordError('поле не может быть пустым')
@@ -48,6 +53,7 @@ function Register({ onSubmit, requestError, setRequestError }) {
 
   // обработака поля name
   function handleChangeName(e) {
+    setNameDitry(true);
     setName(e.target.value);
     !e.target.value
       ? setNameError('поле не может быть пустым')
@@ -75,6 +81,7 @@ function Register({ onSubmit, requestError, setRequestError }) {
             onChange: handleChangeName,
             valueInput: name,
             inputError: nameError,
+            inputDitry: nameDitry,
           },
           {
             title: 'E-mail',
@@ -84,6 +91,7 @@ function Register({ onSubmit, requestError, setRequestError }) {
             onChange: handleChangeEmail,
             valueInput: email,
             inputError: emailError,
+            inputDitry: emailDitry,
           },
           {
             title: 'Пароль',
@@ -93,6 +101,7 @@ function Register({ onSubmit, requestError, setRequestError }) {
             onChange: handleChangePassword,
             valueInput: password,
             inputError: passwordError,
+            inputDitry: passwordDitry,
           },
         ]}
         buttonText={'Зарегистрироваться'}

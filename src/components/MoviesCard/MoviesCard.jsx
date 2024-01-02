@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router';
+import { Link } from 'react-router-dom';
 import './MoviesCard.css';
 import duration from '../../utils/durationMovie.js';
 import {
   saveMovie,
   getSavedMovies,
   deleteMovies,
-} from '../../utils/myAPIMovies.js';
+} from '../../utils/mainAPI.js';
 
 function MoviesCard({ card, /* key,*/ setCards, setIsNotFound }) {
+  console.log(card);
   const location = useLocation();
   const [isLike, setIsLike] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -101,11 +103,13 @@ function MoviesCard({ card, /* key,*/ setCards, setIsNotFound }) {
         <h2 className="card__title">{card.nameRU}</h2>
         <span className="card__time">{duration(card.duration)}</span>
       </div>
-      <img
-        className="card__image"
-        alt={card.nameRU}
-        src={`https://api.nomoreparties.co/${card.image.url}`}
-      />
+      <Link to={card.trailerLink}>
+        <img
+          className="card__image"
+          alt={card.nameRU}
+          src={`https://api.nomoreparties.co/${card.image.url}`}
+        />
+      </Link>
       {
         <button
           className={

@@ -16,6 +16,7 @@ function Profile({
   requestError,
   isLoadingInfoUser,
   handleExit,
+  isGoodRes,
 }) {
   const [name, setName] = React.useState(
     JSON.parse(localStorage.getItem('user')).name
@@ -116,12 +117,18 @@ function Profile({
           />
         ) : (
           <>
-            <InfoUser
-              name={name}
-              email={email}
-              buttonText="Редактировать"
-              onSubmit={setIsEdit}
-            />
+            {isGoodRes ? (
+              <p className="profile__good-res">
+                Сохранение данных прошло успешно
+              </p>
+            ) : (
+              <InfoUser
+                name={name}
+                email={email}
+                buttonText="Редактировать"
+                onSubmit={setIsEdit}
+              />
+            )}
             <button className="profile__logout" onClick={handleExit}>
               Выйти из аккаунта
             </button>

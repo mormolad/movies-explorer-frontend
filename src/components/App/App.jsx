@@ -14,10 +14,11 @@ import {
   getSavedMovies,
   editProfile,
   getUserInfo,
-} from '../../utils/myAPIMovies.js';
+} from '../../utils/mainAPI.js';
 import getCards from '../../utils/MoviesApi';
 import { useResize } from '../../hooks/useResize.js';
 import { DEVICE_PARAMS } from '../../constants/constForApi.js';
+import { DURATION_SHORT_MOVIE } from '../../constants/config.js';
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -27,7 +28,7 @@ function App() {
   const [bedInternet, setBedInternet] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const isSize = useResize();
-
+  const [isGoodRes, setIsGoodRes] = useState(false);
   const [isLoadingInfoUser, setIsLoadingInfoUser] = useState(false);
   const [parametrsForView, setParametrsForView] = useState(
     DEVICE_PARAMS.desktop
@@ -39,6 +40,7 @@ function App() {
 
   //проверка токена
   function chekToken(jwt) {
+    setIsLoading(true);
     chekTokenUser(jwt)
       .then((res) => {
         setLoggedIn(true);
@@ -48,7 +50,8 @@ function App() {
         console.log('ошибка проверки токена', err);
         setLoggedIn(false);
         setIsChekToken(true);
-      });
+      })
+      .finally(() => setIsLoading(false));
   }
 
   //обработчик кнопки логин
@@ -85,9 +88,10 @@ function App() {
     setIsLoadingInfoUser(true);
     return editProfile(name, email)
       .then((res) => {
-        console.log(res.status);
         if (res.status === 200) {
+          console.log(isGoodRes);
           setIsEdit(false);
+          setIsGoodRes(true);
           setRequestError('');
           localStorage.setItem('user', JSON.stringify({ name, email }));
         } else {
@@ -100,12 +104,21 @@ function App() {
       .catch((err) => {
         console.log(err);
       })
-      .finally(() => setIsLoadingInfoUser(false));
+      .finally(() => {
+        setTimeout(setGoodRes, 1500);
+        setIsLoadingInfoUser(false);
+      });
+  }
+
+  function setGoodRes() {
+    setIsGoodRes(false);
   }
 
   useEffect(() => {
     if (localStorage.getItem('jwt')) {
       chekToken(localStorage.jwt);
+    } else {
+      setIsLoading(false);
     }
   }, []);
 
@@ -118,7 +131,9 @@ function App() {
         localStorage.setItem('cards', JSON.stringify(res[0]));
         localStorage.setItem(
           'cardsShortFilms',
-          JSON.stringify(res.filter((film) => film.duration <= 40))
+          JSON.stringify(
+            res.filter((film) => film.duration <= DURATION_SHORT_MOVIE)
+          )
         );
         setBedInternetMy(false);
         if (res[1].length === 0) {
@@ -128,7 +143,11 @@ function App() {
           localStorage.setItem('saveMovies', JSON.stringify(res[1].message));
           localStorage.setItem(
             'saveMovieShort',
-            JSON.stringify(res[1].message.filter((film) => film.duration <= 40))
+            JSON.stringify(
+              res[1].message.filter(
+                (film) => film.duration <= DURATION_SHORT_MOVIE
+              )
+            )
           );
         }
       })
@@ -238,6 +257,7 @@ function App() {
                 formValid={formValid}
                 setFormValid={setFormValid}
                 handleExit={logout}
+                isGoodRes={isGoodRes}
               />
             }
           />
