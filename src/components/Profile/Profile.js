@@ -6,8 +6,9 @@ import './Profile.css';
 import InfoUser from '../InfoUser/InfoUser.jsx';
 import Preloader from '../Preloader/Preloader.jsx';
 
+import { CurrentUserContext } from '../../contexts/CurrentUserContext';
+
 function Profile({
-  logout,
   formValid,
   setFormValid,
   isEdit,
@@ -18,14 +19,16 @@ function Profile({
   handleExit,
   isGoodRes,
 }) {
-  const [name, setName] = React.useState(
-    JSON.parse(localStorage.getItem('user')).name
-  );
+  const currentUser = React.useContext(CurrentUserContext);
+
+  const [name, setName] = React.useState(() => {
+    console.log(currentUser.name);
+    return currentUser.name;
+  });
+  console.log(currentUser);
   const [nameDitry, setNameDitry] = React.useState(false);
   const [nameError, setNameError] = React.useState('');
-  const [email, setEmail] = React.useState(
-    JSON.parse(localStorage.getItem('user')).email
-  );
+  const [email, setEmail] = React.useState(currentUser.email);
   const [emailDitry, setEmailDitry] = React.useState(false);
   const [emailError, setEmailError] = React.useState('');
 
@@ -39,7 +42,7 @@ function Profile({
   }, [emailError, nameError, nameNotChanged, emailNotChanged]);
 
   function handleChangeName(e) {
-    if (e.target.value === JSON.parse(localStorage.getItem('user')).name) {
+    if (e.target.value === currentUser.name) {
       setNameNotChanged(true);
     } else {
       setNameNotChanged(false);
@@ -51,7 +54,7 @@ function Profile({
   }
 
   function handleChangeEmail(e) {
-    if (e.target.value === JSON.parse(localStorage.getItem('user')).email) {
+    if (e.target.value === currentUser.email) {
       setEmailNotChanged(true);
     } else {
       setEmailNotChanged(false);
@@ -71,16 +74,15 @@ function Profile({
   };
 
   const handleSubmit = (valuesForm) => {
+    console.log(valuesForm);
     onSubmit(valuesForm);
   };
 
   return (
     <>
-      <Header theme="black" isLoggedIn={true} />
+      <Header theme="black" isLoggedIn={true} />{' '}
       <section className="profile">
-        <h3 className="profile__title">
-          Привет, {JSON.parse(localStorage.getItem('user')).name}!
-        </h3>
+        <h3 className="profile__title"> Привет, {currentUser.name}! </h3>{' '}
         {isLoadingInfoUser ? (
           <Preloader />
         ) : isEdit ? (
@@ -117,9 +119,10 @@ function Profile({
           />
         ) : (
           <>
+            {' '}
             {isGoodRes ? (
               <p className="profile__good-res">
-                Сохранение данных прошло успешно
+                Сохранение данных прошло успешно{' '}
               </p>
             ) : (
               <InfoUser
@@ -128,13 +131,13 @@ function Profile({
                 buttonText="Редактировать"
                 onSubmit={setIsEdit}
               />
-            )}
+            )}{' '}
             <button className="profile__logout" onClick={handleExit}>
-              Выйти из аккаунта
-            </button>
+              Выйти из аккаунта{' '}
+            </button>{' '}
           </>
-        )}
-      </section>
+        )}{' '}
+      </section>{' '}
     </>
   );
 }

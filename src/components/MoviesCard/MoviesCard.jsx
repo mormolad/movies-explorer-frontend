@@ -3,20 +3,16 @@ import { useLocation } from 'react-router';
 import { Link } from 'react-router-dom';
 import './MoviesCard.css';
 import duration from '../../utils/durationMovie.js';
-import {
-  saveMovie,
-  getSavedMovies,
-  deleteMovies,
-} from '../../utils/mainAPI.js';
+import { saveMovie, deleteMovies } from '../../utils/mainAPI.js';
 
-function MoviesCard({ card, /* key,*/ setCards, setIsNotFound }) {
-  console.log(card);
+function MoviesCard({ card, setCards, setIsNotFound }) {
   const location = useLocation();
   const [isLike, setIsLike] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  // console.log(card);
   const setLike = (bool) => {
     if (bool) {
-      const respons = {
+      let respons = {
         country: card.country,
         director: card.director,
         duration: card.duration,
@@ -33,8 +29,9 @@ function MoviesCard({ card, /* key,*/ setCards, setIsNotFound }) {
       };
       saveMovie(respons)
         .then((res) => {
+          respons = { ...respons, _id: res.message._id };
+          setLikeLocalStorage(respons);
           setIsLike(true);
-          getMoviesMyAPI();
         })
         .catch((err) => {
           console.log(err);
@@ -46,20 +43,38 @@ function MoviesCard({ card, /* key,*/ setCards, setIsNotFound }) {
       const filteredCard = JSON.parse(
         localStorage.getItem('saveMovies')
       ).filter((movie) => movie.movieId === card.id);
-      deleteMovies(filteredCard[0]._id).then((res) => {
-        getMoviesMyAPI();
-        setIsLike(false);
-      });
+      deleteMovies(filteredCard[0]._id)
+        .then((res) => {
+          delLikeLocalStorage(filteredCard[0]._id);
+          setIsLike(false);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
   };
 
-  function getMoviesMyAPI() {
-    getSavedMovies()
-      .then((res) => {
-        localStorage.setItem('saveMovies', JSON.stringify(res.message));
-      })
-      .catch((err) => console.log(err))
-      .finally(() => setIsLoading(false));
+  function setLikeLocalStorage(card) {
+    let saveMovieLocalStorage = JSON.parse(localStorage.getItem('saveMovies'));
+    if (saveMovieLocalStorage === null || saveMovieLocalStorage === undefined) {
+      saveMovieLocalStorage = [card];
+      localStorage.setItem('saveMovies', JSON.stringify(saveMovieLocalStorage));
+    } else {
+      saveMovieLocalStorage[saveMovieLocalStorage.length] = card;
+      localStorage.setItem('saveMovies', JSON.stringify(saveMovieLocalStorage));
+    }
+  }
+
+  function delLikeLocalStorage(id) {
+    console.log(
+      JSON.parse(localStorage.getItem('saveMovies')).filter(
+        (movie) => movie._id !== id
+      )
+    );
+    let saveMovieLocalStorage = JSON.parse(
+      localStorage.getItem('saveMovies')
+    ).filter((movie) => movie._id !== id);
+    localStorage.setItem('saveMovies', JSON.stringify(saveMovieLocalStorage));
   }
 
   useEffect(() => {

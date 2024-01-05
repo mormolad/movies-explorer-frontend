@@ -4,7 +4,7 @@ import FilterCheckbox from '../FilterCheckbox/FilterCheckbox.jsx';
 import ErrorSearch from '../ErrorSearch/ErrorSearch';
 
 function SearchForm({ onSearch, setIsShortFilms, searchWord }) {
-  const [value, setValue] = React.useState();
+  const [value, setValue] = React.useState(searchWord);
   const [inputError, setInputError] = React.useState(false);
 
   //обработка поля поискового запроса

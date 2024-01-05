@@ -15,12 +15,16 @@ import {
   editProfile,
   getUserInfo,
 } from '../../utils/mainAPI.js';
-import getCards from '../../utils/MoviesApi';
+import getCards from '../../utils/moviesApi';
 import { useResize } from '../../hooks/useResize.js';
 import { DEVICE_PARAMS } from '../../constants/constForApi.js';
 import { DURATION_SHORT_MOVIE } from '../../constants/config.js';
+import { CurrentUserContext } from '../../contexts/CurrentUserContext';
+import { useLocation } from 'react-router';
 
 function App() {
+  const location = useLocation();
+  console.log(location);
   const [loggedIn, setLoggedIn] = useState(false);
   const navigate = useNavigate();
   const [requestError, setRequestError] = useState('');
@@ -33,10 +37,26 @@ function App() {
   const [parametrsForView, setParametrsForView] = useState(
     DEVICE_PARAMS.desktop
   );
+  const [cards, setCards] = useState([]);
   const [bedInternetMy, setBedInternetMy] = useState(false);
-
+  const [endCollection, setEndCollection] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [formValid, setFormValid] = React.useState(false);
+  const [additionalMovies, setAdditionalMovies] = useState(0);
+  const [isFirstSearch, setIsFirstSearch] = useState(true);
+  const [isNotFound, setIsNotFound] = useState(false);
+  const [isShortFilms, setIsShortFilms] = useState(
+    JSON.parse(localStorage.getItem('shortFilmStatusSwitch'))
+  );
+  const [isShortSaveFilms, setIsShortSaveFilms] = useState(
+    JSON.parse(localStorage.getItem('shortFilmStatusSwitch'))
+  );
+  const [currentUser, setCurrentUser] = React.useState(
+    localStorage.getItem('user') === null ||
+      localStorage.getItem('user') === undefined
+      ? {}
+      : JSON.parse(localStorage.getItem('user'))
+  );
 
   //проверка токена
   function chekToken(jwt) {
@@ -89,13 +109,11 @@ function App() {
     return editProfile(name, email)
       .then((res) => {
         if (res.status === 200) {
-          console.log(isGoodRes);
           setIsEdit(false);
           setIsGoodRes(true);
           setRequestError('');
-          localStorage.setItem('user', JSON.stringify({ name, email }));
+          setCurrentUser({ name, email });
         } else {
-          setFormValid(false);
           res.status === 409
             ? setRequestError('Пользователь с таким email уже существует.')
             : setRequestError('При обновлении профиля произошла ошибка.');
@@ -107,6 +125,7 @@ function App() {
       .finally(() => {
         setTimeout(setGoodRes, 1500);
         setIsLoadingInfoUser(false);
+        setFormValid(false);
       });
   }
 
@@ -158,6 +177,97 @@ function App() {
       })
       .finally(() => setIsLoading(false));
   }
+  //определить стoит ли лайк
+  function setLike(card) {
+    if (
+      localStorage.getItem('saveMovies') === null ||
+      localStorage.getItem('saveMovies') === 'undefined'
+    ) {
+      return false;
+    } else if (JSON.parse(localStorage.getItem('saveMovies')).length === 0) {
+      return false;
+    } else {
+      const like = JSON.parse(localStorage.getItem('saveMovies')).filter(
+        (movie) => card.nameRU === movie.nameRU
+      );
+      return like.length > 0;
+    }
+  }
+
+  const handleMore = () => {
+    setAdditionalMovies(additionalMovies + parametrsForView.cards.more);
+  };
+
+  function handlerSearchRequest(searchWord) {
+    setAdditionalMovies(0);
+    if (isFirstSearch) {
+      getData();
+      handlerSearch(searchWord);
+    } else {
+      handlerSearch(searchWord);
+    }
+  }
+
+  function handlerSearch(searchWord) {
+    setIsNotFound(false);
+    localStorage.getItem('cards');
+    const foundMovies = JSON.parse(localStorage.getItem('cards')).filter(
+      (movie) =>
+        movie.nameRU.toLowerCase().includes(searchWord.toLowerCase()) ||
+        movie.nameEN.toLowerCase().includes(searchWord.toLowerCase())
+    );
+    localStorage.setItem('foundMovies', JSON.stringify(foundMovies));
+    localStorage.setItem('searchWord', JSON.stringify(searchWord));
+    console.log(foundMovies);
+    if (foundMovies.length === 0) {
+      setIsNotFound(true);
+    } else if (
+      JSON.parse(localStorage.getItem('foundMovies')).filter(
+        (film) => film.duration <= DURATION_SHORT_MOVIE
+      ) === undefined
+    ) {
+      setIsNotFound(true);
+    } else if (
+      location.pathname === '/saved-movies' ? isShortSaveFilms : isShortFilms
+    ) {
+      makeCollectionCards(
+        JSON.parse(localStorage.getItem('foundMovies')).filter(
+          (film) => film.duration <= DURATION_SHORT_MOVIE
+        ),
+        parametrsForView
+      );
+    } else {
+      makeCollectionCards(
+        JSON.parse(
+          localStorage.getItem('foundMovies', JSON.stringify(foundMovies))
+        ),
+        parametrsForView
+      );
+    }
+  }
+  //сделать коллекцию кард для рендера
+  function makeCollectionCards(cardsForCollection, paramsCollection) {
+    if (cardsForCollection === null) {
+      return;
+    }
+    const arrCards = [];
+    setEndCollection(false);
+    for (let i = 0; i < paramsCollection.cards.total + additionalMovies; i++) {
+      if (!cardsForCollection[i]) {
+        setEndCollection(true);
+        break;
+      }
+      if (
+        paramsCollection.cards.total + additionalMovies ===
+        cardsForCollection.length
+      ) {
+        setEndCollection(true);
+      }
+      cardsForCollection[i].like = setLike(cardsForCollection[i]);
+      arrCards[i] = cardsForCollection[i];
+    }
+    setCards(arrCards);
+  }
 
   const logout = () => {
     localStorage.clear();
@@ -167,9 +277,9 @@ function App() {
 
   useEffect(() => {
     if (loggedIn) {
-      getData();
       getUserInfo().then((res) => {
         localStorage.setItem('user', JSON.stringify(res.message));
+        setCurrentUser(res.message);
       });
     }
   }, [loggedIn]);
@@ -187,82 +297,107 @@ function App() {
   return (
     <div className="page">
       <div className="page__content">
-        <Routes>
-          <Route path="/" element={<UserPage isLoggedIn={loggedIn} />} />
-          <Route
-            path="/signin"
-            element={
-              <Login
-                isLoggedIn={loggedIn}
-                onSubmit={handleSubmitLogin}
-                requestError={requestError}
-                setRequestError={setRequestError}
-              />
-            }
-          />
-          <Route
-            path="/signup"
-            element={
-              <Register
-                isLoggedIn={loggedIn}
-                onSubmit={handleSubmitRegister}
-                requestError={requestError}
-                setRequestError={setRequestError}
-              />
-            }
-          />
-          <Route
-            path="/movies"
-            element={
-              <ProtectedRoute
-                element={Movies}
-                isLoggedIn={loggedIn}
-                parametrsForView={parametrsForView}
-                path="/movies"
-                isChekToken={isChekToken}
-                bedInternet={bedInternet}
-                isLoading={isLoading}
-              />
-            }
-          />
-          <Route
-            path="/saved-movies"
-            element={
-              <ProtectedRoute
-                element={SaveMovies}
-                isLoggedIn={loggedIn}
-                parametrsForView={parametrsForView}
-                path="/saved-movies"
-                isChekToken={isChekToken}
-                bedInternet={bedInternetMy}
-                isLoading={isLoading}
-              />
-            }
-          />
-          <Route
-            path="/profile"
-            element={
-              <ProtectedRoute
-                element={Profile}
-                isLoggedIn={loggedIn}
-                setLoggedIn={setLoggedIn}
-                path="/profile"
-                onSubmit={handleSubmitEditProfile}
-                requestError={requestError}
-                setRequestError={setRequestError}
-                isLoading={isLoading}
-                isLoadingInfoUser={isLoadingInfoUser}
-                isEdit={isEdit}
-                setIsEdit={setIsEdit}
-                formValid={formValid}
-                setFormValid={setFormValid}
-                handleExit={logout}
-                isGoodRes={isGoodRes}
-              />
-            }
-          />
-          <Route path="/*" element={<NotFound />} />
-        </Routes>
+        <CurrentUserContext.Provider value={currentUser}>
+          <Routes>
+            <Route path="/" element={<UserPage isLoggedIn={loggedIn} />} />
+            <Route
+              path="/signin"
+              element={
+                <Login
+                  isLoggedIn={loggedIn}
+                  onSubmit={handleSubmitLogin}
+                  requestError={requestError}
+                  setRequestError={setRequestError}
+                />
+              }
+            />
+            <Route
+              path="/signup"
+              element={
+                <Register
+                  isLoggedIn={loggedIn}
+                  onSubmit={handleSubmitRegister}
+                  requestError={requestError}
+                  setRequestError={setRequestError}
+                />
+              }
+            />
+            <Route
+              path="/movies"
+              element={
+                <ProtectedRoute
+                  element={Movies}
+                  isLoggedIn={loggedIn}
+                  parametrsForView={parametrsForView}
+                  path="/movies"
+                  isChekToken={isChekToken}
+                  bedInternet={bedInternet}
+                  isLoading={isLoading}
+                  getData={getData}
+                  makeCollectionCards={makeCollectionCards}
+                  cards={cards}
+                  handleMore={handleMore}
+                  setIsNotFound={setIsNotFound}
+                  handlerSearchRequest={handlerSearchRequest}
+                  isFirstSearch={isFirstSearch}
+                  setIsFirstSearch={setIsFirstSearch}
+                  isShortFilms={isShortFilms}
+                  setIsShortFilms={setIsShortFilms}
+                  endCollection={endCollection}
+                  isNotFound={isNotFound}
+                  additionalMovies={additionalMovies}
+                  isSize={isSize}
+                />
+              }
+            />
+            <Route
+              path="/saved-movies"
+              element={
+                <ProtectedRoute
+                  element={SaveMovies}
+                  isLoggedIn={loggedIn}
+                  parametrsForView={parametrsForView}
+                  path="/saved-movies"
+                  isChekToken={isChekToken}
+                  bedInternet={bedInternetMy}
+                  isLoading={isLoading}
+                  makeCollectionCards={makeCollectionCards}
+                  cards={cards}
+                  isSize={isSize}
+                  setIsShortFilms={setIsShortFilms}
+                  isShortFilms={isShortFilms}
+                  handlerSearchRequest={handlerSearchRequest}
+                  endCollection={endCollection}
+                  isNotFound={isNotFound}
+                  setCards={setCards}
+                />
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute
+                  element={Profile}
+                  isLoggedIn={loggedIn}
+                  setLoggedIn={setLoggedIn}
+                  path="/profile"
+                  onSubmit={handleSubmitEditProfile}
+                  requestError={requestError}
+                  setRequestError={setRequestError}
+                  isLoading={isLoading}
+                  isLoadingInfoUser={isLoadingInfoUser}
+                  isEdit={isEdit}
+                  setIsEdit={setIsEdit}
+                  formValid={formValid}
+                  setFormValid={setFormValid}
+                  handleExit={logout}
+                  isGoodRes={isGoodRes}
+                />
+              }
+            />
+            <Route path="/*" element={<NotFound />} />
+          </Routes>
+        </CurrentUserContext.Provider>
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 import checkResponse from './checkResponse.js';
-import { BASE_URL } from '../constants/constForApi';
+import { BASE_URL } from '../constants/constForApi.js';
 
 export default function getCards() {
   return fetch(BASE_URL, {
