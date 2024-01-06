@@ -22,10 +22,8 @@ function Profile({
   const currentUser = React.useContext(CurrentUserContext);
 
   const [name, setName] = React.useState(() => {
-    console.log(currentUser.name);
     return currentUser.name;
   });
-  console.log(currentUser);
   const [nameDitry, setNameDitry] = React.useState(false);
   const [nameError, setNameError] = React.useState('');
   const [email, setEmail] = React.useState(currentUser.email);

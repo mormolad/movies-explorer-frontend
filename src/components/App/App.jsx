@@ -24,7 +24,6 @@ import { useLocation } from 'react-router';
 
 function App() {
   const location = useLocation();
-  console.log(location);
   const [loggedIn, setLoggedIn] = useState(false);
   const navigate = useNavigate();
   const [requestError, setRequestError] = useState('');
@@ -44,12 +43,15 @@ function App() {
   const [formValid, setFormValid] = React.useState(false);
   const [additionalMovies, setAdditionalMovies] = useState(0);
   const [isFirstSearch, setIsFirstSearch] = useState(true);
+  const [isSearchSaveMovies, setIsSearchSaveMovies] = useState(false);
   const [isNotFound, setIsNotFound] = useState(false);
   const [isShortFilms, setIsShortFilms] = useState(
     JSON.parse(localStorage.getItem('shortFilmStatusSwitch'))
   );
   const [isShortSaveFilms, setIsShortSaveFilms] = useState(
-    JSON.parse(localStorage.getItem('shortFilmStatusSwitch'))
+    localStorage.getItem('shortSaveFilmStatusSwitch') === null
+      ? false
+      : JSON.parse(localStorage.getItem('shortSaveFilmStatusSwitch'))
   );
   const [currentUser, setCurrentUser] = React.useState(
     localStorage.getItem('user') === null ||
@@ -68,8 +70,8 @@ function App() {
       })
       .catch((err) => {
         console.log('ошибка проверки токена', err);
-        setLoggedIn(false);
         setIsChekToken(true);
+        logout();
       })
       .finally(() => setIsLoading(false));
   }
@@ -80,6 +82,7 @@ function App() {
       .then((data) => {
         localStorage.setItem('jwt', data.message);
         setLoggedIn(true);
+        getData();
         navigate('/movies', { replace: true });
       })
       .catch((err) => {
@@ -155,6 +158,7 @@ function App() {
           )
         );
         setBedInternetMy(false);
+        console.log(res[1]);
         if (res[1].length === 0) {
           return;
         }
@@ -201,46 +205,80 @@ function App() {
   function handlerSearchRequest(searchWord) {
     setAdditionalMovies(0);
     if (isFirstSearch) {
-      getData();
       handlerSearch(searchWord);
     } else {
       handlerSearch(searchWord);
     }
   }
 
+  function setCorrectImage(cardsCollection) {
+    const saveMovie = cardsCollection.map((item) => {
+      const link = item.image;
+      delete item.image;
+      item.image = { url: link.slice(29) };
+      return item;
+    });
+
+    return saveMovie;
+  }
+
   function handlerSearch(searchWord) {
+    console.log('search', searchWord, location.pathname);
+    if (location.pathname === '/saved-movies') {
+      setIsSearchSaveMovies(true);
+    } else {
+      setIsFirstSearch(false);
+    }
     setIsNotFound(false);
-    localStorage.getItem('cards');
-    const foundMovies = JSON.parse(localStorage.getItem('cards')).filter(
+    const foundMovies = JSON.parse(
+      localStorage.getItem(
+        location.pathname === '/movies' ? 'cards' : 'saveMovies'
+      )
+    ).filter(
       (movie) =>
         movie.nameRU.toLowerCase().includes(searchWord.toLowerCase()) ||
         movie.nameEN.toLowerCase().includes(searchWord.toLowerCase())
     );
-    localStorage.setItem('foundMovies', JSON.stringify(foundMovies));
-    localStorage.setItem('searchWord', JSON.stringify(searchWord));
-    console.log(foundMovies);
+    localStorage.setItem(
+      location.pathname === '/movies' ? 'foundMovies' : 'foundSaveMovies',
+      JSON.stringify(foundMovies)
+    );
+    localStorage.setItem(
+      location.pathname === '/movies' ? 'searchWord' : 'searchWordSaveMovies',
+      JSON.stringify(searchWord)
+    );
+
     if (foundMovies.length === 0) {
       setIsNotFound(true);
     } else if (
-      JSON.parse(localStorage.getItem('foundMovies')).filter(
-        (film) => film.duration <= DURATION_SHORT_MOVIE
-      ) === undefined
+      JSON.parse(
+        localStorage.getItem(
+          location.pathname === '/movies' ? 'foundMovies' : 'foundSaveMovies'
+        )
+      ).filter((film) => film.duration <= DURATION_SHORT_MOVIE) === undefined
     ) {
       setIsNotFound(true);
     } else if (
-      location.pathname === '/saved-movies' ? isShortSaveFilms : isShortFilms
+      location.pathname === '/movies' ? isShortFilms : isShortSaveFilms
     ) {
       makeCollectionCards(
-        JSON.parse(localStorage.getItem('foundMovies')).filter(
-          (film) => film.duration <= DURATION_SHORT_MOVIE
-        ),
+        location.pathname === '/movies'
+          ? JSON.parse(localStorage.getItem('foundMovies')).filter(
+              (film) => film.duration <= DURATION_SHORT_MOVIE
+            )
+          : setCorrectImage(
+              JSON.parse(localStorage.getItem('foundSaveMovies'))
+            ).filter((film) => film.duration <= DURATION_SHORT_MOVIE),
+
         parametrsForView
       );
     } else {
       makeCollectionCards(
-        JSON.parse(
-          localStorage.getItem('foundMovies', JSON.stringify(foundMovies))
-        ),
+        location.pathname === '/movies'
+          ? JSON.parse(localStorage.getItem('foundMovies'))
+          : setCorrectImage(
+              JSON.parse(localStorage.getItem('foundSaveMovies'))
+            ),
         parametrsForView
       );
     }
@@ -252,7 +290,14 @@ function App() {
     }
     const arrCards = [];
     setEndCollection(false);
-    for (let i = 0; i < paramsCollection.cards.total + additionalMovies; i++) {
+    for (
+      let i = 0;
+      i <
+      (location.pathname === '/movies'
+        ? paramsCollection.cards.total + additionalMovies
+        : cardsForCollection.length);
+      i++
+    ) {
       if (!cardsForCollection[i]) {
         setEndCollection(true);
         break;
@@ -364,12 +409,15 @@ function App() {
                   makeCollectionCards={makeCollectionCards}
                   cards={cards}
                   isSize={isSize}
-                  setIsShortFilms={setIsShortFilms}
-                  isShortFilms={isShortFilms}
+                  setIsShortSaveFilms={setIsShortSaveFilms}
+                  isShortSaveFilms={isShortSaveFilms}
                   handlerSearchRequest={handlerSearchRequest}
                   endCollection={endCollection}
                   isNotFound={isNotFound}
                   setCards={setCards}
+                  setCorrectImage={setCorrectImage}
+                  isSearchSaveMovies={isSearchSaveMovies}
+                  setIsSearchSaveMovies={setIsSearchSaveMovies}
                 />
               }
             />

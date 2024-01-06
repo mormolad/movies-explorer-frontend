@@ -24,23 +24,23 @@ function Movies({
   endCollection,
   isNotFound,
   additionalMovies,
-  isSize
+  isSize,
 }) {
-  
-
   useEffect(() => {
-    if (!isShortFilms) {
-      makeCollectionCards(
-        JSON.parse(localStorage.getItem('foundMovies')),
-        parametrsForView
-      );
-    } else if (isShortFilms) {
-      makeCollectionCards(
-        JSON.parse(localStorage.getItem('foundMovies')).filter(
-          (film) => film.duration <= DURATION_SHORT_MOVIE
-        ),
-        parametrsForView
-      );
+    if (localStorage.getItem('foundMovies') === null) {
+      setIsNotFound(true);
+    } else {
+      !isShortFilms
+        ? makeCollectionCards(
+            JSON.parse(localStorage.getItem('foundMovies')),
+            parametrsForView
+          )
+        : makeCollectionCards(
+            JSON.parse(localStorage.getItem('foundMovies')).filter(
+              (film) => film.duration <= DURATION_SHORT_MOVIE
+            ),
+            parametrsForView
+          );
     }
   }, [isShortFilms, isSize, additionalMovies]);
 

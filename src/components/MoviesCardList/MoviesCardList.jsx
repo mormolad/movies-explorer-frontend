@@ -8,6 +8,7 @@ function MoviesCardList({
   endCollection,
   setCards,
   setIsNotFound,
+  isSearchSaveMovies,
 }) {
   const onClick = (e) => {
     handleMore();
@@ -21,6 +22,7 @@ function MoviesCardList({
             key={card.id}
             setCards={setCards}
             setIsNotFound={setIsNotFound}
+            isSearchSaveMovies={isSearchSaveMovies}
           />
         ))}
       </ul>

@@ -5,11 +5,10 @@ import './MoviesCard.css';
 import duration from '../../utils/durationMovie.js';
 import { saveMovie, deleteMovies } from '../../utils/mainAPI.js';
 
-function MoviesCard({ card, setCards, setIsNotFound }) {
+function MoviesCard({ card, setCards, setIsNotFound, isSearchSaveMovies }) {
   const location = useLocation();
   const [isLike, setIsLike] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  // console.log(card);
   const setLike = (bool) => {
     if (bool) {
       let respons = {
@@ -45,6 +44,7 @@ function MoviesCard({ card, setCards, setIsNotFound }) {
       ).filter((movie) => movie.movieId === card.id);
       deleteMovies(filteredCard[0]._id)
         .then((res) => {
+          console.log('delet card yes');
           delLikeLocalStorage(filteredCard[0]._id);
           setIsLike(false);
         })
@@ -66,11 +66,6 @@ function MoviesCard({ card, setCards, setIsNotFound }) {
   }
 
   function delLikeLocalStorage(id) {
-    console.log(
-      JSON.parse(localStorage.getItem('saveMovies')).filter(
-        (movie) => movie._id !== id
-      )
-    );
     let saveMovieLocalStorage = JSON.parse(
       localStorage.getItem('saveMovies')
     ).filter((movie) => movie._id !== id);
@@ -82,6 +77,7 @@ function MoviesCard({ card, setCards, setIsNotFound }) {
   }, []);
 
   function handleLikeClick(e) {
+    console.log('handle like');
     setIsLoading(true);
     JSON.stringify(e.target.classList).indexOf('active') === -1
       ? setLike(true)
@@ -89,15 +85,19 @@ function MoviesCard({ card, setCards, setIsNotFound }) {
   }
 
   function handleDelClick(e) {
-    const filteredCard = JSON.parse(localStorage.getItem('saveMovies')).filter(
-      (movie) => movie.movieId === card.movieId
-    );
+    const filteredCard = JSON.parse(
+      localStorage.getItem(
+        !isSearchSaveMovies ? 'saveMovies' : 'foundSaveMovies'
+      )
+    ).filter((movie) => movie.movieId === card.movieId);
     deleteMovies(filteredCard[0]._id).then((res) => {
       const newCollectionCardInLocalStorage = JSON.parse(
-        localStorage.getItem('saveMovies')
+        localStorage.getItem(
+          !isSearchSaveMovies ? 'saveMovies' : 'foundSaveMovies'
+        )
       ).filter((movies) => !(movies.movieId === card.movieId));
       localStorage.setItem(
-        'saveMovies',
+        !isSearchSaveMovies ? 'saveMovies' : 'foundSaveMovies',
         JSON.stringify(newCollectionCardInLocalStorage)
       );
       const cardsForRender = newCollectionCardInLocalStorage.map((item) => {

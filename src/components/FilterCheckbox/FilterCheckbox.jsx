@@ -1,17 +1,26 @@
 import React, { useState } from 'react';
 import './FilterCheckbox.css';
+import { useLocation } from 'react-router';
 
 function FilterCheckbox({ setIsShortFilms }) {
+  const location = useLocation();
   const [durationCheckbox, setDurationCheckbox] = useState(
-    JSON.parse(localStorage.getItem('shortFilmStatusSwitch'))
+    JSON.parse(
+      localStorage.getItem(
+        location.pathname === '/saved-movies'
+          ? 'shortSaveFilmStatusSwitch'
+          : 'shortFilmStatusSwitch'
+      )
+    )
   );
 
   function handleChangValue(e) {
-    console.log(e.target.checked);
     setDurationCheckbox(e.target.checked);
     setIsShortFilms(e.target.checked);
     localStorage.setItem(
-      'shortFilmStatusSwitch',
+      location.pathname === '/saved-movies'
+        ? 'shortSaveFilmStatusSwitch'
+        : 'shortFilmStatusSwitch',
       JSON.stringify(e.target.checked)
     );
   }

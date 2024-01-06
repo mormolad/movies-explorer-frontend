@@ -50,6 +50,14 @@
   color: #ffffff;
   text-decoration: none;
 }
+
+.header__button_active {
+  border-bottom: 2px solid #ffffff;
+}
+
+.header__account-button_active {
+  border-bottom: 2px solid #ffffff;
+}
 .header__button_noAuth {
   font-size: 12px;
   height: 16px;
@@ -61,6 +69,7 @@
 }
 
 .header__account-button {
+  width: 100px;
   display: flex;
   align-items: center;
   gap: 13px;

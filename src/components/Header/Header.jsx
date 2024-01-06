@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import './Header.css';
 import Navigation from '../Navigation/Navigation';
 import logo from '../../images/logo.svg';
@@ -16,6 +16,9 @@ function Header({ isLoggedIn, theme }) {
   function handleClose() {
     setIsClicked(false);
   }
+
+  const setActive = ({ isActive }) =>
+    isActive ? 'header__button header__button_active' : 'header__button';
 
   return !isLoggedIn ? (
     <header
@@ -46,19 +49,27 @@ function Header({ isLoggedIn, theme }) {
       <nav className="header__links-films">
         <ul className="header__menu-films-links">
           <li>
-            <Link to="/movies" className="header__button">
+            <NavLink to="/movies" className={setActive}>
+              {' '}
               Фильмы
-            </Link>
+            </NavLink>
           </li>
           <li>
-            <Link to="/saved-movies" className="header__button">
+            <NavLink to="/saved-movies" className={setActive}>
               Сохранённые фильмы
-            </Link>
+            </NavLink>
           </li>
         </ul>
       </nav>
       <div className="header__button-container">
-        <Link to="/profile" className="header__account-button">
+        <NavLink
+          to="/profile"
+          className={({ isActive }) =>
+            isActive
+              ? 'header__account-button header__account-button_active'
+              : 'header__account-button'
+          }
+        >
           <p className="header__accoutn-title">Аккаунт</p>
           <div
             className={
@@ -73,7 +84,7 @@ function Header({ isLoggedIn, theme }) {
               className="header__img-account-button"
             />
           </div>
-        </Link>
+        </NavLink>
         <button
           onClick={handleOpen}
           className={

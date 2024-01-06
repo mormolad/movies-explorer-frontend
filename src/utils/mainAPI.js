@@ -44,9 +44,7 @@ export const editProfile = (name, email) => {
       Authorization: `Bearer ${localStorage.getItem('jwt')}`,
     },
     body: JSON.stringify({ name, email }),
-  })
-    .then((res) => res)
-    .catch((err) => console.log(err));
+  }).then((res) => checkResponse(res));
 };
 
 export const getUserInfo = () => {

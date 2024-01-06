@@ -16,34 +16,22 @@ function SaveMovies({
   makeCollectionCards,
   isSize,
   cards,
-  isShortFilms,
-  setIsShortFilms,
+  isShortSaveFilms,
+  setIsShortSaveFilms,
   setCards,
+  handlerSearchRequest,
+  setCorrectImage,
+  isSearchSaveMovies,
 }) {
   const [isNotFound, setIsNotFound] = useState(false);
-
-  function handlerSearchRequest(searchWord) {
-    setIsNotFound(false);
-    const foundMovies = JSON.parse(localStorage.getItem('saveMovies')).filter(
-      (movie) =>
-        movie.nameRU.toLowerCase().includes(searchWord.toLowerCase()) ||
-        movie.nameEN.toLowerCase().includes(searchWord.toLowerCase())
-    );
-    localStorage.setItem('foundSaveMovies', JSON.stringify(foundMovies));
-    localStorage.setItem(
-      'shortSaveFilmStatusSwitch',
-      JSON.stringify(isShortFilms)
-    );
-    localStorage.setItem('searchWordSaveMovies', JSON.stringify(searchWord));
-    if (foundMovies.length === 0 || foundMovies === null) setIsNotFound(true);
-  }
 
   // инициализация страницы
   useEffect(() => {
     setIsNotFound(false);
     if (
       localStorage.getItem('saveMovies') === 'undefined' ||
-      localStorage.getItem('saveMovies') === '[]'
+      localStorage.getItem('saveMovies') === [] ||
+      localStorage.getItem('saveMovies') === null
     ) {
       setIsNotFound(true);
     } else {
@@ -54,52 +42,52 @@ function SaveMovies({
     }
   }, []);
 
-  useEffect(() => {
-    if (!isShortFilms) {
-      makeCollectionCards(
-        setCorrectImage(JSON.parse(localStorage.getItem('saveMovies'))),
-        parametrsForView
-      );
-    } else if (isShortFilms) {
-      makeCollectionCards(
-        setCorrectImage(JSON.parse(localStorage.getItem('saveMovies'))).filter(
-          (film) => film.duration <= DURATION_SHORT_MOVIE
-        ),
-        parametrsForView
-      );
+  function checkSaveFilms(localStorageItem) {
+    if (!isShortSaveFilms) {
+      localStorage.getItem(localStorageItem) === null
+        ? setIsNotFound(true)
+        : makeCollectionCards(
+            setCorrectImage(JSON.parse(localStorage.getItem(localStorageItem))),
+            parametrsForView
+          );
+    } else if (isShortSaveFilms) {
+      localStorage.getItem(localStorageItem) === null
+        ? setIsNotFound(true)
+        : makeCollectionCards(
+            setCorrectImage(
+              JSON.parse(localStorage.getItem(localStorageItem))
+            ).filter((film) => film.duration <= DURATION_SHORT_MOVIE),
+            parametrsForView
+          );
     }
-  }, [isShortFilms, isSize]);
-
-  function setCorrectImage(cardsCollection) {
-    const saveMovie = cardsCollection.map((item) => {
-      const link = item.image;
-      delete item.image;
-      item.image = { url: link.slice(29) };
-      return item;
-    });
-
-    return saveMovie;
   }
 
   useEffect(() => {
-    if (!(localStorage.getItem('saveMovies') === 'undefined')) {
-      if (!isShortFilms) {
-        makeCollectionCards(
-          setCorrectImage(JSON.parse(localStorage.getItem('saveMovies'))),
-          parametrsForView
-        );
-      } else {
-        makeCollectionCards(
-          setCorrectImage(
-            JSON.parse(localStorage.getItem('saveMovies')).filter(
-              (film) => film.duration <= DURATION_SHORT_MOVIE
-            )
-          ),
-          parametrsForView
-        );
-      }
-    }
-  }, [isShortFilms, isSize, parametrsForView]);
+    checkSaveFilms(!isSearchSaveMovies ? 'saveMovies' : 'foundSaveMovies');
+    // if (!isShortSaveFilms) {
+    //   makeCollectionCards(
+    //     setCorrectImage(
+    //       JSON.parse(
+    //         localStorage.getItem(
+    //           !isSearchSaveMovies ? 'saveMovies' : 'foundSaveMovies'
+    //         )
+    //       )
+    //     ),
+    //     parametrsForView
+    //   );
+    // } else if (isShortSaveFilms) {
+    //   makeCollectionCards(
+    //     setCorrectImage(
+    //       JSON.parse(
+    //         localStorage.getItem(
+    //           !isSearchSaveMovies ? 'saveMovies' : 'foundSaveMovies'
+    //         )
+    //       )
+    //     ).filter((film) => film.duration <= DURATION_SHORT_MOVIE),
+    //     parametrsForView
+    //   );
+    // }
+  }, [isShortSaveFilms, isSize, parametrsForView]);
 
   return (
     <>
@@ -107,7 +95,7 @@ function SaveMovies({
       <section className="movies">
         <SearchForm
           onSearch={handlerSearchRequest}
-          setIsShortFilms={setIsShortFilms}
+          setIsShortFilms={setIsShortSaveFilms}
           searchWord={JSON.parse(localStorage.getItem('searchWordSaveMovies'))}
         />
         {bedInternet ? (
@@ -126,6 +114,7 @@ function SaveMovies({
               endCollection={true}
               setIsNotFound={setIsNotFound}
               setCards={setCards}
+              isSearchSaveMovies={isSearchSaveMovies}
             />
           )
         ) : (
