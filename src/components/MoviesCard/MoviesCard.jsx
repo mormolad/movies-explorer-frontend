@@ -47,6 +47,7 @@ function MoviesCard({ card, setCards, setIsNotFound, isSearchSaveMovies }) {
           console.log('delet card yes');
           delLikeLocalStorage(filteredCard[0]._id);
           setIsLike(false);
+          setIsLoading(false);
         })
         .catch((err) => {
           console.log(err);
