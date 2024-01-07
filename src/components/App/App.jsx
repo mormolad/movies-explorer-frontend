@@ -37,6 +37,7 @@ function App() {
     DEVICE_PARAMS.desktop
   );
   const [cards, setCards] = useState([]);
+  const [cardsForSaveMovie, setCardsForSaveMovie] = useState([]);
   const [bedInternetMy, setBedInternetMy] = useState(false);
   const [endCollection, setEndCollection] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
@@ -82,7 +83,7 @@ function App() {
       .then((data) => {
         localStorage.setItem('jwt', data.message);
         setLoggedIn(true);
-        getData();
+        setRequestError('');
         navigate('/movies', { replace: true });
       })
       .catch((err) => {
@@ -108,21 +109,21 @@ function App() {
   }
   //редактировать профиль
   function handleSubmitEditProfile({ name, email }) {
+    setRequestError('');
     setIsLoadingInfoUser(true);
     return editProfile(name, email)
       .then((res) => {
-        if (res.status === 200) {
-          setIsEdit(false);
-          setIsGoodRes(true);
-          setRequestError('');
-          setCurrentUser({ name, email });
-        } else {
-          res.status === 409
-            ? setRequestError('Пользователь с таким email уже существует.')
-            : setRequestError('При обновлении профиля произошла ошибка.');
-        }
+        console.log(res.message);
+        setIsEdit(false);
+        setIsGoodRes(true);
+        setRequestError('');
+        setCurrentUser({ name, email });
       })
       .catch((err) => {
+        console.log(err);
+        err === 'Error: 409'
+          ? setRequestError('Пользователь с таким email уже существует.')
+          : setRequestError('При обновлении профиля произошла ошибка.');
         console.log(err);
       })
       .finally(() => {
@@ -145,9 +146,9 @@ function App() {
   }, []);
 
   //наполнение localStorage с обоих API
-  function getData() {
+  function getData(searchWord) {
     setIsLoading(true);
-    Promise.all([getCards(), getSavedMovies()])
+    getCards()
       .then((res) => {
         setBedInternet(false);
         localStorage.setItem('cards', JSON.stringify(res[0]));
@@ -157,29 +158,16 @@ function App() {
             res.filter((film) => film.duration <= DURATION_SHORT_MOVIE)
           )
         );
-        setBedInternetMy(false);
-        console.log(res[1]);
-        if (res[1].length === 0) {
-          return;
-        }
-        if (res[1].message.length > 0) {
-          localStorage.setItem('saveMovies', JSON.stringify(res[1].message));
-          localStorage.setItem(
-            'saveMovieShort',
-            JSON.stringify(
-              res[1].message.filter(
-                (film) => film.duration <= DURATION_SHORT_MOVIE
-              )
-            )
-          );
-        }
       })
       .catch((err) => {
         console.log(err);
-        setBedInternet(true); //написать ошибку нет соединения с сервером фильмов
+        setBedInternet(true);
         setBedInternetMy(true);
       })
-      .finally(() => setIsLoading(false));
+      .finally(() => {
+        handlerSearch(searchWord);
+        setIsLoading(false);
+      });
   }
   //определить стoит ли лайк
   function setLike(card) {
@@ -203,15 +191,20 @@ function App() {
   };
 
   function handlerSearchRequest(searchWord) {
-    setAdditionalMovies(0);
-    if (isFirstSearch) {
-      handlerSearch(searchWord);
+    if (location.pathname === '/movies') {
+      setAdditionalMovies(0);
+      if (isFirstSearch) {
+        getData(searchWord);
+      } else {
+        handlerSearch(searchWord);
+      }
     } else {
-      handlerSearch(searchWord);
+      handlerSearchForSaveMovies(searchWord);
     }
   }
 
   function setCorrectImage(cardsCollection) {
+    console.log(cardsCollection);
     const saveMovie = cardsCollection.map((item) => {
       const link = item.image;
       delete item.image;
@@ -222,69 +215,77 @@ function App() {
     return saveMovie;
   }
 
-  function handlerSearch(searchWord) {
-    console.log('search', searchWord, location.pathname);
-    if (location.pathname === '/saved-movies') {
-      setIsSearchSaveMovies(true);
-    } else {
-      setIsFirstSearch(false);
-    }
+  function handlerSearchForSaveMovies(searchWord) {
     setIsNotFound(false);
-    const foundMovies = JSON.parse(
-      localStorage.getItem(
-        location.pathname === '/movies' ? 'cards' : 'saveMovies'
-      )
-    ).filter(
+    const foundMovies = JSON.parse(localStorage.getItem('saveMovies')).filter(
       (movie) =>
         movie.nameRU.toLowerCase().includes(searchWord.toLowerCase()) ||
         movie.nameEN.toLowerCase().includes(searchWord.toLowerCase())
     );
-    localStorage.setItem(
-      location.pathname === '/movies' ? 'foundMovies' : 'foundSaveMovies',
-      JSON.stringify(foundMovies)
+    if (foundMovies.length === 0) {
+      setIsNotFound(true);
+    } else if (isShortFilms) {
+      if (
+        foundMovies.filter((film) => film.duration <= DURATION_SHORT_MOVIE)
+          .length === 0
+      ) {
+        setIsNotFound(true);
+      } else {
+        setCardsForSaveMovie(
+          setCorrectImage(
+            foundMovies.filter((film) => film.duration <= DURATION_SHORT_MOVIE)
+          )
+        );
+        makeCollectionCards(
+          setCorrectImage(
+            foundMovies.filter((film) => film.duration <= DURATION_SHORT_MOVIE)
+          ),
+          parametrsForView
+        );
+      }
+    } else {
+      console.log(foundMovies);
+      setCardsForSaveMovie(setCorrectImage(foundMovies));
+      makeCollectionCards(setCorrectImage(foundMovies), parametrsForView);
+    }
+  }
+
+  function handlerSearch(searchWord) {
+    setIsFirstSearch(false);
+    setIsNotFound(false);
+    localStorage.setItem('searchWord', JSON.stringify(searchWord));
+    localStorage.setItem('shortFilmStatusSwitch', JSON.stringify(isShortFilms));
+    const foundMovies = JSON.parse(localStorage.getItem('cards')).filter(
+      (movie) =>
+        movie.nameRU.toLowerCase().includes(searchWord.toLowerCase()) ||
+        movie.nameEN.toLowerCase().includes(searchWord.toLowerCase())
     );
-    localStorage.setItem(
-      location.pathname === '/movies' ? 'searchWord' : 'searchWordSaveMovies',
-      JSON.stringify(searchWord)
-    );
+    localStorage.setItem('foundMovies', JSON.stringify(foundMovies));
 
     if (foundMovies.length === 0) {
       setIsNotFound(true);
-    } else if (
-      JSON.parse(
-        localStorage.getItem(
-          location.pathname === '/movies' ? 'foundMovies' : 'foundSaveMovies'
-        )
-      ).filter((film) => film.duration <= DURATION_SHORT_MOVIE) === undefined
-    ) {
-      setIsNotFound(true);
-    } else if (
-      location.pathname === '/movies' ? isShortFilms : isShortSaveFilms
-    ) {
-      makeCollectionCards(
-        location.pathname === '/movies'
-          ? JSON.parse(localStorage.getItem('foundMovies')).filter(
+    } else if (isShortFilms) {
+      JSON.parse(localStorage.getItem('foundMovies')).filter(
+        (film) => film.duration <= DURATION_SHORT_MOVIE
+      ) === undefined
+        ? setIsNotFound(true)
+        : makeCollectionCards(
+            JSON.parse(localStorage.getItem('foundMovies')).filter(
               (film) => film.duration <= DURATION_SHORT_MOVIE
-            )
-          : setCorrectImage(
-              JSON.parse(localStorage.getItem('foundSaveMovies'))
-            ).filter((film) => film.duration <= DURATION_SHORT_MOVIE),
-
-        parametrsForView
-      );
+            ),
+            parametrsForView
+          );
     } else {
       makeCollectionCards(
-        location.pathname === '/movies'
-          ? JSON.parse(localStorage.getItem('foundMovies'))
-          : setCorrectImage(
-              JSON.parse(localStorage.getItem('foundSaveMovies'))
-            ),
+        JSON.parse(localStorage.getItem('foundMovies')),
         parametrsForView
       );
     }
   }
+
   //сделать коллекцию кард для рендера
   function makeCollectionCards(cardsForCollection, paramsCollection) {
+    // console.log(cardsForCollection, paramsCollection);
     if (cardsForCollection === null) {
       return;
     }
@@ -322,10 +323,24 @@ function App() {
 
   useEffect(() => {
     if (loggedIn) {
-      getUserInfo().then((res) => {
-        localStorage.setItem('user', JSON.stringify(res.message));
-        setCurrentUser(res.message);
-      });
+      Promise.all([getUserInfo(), getSavedMovies()])
+        .then((res) => {
+          localStorage.setItem('user', JSON.stringify(res[0].message));
+          setCurrentUser(res[0].message);
+          if (res[1].message.length > 0) {
+            localStorage.setItem('saveMovies', JSON.stringify(res[1].message));
+            setCardsForSaveMovie(
+              localStorage.setItem('saveMovies', JSON.stringify(res[1].message))
+            );
+          } else {
+            localStorage.setItem('saveMovies', JSON.stringify([]));
+            setCardsForSaveMovie([]);
+          }
+        })
+        .catch((err) => {
+          setBedInternetMy(true);
+          console.log(err);
+        });
     }
   }, [loggedIn]);
 
@@ -378,7 +393,6 @@ function App() {
                   isChekToken={isChekToken}
                   bedInternet={bedInternet}
                   isLoading={isLoading}
-                  getData={getData}
                   makeCollectionCards={makeCollectionCards}
                   cards={cards}
                   handleMore={handleMore}
@@ -392,6 +406,7 @@ function App() {
                   isNotFound={isNotFound}
                   additionalMovies={additionalMovies}
                   isSize={isSize}
+                  setAdditionalMovies={setAdditionalMovies}
                 />
               }
             />
@@ -418,6 +433,8 @@ function App() {
                   setCorrectImage={setCorrectImage}
                   isSearchSaveMovies={isSearchSaveMovies}
                   setIsSearchSaveMovies={setIsSearchSaveMovies}
+                  cardsForSaveMovie={cardsForSaveMovie}
+                  setCardsForSaveMovie={setCardsForSaveMovie}
                 />
               }
             />

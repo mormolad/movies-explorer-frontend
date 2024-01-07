@@ -119,7 +119,9 @@ function MoviesCard({ card, setCards, setIsNotFound, isSearchSaveMovies }) {
         <h2 className="card__title">{card.nameRU}</h2>
         <span className="card__time">{duration(card.duration)}</span>
       </div>
-      <Link to={card.trailerLink}>
+      <Link
+        to={location.pathname === '/movies' ? card.trailerLink : card.trailer}
+      >
         <img
           className="card__image"
           alt={card.nameRU}

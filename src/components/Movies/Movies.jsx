@@ -25,6 +25,7 @@ function Movies({
   isNotFound,
   additionalMovies,
   isSize,
+  setAdditionalMovies,
 }) {
   useEffect(() => {
     if (localStorage.getItem('foundMovies') === null) {
@@ -45,6 +46,7 @@ function Movies({
   }, [isShortFilms, isSize, additionalMovies]);
 
   useEffect(() => {
+    setAdditionalMovies(0);
     if (localStorage.getItem('foundMovies') === null) {
       setIsFirstSearch(true);
     } else if (JSON.parse(localStorage.getItem('foundMovies')).length === 0) {

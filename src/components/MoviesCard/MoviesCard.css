@@ -50,7 +50,7 @@
   background: #313131;
   background-image: url(../../images/no-save-button.svg);
   padding: 0;
-  margin: 13px 130px 18px 130px;
+  margin: 13px 120px 18px 120px;
   border: none;
   border-radius: 50px;
   width: 100px;
@@ -85,12 +85,13 @@
 
 @media screen and (max-width: 1150px) {
   .card {
-    width: 342px;
+    width: 339px;
     height: 309px;
   }
+
   .card__image {
     height: 190px;
-    width: 342px;
+    width: 339px;
   }
 }
 

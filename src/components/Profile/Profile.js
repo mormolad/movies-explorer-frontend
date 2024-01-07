@@ -21,9 +21,7 @@ function Profile({
 }) {
   const currentUser = React.useContext(CurrentUserContext);
 
-  const [name, setName] = React.useState(() => {
-    return currentUser.name;
-  });
+  const [name, setName] = React.useState(currentUser.name);
   const [nameDitry, setNameDitry] = React.useState(false);
   const [nameError, setNameError] = React.useState('');
   const [email, setEmail] = React.useState(currentUser.email);
@@ -34,12 +32,14 @@ function Profile({
   const [emailNotChanged, setEmailNotChanged] = useState(true);
 
   useEffect(() => {
+    console.log(emailError || nameError || (nameNotChanged && emailNotChanged));
     emailError || nameError || (nameNotChanged && emailNotChanged)
       ? setFormValid(false)
       : setFormValid(true);
   }, [emailError, nameError, nameNotChanged, emailNotChanged]);
 
   function handleChangeName(e) {
+    console.log(e.target.value === currentUser.name);
     if (e.target.value === currentUser.name) {
       setNameNotChanged(true);
     } else {
@@ -49,6 +49,7 @@ function Profile({
     !e.target.value
       ? setNameError('поле не может быть пустым')
       : setNameError('');
+    console.log(nameNotChanged);
   }
 
   function handleChangeEmail(e) {

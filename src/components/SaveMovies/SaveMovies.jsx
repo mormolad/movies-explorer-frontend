@@ -22,11 +22,14 @@ function SaveMovies({
   handlerSearchRequest,
   setCorrectImage,
   isSearchSaveMovies,
+  cardsForSaveMovie,
+  setCardsForSaveMovie,
 }) {
   const [isNotFound, setIsNotFound] = useState(false);
-
+  //const [cardsForSaveMovie, setCardsForSaveMovie] = useState([]);
   // инициализация страницы
   useEffect(() => {
+    setIsShortSaveFilms(false);
     setIsNotFound(false);
     if (
       localStorage.getItem('saveMovies') === 'undefined' ||
@@ -35,6 +38,7 @@ function SaveMovies({
     ) {
       setIsNotFound(true);
     } else {
+      setCardsForSaveMovie(JSON.parse(localStorage.getItem('saveMovies')));
       makeCollectionCards(
         setCorrectImage(JSON.parse(localStorage.getItem('saveMovies'))),
         parametrsForView
@@ -42,51 +46,40 @@ function SaveMovies({
     }
   }, []);
 
-  function checkSaveFilms(localStorageItem) {
-    if (!isShortSaveFilms) {
-      localStorage.getItem(localStorageItem) === null
-        ? setIsNotFound(true)
-        : makeCollectionCards(
-            setCorrectImage(JSON.parse(localStorage.getItem(localStorageItem))),
-            parametrsForView
-          );
-    } else if (isShortSaveFilms) {
-      localStorage.getItem(localStorageItem) === null
-        ? setIsNotFound(true)
-        : makeCollectionCards(
-            setCorrectImage(
-              JSON.parse(localStorage.getItem(localStorageItem))
-            ).filter((film) => film.duration <= DURATION_SHORT_MOVIE),
-            parametrsForView
-          );
-    }
+  function showSaveMovies() {
+    makeCollectionCards(setCorrectImage(cardsForSaveMovie), parametrsForView);
+  }
+
+  function showShortSaveMovies() {
+    makeCollectionCards(
+      setCorrectImage(JSON.parse(localStorage.getItem('saveMovies'))).filter(
+        (film) => film.duration <= DURATION_SHORT_MOVIE
+      ),
+      parametrsForView
+    );
   }
 
   useEffect(() => {
-    checkSaveFilms(!isSearchSaveMovies ? 'saveMovies' : 'foundSaveMovies');
-    // if (!isShortSaveFilms) {
-    //   makeCollectionCards(
-    //     setCorrectImage(
-    //       JSON.parse(
-    //         localStorage.getItem(
-    //           !isSearchSaveMovies ? 'saveMovies' : 'foundSaveMovies'
-    //         )
-    //       )
-    //     ),
-    //     parametrsForView
-    //   );
-    // } else if (isShortSaveFilms) {
-    //   makeCollectionCards(
-    //     setCorrectImage(
-    //       JSON.parse(
-    //         localStorage.getItem(
-    //           !isSearchSaveMovies ? 'saveMovies' : 'foundSaveMovies'
-    //         )
-    //       )
-    //     ).filter((film) => film.duration <= DURATION_SHORT_MOVIE),
-    //     parametrsForView
-    //   );
-    // }
+    if (!isShortSaveFilms) {
+      if (
+        localStorage.getItem('saveMovies') === null ||
+        localStorage.getItem('saveMovies') === 'undefined' ||
+        localStorage.getItem('saveMovies').length === 0
+      ) {
+        setIsNotFound(true);
+      } else {
+        showSaveMovies();
+      }
+    } else {
+      const saveShortMovies = JSON.parse(
+        localStorage.getItem('saveMovies')
+      ).filter((film) => film.duration <= DURATION_SHORT_MOVIE);
+      if (saveShortMovies.lenght === 0) {
+        setIsNotFound(true);
+      } else {
+        showShortSaveMovies();
+      }
+    }
   }, [isShortSaveFilms, isSize, parametrsForView]);
 
   return (

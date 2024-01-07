@@ -47,7 +47,7 @@
 
 @media screen and (max-width: 1155px) {
   .cards__list {
-    padding: 70px 30px 30px;
+    padding: 70px 10px 10px;
     grid-template-columns: repeat(auto-fit, 339px);
     gap: 36px 30px;
   }
