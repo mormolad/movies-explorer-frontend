@@ -46,9 +46,7 @@ function App() {
   const [isFirstSearch, setIsFirstSearch] = useState(true);
   const [isSearchSaveMovies, setIsSearchSaveMovies] = useState(false);
   const [isNotFound, setIsNotFound] = useState(false);
-  const [isShortFilms, setIsShortFilms] = useState(
-    JSON.parse(localStorage.getItem('shortFilmStatusSwitch'))
-  );
+  const [isShortFilms, setIsShortFilms] = useState(false);
   const [isShortSaveFilms, setIsShortSaveFilms] = useState(
     localStorage.getItem('shortSaveFilmStatusSwitch') === null
       ? false
@@ -61,6 +59,9 @@ function App() {
       : JSON.parse(localStorage.getItem('user'))
   );
 
+  useEffect(() => {
+    console.log(JSON.parse(localStorage.getItem('shortFilmStatusSwitch')));
+  }, [isShortFilms]);
   //проверка токена
   function chekToken(jwt) {
     setIsLoading(true);
@@ -151,7 +152,6 @@ function App() {
     setIsLoading(true);
     getCards()
       .then((res) => {
-        console.log(res);
         setBedInternet(false);
         localStorage.setItem('cards', JSON.stringify(getLikesForGetCards(res)));
       })
@@ -169,7 +169,6 @@ function App() {
     const saveMovie = JSON.parse(localStorage.getItem('saveMovies'));
     if (localStorage.saveMovies === undefined) {
       return res.map((item) => {
-        console.log(item);
         const image = item.image.url;
         const thumbnail = item.image.previewUrl;
         delete item.image;
@@ -180,7 +179,6 @@ function App() {
       });
     } else {
       return res.map((item) => {
-        console.log(item);
         const image = item.image.url;
         const thumbnail = item.image.previewUrl;
         // delete item.image;
@@ -210,11 +208,9 @@ function App() {
   }
 
   function handlerSearch(searchWord) {
-    console.log(searchWord);
     setIsFirstSearch(false);
     setIsNotFound(false);
     localStorage.setItem('searchWord', JSON.stringify(searchWord));
-    localStorage.setItem('shortFilmStatusSwitch', JSON.stringify(isShortFilms));
 
     const foundMovies = JSON.parse(localStorage.getItem('cards')).filter(
       (movie) => {
@@ -248,7 +244,6 @@ function App() {
 
   //сделать коллекцию кард для рендера
   function makeCollectionCards(cardsForCollection, paramsCollection) {
-    console.log(cardsForCollection);
     if (cardsForCollection === null) {
       return;
     }
@@ -274,7 +269,7 @@ function App() {
       }
       arrCards[i] = cardsForCollection[i];
     }
-    console.log(arrCards);
+
     setCards(arrCards);
   }
 
@@ -287,7 +282,6 @@ function App() {
   function getUserData() {
     Promise.all([getUserInfo(), getSavedMovies()])
       .then((res) => {
-        console.log(res[1]);
         localStorage.setItem('user', JSON.stringify(res[0].message));
         setCurrentUser(res[0].message);
         if (res[1].message.length > 0) {

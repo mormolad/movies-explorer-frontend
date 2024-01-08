@@ -72,7 +72,6 @@ function Movies({
         );
       }
     }
-    console.log('rerender');
   }, []);
 
   return (
