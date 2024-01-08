@@ -52,7 +52,6 @@
     cursor: pointer;
     opacity: 0.6;
   }
-
   .navigation__link {
     width: max-content;
     text-decoration: none;
@@ -64,6 +63,10 @@
     border-bottom: 2px solid transparent;
   }
   .navigation__link:hover {
+    cursor: pointer;
+    opacity: 0.6;
+  }
+  .navigation__link_active {
     border-bottom: 2px solid #ffffff;
   }
   .navigation__account-button {

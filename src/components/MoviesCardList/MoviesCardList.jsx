@@ -13,12 +13,14 @@ function MoviesCardList({
   const onClick = (e) => {
     handleMore();
   };
+
   return (
     <section className="cards">
       <ul className="cards__list">
         {cards.map((card) => (
           <MoviesCard
             card={card}
+            cards={cards}
             key={card.id}
             setCards={setCards}
             setIsNotFound={setIsNotFound}

@@ -5,10 +5,17 @@ import './MoviesCard.css';
 import duration from '../../utils/durationMovie.js';
 import { saveMovie, deleteMovies } from '../../utils/mainAPI.js';
 
-function MoviesCard({ card, setCards, setIsNotFound, isSearchSaveMovies }) {
+function MoviesCard({
+  card,
+  setCards,
+  setIsNotFound,
+  isSearchSaveMovies,
+  cards,
+}) {
   const location = useLocation();
-  const [isLike, setIsLike] = useState(false);
+  const [isLike, setIsLike] = useState(card.like);
   const [isLoading, setIsLoading] = useState(false);
+
   const setLike = (bool) => {
     if (bool) {
       let respons = {
@@ -17,13 +24,11 @@ function MoviesCard({ card, setCards, setIsNotFound, isSearchSaveMovies }) {
         duration: card.duration,
         year: card.year,
         description: card.description,
-        image: `https://api.nomoreparties.co${card.image.url}`,
+        image: card.image,
         trailer: card.trailerLink,
         nameRU: card.nameRU,
         nameEN: card.nameEN,
-        thumbnail: `https://api.nomoreparties.co${
-          card.image.previewUrl.split('\n/')[0]
-        }`,
+        thumbnail: card.image,
         movieId: card.id,
       };
       saveMovie(respons)
@@ -41,11 +46,13 @@ function MoviesCard({ card, setCards, setIsNotFound, isSearchSaveMovies }) {
     } else {
       const filteredCard = JSON.parse(
         localStorage.getItem('saveMovies')
-      ).filter((movie) => movie.movieId === card.id);
+      ).filter((movie) => {
+        return movie.movieId === card.id;
+      });
       deleteMovies(filteredCard[0]._id)
         .then((res) => {
           console.log('delet card yes');
-          delLikeLocalStorage(filteredCard[0]._id);
+          delLikeLocalStorage(filteredCard[0]);
           setIsLike(false);
           setIsLoading(false);
         })
@@ -57,20 +64,68 @@ function MoviesCard({ card, setCards, setIsNotFound, isSearchSaveMovies }) {
 
   function setLikeLocalStorage(card) {
     let saveMovieLocalStorage = JSON.parse(localStorage.getItem('saveMovies'));
-    if (saveMovieLocalStorage === null || saveMovieLocalStorage === undefined) {
+    if (
+      localStorage.saveMovies === undefined ||
+      JSON.parse(localStorage.getItem('saveMovies')).length === 0
+    ) {
       saveMovieLocalStorage = [card];
+      console.log(saveMovieLocalStorage);
       localStorage.setItem('saveMovies', JSON.stringify(saveMovieLocalStorage));
     } else {
       saveMovieLocalStorage[saveMovieLocalStorage.length] = card;
       localStorage.setItem('saveMovies', JSON.stringify(saveMovieLocalStorage));
     }
+    setLikeCard(card);
   }
 
-  function delLikeLocalStorage(id) {
+  function setLikeCard(card) {
+    let cardsLocalStorage = JSON.parse(localStorage.getItem('cards'));
+    cardsLocalStorage.forEach((item) => {
+      if (item.id === card.movieId) {
+        item.like = true;
+      }
+      localStorage.setItem('cards', JSON.stringify(cardsLocalStorage));
+    });
+    let foundCardsLocalStorage = JSON.parse(
+      localStorage.getItem('foundMovies')
+    );
+    foundCardsLocalStorage.forEach((item) => {
+      if (item.id === card.movieId) {
+        item.like = true;
+      }
+    });
+    localStorage.setItem('foundMovies', JSON.stringify(foundCardsLocalStorage));
+    setCards(foundCardsLocalStorage);
+  }
+
+  function delLikeLocalStorage(card) {
     let saveMovieLocalStorage = JSON.parse(
       localStorage.getItem('saveMovies')
-    ).filter((movie) => movie._id !== id);
+    ).filter((movie) => {
+      return movie._id !== card._id;
+    });
     localStorage.setItem('saveMovies', JSON.stringify(saveMovieLocalStorage));
+    delLikeCard(card);
+  }
+
+  function delLikeCard(card) {
+    let cardsLocalStorage = JSON.parse(localStorage.getItem('cards'));
+    cardsLocalStorage.forEach((item) => {
+      if (item.id === card.movieId) {
+        item.like = false;
+      }
+      localStorage.setItem('cards', JSON.stringify(cardsLocalStorage));
+    });
+    let foundCardsLocalStorage = JSON.parse(
+      localStorage.getItem('foundMovies')
+    );
+    foundCardsLocalStorage.forEach((item) => {
+      if (item.id === card.movieId) {
+        item.like = false;
+      }
+    });
+    localStorage.setItem('foundMovies', JSON.stringify(foundCardsLocalStorage));
+    setCards(foundCardsLocalStorage);
   }
 
   useEffect(() => {
@@ -78,7 +133,6 @@ function MoviesCard({ card, setCards, setIsNotFound, isSearchSaveMovies }) {
   }, []);
 
   function handleLikeClick(e) {
-    console.log('handle like');
     setIsLoading(true);
     JSON.stringify(e.target.classList).indexOf('active') === -1
       ? setLike(true)
@@ -86,31 +140,65 @@ function MoviesCard({ card, setCards, setIsNotFound, isSearchSaveMovies }) {
   }
 
   function handleDelClick(e) {
-    const filteredCard = JSON.parse(
-      localStorage.getItem(
-        !isSearchSaveMovies ? 'saveMovies' : 'foundSaveMovies'
-      )
-    ).filter((movie) => movie.movieId === card.movieId);
-    deleteMovies(filteredCard[0]._id).then((res) => {
-      const newCollectionCardInLocalStorage = JSON.parse(
-        localStorage.getItem(
-          !isSearchSaveMovies ? 'saveMovies' : 'foundSaveMovies'
-        )
-      ).filter((movies) => !(movies.movieId === card.movieId));
-      localStorage.setItem(
-        !isSearchSaveMovies ? 'saveMovies' : 'foundSaveMovies',
-        JSON.stringify(newCollectionCardInLocalStorage)
-      );
-      const cardsForRender = newCollectionCardInLocalStorage.map((item) => {
-        const image = { url: item.image.slice(29) };
-        delete item.image;
-        item = { ...item, image };
-        return item;
-      });
-      cardsForRender.length === 0
-        ? setIsNotFound(true)
-        : setCards(cardsForRender);
-    });
+    console.log(cards);
+
+    if (!(JSON.parse(localStorage.getItem('saveMovies')) === null)) {
+      const filteredCard = JSON.parse(
+        localStorage.getItem('saveMovies')
+      ).filter((movie) => movie.movieId === card.movieId);
+      deleteMovies(filteredCard[0]._id)
+        .then((res) => {
+          if (localStorage.getItem('cards') !== null) {
+            const newCollection = JSON.parse(localStorage.getItem('cards')).map(
+              (item) => {
+                if (item.id === res.message.movieId) {
+                  item.like = false;
+                }
+                return item;
+              }
+            );
+            console.log(newCollection);
+            localStorage.setItem('cards', JSON.stringify(newCollection));
+          }
+          if (localStorage.getItem('foundMovies') !== null) {
+            const newCollection = JSON.parse(
+              localStorage.getItem('foundMovies')
+            ).map((item) => {
+              if (item.id === res.message.movieId) {
+                item.like = false;
+              }
+              return item;
+            });
+            localStorage.setItem('foundMovies', JSON.stringify(newCollection));
+          }
+          const newCollectionCardInLocalStorage = JSON.parse(
+            localStorage.getItem('saveMovies')
+          ).filter((movies) => !(movies.movieId === card.movieId));
+          localStorage.setItem(
+            'saveMovies',
+            JSON.stringify(newCollectionCardInLocalStorage)
+          );
+          const cardsForRender = newCollectionCardInLocalStorage.map((item) => {
+            return item;
+          });
+          if (cardsForRender.length === 0) {
+            setIsNotFound(true);
+          } else {
+            if (isSearchSaveMovies) {
+              const cardsFilter = cards.filter((item) => {
+                console.log(item);
+                return !(item.movieId === filteredCard[0]._id);
+              });
+              setCards(cardsFilter);
+            } else {
+              setCards(cardsForRender);
+            }
+          }
+        })
+        .catch((err) => console.log(err));
+    } else {
+      setIsNotFound(true);
+    }
   }
 
   return (
@@ -122,11 +210,7 @@ function MoviesCard({ card, setCards, setIsNotFound, isSearchSaveMovies }) {
       <Link
         to={location.pathname === '/movies' ? card.trailerLink : card.trailer}
       >
-        <img
-          className="card__image"
-          alt={card.nameRU}
-          src={`https://api.nomoreparties.co/${card.image.url}`}
-        />
+        <img className="card__image" alt={card.nameRU} src={card.image} />
       </Link>
       {
         <button

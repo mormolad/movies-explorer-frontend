@@ -7,6 +7,7 @@ import Footer from '../Footer/Footer.jsx';
 import Preloader from '../Preloader/Preloader.jsx';
 import ErrorSearch from '../ErrorSearch/ErrorSearch.jsx';
 import { DURATION_SHORT_MOVIE } from '../../constants/config.js';
+
 function Movies({
   isLoggedIn,
   parametrsForView,
@@ -26,6 +27,7 @@ function Movies({
   additionalMovies,
   isSize,
   setAdditionalMovies,
+  setCards,
 }) {
   useEffect(() => {
     if (localStorage.getItem('foundMovies') === null) {
@@ -55,9 +57,7 @@ function Movies({
     } else {
       setIsFirstSearch(false);
       setIsNotFound(false);
-
-      const switchShort = localStorage.getItem('shortFilmStatusSwitch');
-      if (switchShort === 'true') {
+      if (localStorage.getItem('shortFilmStatusSwitch') === 'true') {
         makeCollectionCards(
           JSON.parse(localStorage.getItem('foundMovies')).filter(
             (film) => film.duration <= DURATION_SHORT_MOVIE
@@ -65,12 +65,14 @@ function Movies({
           parametrsForView
         );
       } else {
+        console.log(JSON.parse(localStorage.getItem('foundMovies')));
         makeCollectionCards(
           JSON.parse(localStorage.getItem('foundMovies')),
           parametrsForView
         );
       }
     }
+    console.log('rerender');
   }, []);
 
   return (
@@ -98,6 +100,7 @@ function Movies({
               handleMore={handleMore}
               endCollection={endCollection}
               isLoading={isLoading}
+              setCards={setCards}
             />
           )
         ) : (

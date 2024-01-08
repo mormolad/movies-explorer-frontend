@@ -84,6 +84,7 @@ function App() {
         localStorage.setItem('jwt', data.message);
         setLoggedIn(true);
         setRequestError('');
+        getUserData();
         navigate('/movies', { replace: true });
       })
       .catch((err) => {
@@ -145,44 +146,53 @@ function App() {
     }
   }, []);
 
-  //наполнение localStorage с обоих API
+  //
   function getData(searchWord) {
     setIsLoading(true);
     getCards()
       .then((res) => {
+        console.log(res);
         setBedInternet(false);
-        localStorage.setItem('cards', JSON.stringify(res[0]));
-        localStorage.setItem(
-          'cardsShortFilms',
-          JSON.stringify(
-            res.filter((film) => film.duration <= DURATION_SHORT_MOVIE)
-          )
-        );
+        localStorage.setItem('cards', JSON.stringify(getLikesForGetCards(res)));
       })
       .catch((err) => {
         console.log(err);
         setBedInternet(true);
-        setBedInternetMy(true);
       })
       .finally(() => {
         handlerSearch(searchWord);
         setIsLoading(false);
       });
   }
-  //определить стoит ли лайк
-  function setLike(card) {
-    if (
-      localStorage.getItem('saveMovies') === null ||
-      localStorage.getItem('saveMovies') === 'undefined'
-    ) {
-      return false;
-    } else if (JSON.parse(localStorage.getItem('saveMovies')).length === 0) {
-      return false;
+
+  function getLikesForGetCards(res) {
+    const saveMovie = JSON.parse(localStorage.getItem('saveMovies'));
+    if (localStorage.saveMovies === undefined) {
+      return res.map((item) => {
+        console.log(item);
+        const image = item.image.url;
+        const thumbnail = item.image.previewUrl;
+        delete item.image;
+        item.thumbnail = thumbnail;
+        item.image = 'https://api.nomoreparties.co' + image;
+        item.like = false;
+        return item;
+      });
     } else {
-      const like = JSON.parse(localStorage.getItem('saveMovies')).filter(
-        (movie) => card.nameRU === movie.nameRU
-      );
-      return like.length > 0;
+      return res.map((item) => {
+        console.log(item);
+        const image = item.image.url;
+        const thumbnail = item.image.previewUrl;
+        // delete item.image;
+        item.image = 'https://api.nomoreparties.co/' + image;
+        item.thumbnail = thumbnail;
+        if (saveMovie.some((movie) => item.id === movie.movieId)) {
+          item.like = true;
+        } else {
+          item.like = false;
+        }
+        return item;
+      });
     }
   }
 
@@ -191,77 +201,30 @@ function App() {
   };
 
   function handlerSearchRequest(searchWord) {
-    if (location.pathname === '/movies') {
-      setAdditionalMovies(0);
-      if (isFirstSearch) {
-        getData(searchWord);
-      } else {
-        handlerSearch(searchWord);
-      }
+    setAdditionalMovies(0);
+    if (isFirstSearch) {
+      getData(searchWord);
     } else {
-      handlerSearchForSaveMovies(searchWord);
-    }
-  }
-
-  function setCorrectImage(cardsCollection) {
-    console.log(cardsCollection);
-    const saveMovie = cardsCollection.map((item) => {
-      const link = item.image;
-      delete item.image;
-      item.image = { url: link.slice(29) };
-      return item;
-    });
-
-    return saveMovie;
-  }
-
-  function handlerSearchForSaveMovies(searchWord) {
-    setIsNotFound(false);
-    const foundMovies = JSON.parse(localStorage.getItem('saveMovies')).filter(
-      (movie) =>
-        movie.nameRU.toLowerCase().includes(searchWord.toLowerCase()) ||
-        movie.nameEN.toLowerCase().includes(searchWord.toLowerCase())
-    );
-    if (foundMovies.length === 0) {
-      setIsNotFound(true);
-    } else if (isShortFilms) {
-      if (
-        foundMovies.filter((film) => film.duration <= DURATION_SHORT_MOVIE)
-          .length === 0
-      ) {
-        setIsNotFound(true);
-      } else {
-        setCardsForSaveMovie(
-          setCorrectImage(
-            foundMovies.filter((film) => film.duration <= DURATION_SHORT_MOVIE)
-          )
-        );
-        makeCollectionCards(
-          setCorrectImage(
-            foundMovies.filter((film) => film.duration <= DURATION_SHORT_MOVIE)
-          ),
-          parametrsForView
-        );
-      }
-    } else {
-      console.log(foundMovies);
-      setCardsForSaveMovie(setCorrectImage(foundMovies));
-      makeCollectionCards(setCorrectImage(foundMovies), parametrsForView);
+      handlerSearch(searchWord);
     }
   }
 
   function handlerSearch(searchWord) {
+    console.log(searchWord);
     setIsFirstSearch(false);
     setIsNotFound(false);
     localStorage.setItem('searchWord', JSON.stringify(searchWord));
     localStorage.setItem('shortFilmStatusSwitch', JSON.stringify(isShortFilms));
+
     const foundMovies = JSON.parse(localStorage.getItem('cards')).filter(
-      (movie) =>
-        movie.nameRU.toLowerCase().includes(searchWord.toLowerCase()) ||
-        movie.nameEN.toLowerCase().includes(searchWord.toLowerCase())
+      (movie) => {
+        return (
+          movie.nameRU.toLowerCase().includes(searchWord.toLowerCase()) ||
+          movie.nameEN.toLowerCase().includes(searchWord.toLowerCase())
+        );
+      }
     );
     localStorage.setItem('foundMovies', JSON.stringify(foundMovies));
-
     if (foundMovies.length === 0) {
       setIsNotFound(true);
     } else if (isShortFilms) {
@@ -285,7 +248,7 @@ function App() {
 
   //сделать коллекцию кард для рендера
   function makeCollectionCards(cardsForCollection, paramsCollection) {
-    // console.log(cardsForCollection, paramsCollection);
+    console.log(cardsForCollection);
     if (cardsForCollection === null) {
       return;
     }
@@ -309,9 +272,9 @@ function App() {
       ) {
         setEndCollection(true);
       }
-      cardsForCollection[i].like = setLike(cardsForCollection[i]);
       arrCards[i] = cardsForCollection[i];
     }
+    console.log(arrCards);
     setCards(arrCards);
   }
 
@@ -321,28 +284,27 @@ function App() {
     navigate('/', { replace: true });
   };
 
-  useEffect(() => {
-    if (loggedIn) {
-      Promise.all([getUserInfo(), getSavedMovies()])
-        .then((res) => {
-          localStorage.setItem('user', JSON.stringify(res[0].message));
-          setCurrentUser(res[0].message);
-          if (res[1].message.length > 0) {
-            localStorage.setItem('saveMovies', JSON.stringify(res[1].message));
-            setCardsForSaveMovie(
-              localStorage.setItem('saveMovies', JSON.stringify(res[1].message))
-            );
-          } else {
-            localStorage.setItem('saveMovies', JSON.stringify([]));
-            setCardsForSaveMovie([]);
-          }
-        })
-        .catch((err) => {
-          setBedInternetMy(true);
-          console.log(err);
-        });
-    }
-  }, [loggedIn]);
+  function getUserData() {
+    Promise.all([getUserInfo(), getSavedMovies()])
+      .then((res) => {
+        console.log(res[1]);
+        localStorage.setItem('user', JSON.stringify(res[0].message));
+        setCurrentUser(res[0].message);
+        if (res[1].message.length > 0) {
+          localStorage.setItem('saveMovies', JSON.stringify(res[1].message));
+          setCardsForSaveMovie(
+            localStorage.setItem('saveMovies', JSON.stringify(res[1].message))
+          );
+        } else {
+          localStorage.setItem('saveMovies', JSON.stringify([]));
+          setCardsForSaveMovie([]);
+        }
+      })
+      .catch((err) => {
+        setBedInternetMy(true);
+        console.log(err);
+      });
+  }
 
   useEffect(() => {
     if (isSize > DEVICE_PARAMS.desktop.width) {
@@ -407,6 +369,7 @@ function App() {
                   additionalMovies={additionalMovies}
                   isSize={isSize}
                   setAdditionalMovies={setAdditionalMovies}
+                  setCards={setCards}
                 />
               }
             />
@@ -430,7 +393,6 @@ function App() {
                   endCollection={endCollection}
                   isNotFound={isNotFound}
                   setCards={setCards}
-                  setCorrectImage={setCorrectImage}
                   isSearchSaveMovies={isSearchSaveMovies}
                   setIsSearchSaveMovies={setIsSearchSaveMovies}
                   cardsForSaveMovie={cardsForSaveMovie}

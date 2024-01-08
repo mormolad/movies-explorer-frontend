@@ -32,7 +32,6 @@ function Profile({
   const [emailNotChanged, setEmailNotChanged] = useState(true);
 
   useEffect(() => {
-    console.log(emailError || nameError || (nameNotChanged && emailNotChanged));
     emailError || nameError || (nameNotChanged && emailNotChanged)
       ? setFormValid(false)
       : setFormValid(true);
