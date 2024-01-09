@@ -269,7 +269,6 @@ function App() {
       }
       arrCards[i] = cardsForCollection[i];
     }
-
     setCards(arrCards);
   }
 
@@ -308,7 +307,13 @@ function App() {
     } else {
       setParametrsForView(DEVICE_PARAMS.mobile);
     }
+    console.log(isSize);
   }, [isSize]);
+
+  useEffect(() => {
+    console.log(isSize);
+    makeCollectionCards(cards, parametrsForView);
+  }, [parametrsForView]);
 
   return (
     <div className="page">

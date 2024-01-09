@@ -25,28 +25,36 @@ function SaveMovies({
   function handlerSearchRequest(searchWord) {
     setIsNotFound(false);
     setIsSearchSaveMovies(true);
-    const foundMovies = JSON.parse(localStorage.getItem('saveMovies')).filter(
+    const foundSaveMovies = JSON.parse(
+      localStorage.getItem('saveMovies')
+    ).filter(
       (movie) =>
         movie.nameRU.toLowerCase().includes(searchWord.toLowerCase()) ||
         movie.nameEN.toLowerCase().includes(searchWord.toLowerCase())
     );
-    if (foundMovies.length === 0) {
+    if (foundSaveMovies.length === 0) {
       setIsNotFound(true);
     } else if (isShortSaveFilms) {
       if (
-        foundMovies.filter((film) => film.duration <= DURATION_SHORT_MOVIE)
+        foundSaveMovies.filter((film) => film.duration <= DURATION_SHORT_MOVIE)
           .length === 0
       ) {
         setIsNotFound(true);
       } else {
-        setFoundMovies(foundMovies);
+        setFoundMovies(
+          foundSaveMovies.filter(
+            (film) => film.duration <= DURATION_SHORT_MOVIE
+          )
+        );
         setCards(
-          foundMovies.filter((film) => film.duration <= DURATION_SHORT_MOVIE)
+          foundSaveMovies.filter(
+            (film) => film.duration <= DURATION_SHORT_MOVIE
+          )
         );
       }
     } else {
-      setFoundMovies(foundMovies);
-      setCards(foundMovies);
+      setFoundMovies(foundSaveMovies);
+      setCards(foundSaveMovies);
     }
   }
 

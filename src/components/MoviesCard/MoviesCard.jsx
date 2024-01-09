@@ -157,7 +157,6 @@ function MoviesCard({
                 return item;
               }
             );
-            console.log(newCollection);
             localStorage.setItem('cards', JSON.stringify(newCollection));
           }
           if (localStorage.getItem('foundMovies') !== null) {
@@ -171,26 +170,26 @@ function MoviesCard({
             });
             localStorage.setItem('foundMovies', JSON.stringify(newCollection));
           }
-          const newCollectionCardInLocalStorage = JSON.parse(
+          const cardsForRender = JSON.parse(
             localStorage.getItem('saveMovies')
           ).filter((movies) => !(movies.movieId === card.movieId));
-          localStorage.setItem(
-            'saveMovies',
-            JSON.stringify(newCollectionCardInLocalStorage)
-          );
-          const cardsForRender = newCollectionCardInLocalStorage.map((item) => {
-            return item;
-          });
+
+          localStorage.setItem('saveMovies', JSON.stringify(cardsForRender));
+
           if (cardsForRender.length === 0) {
             setIsNotFound(true);
           } else {
             if (isSearchSaveMovies) {
               const cardsFilter = cards.filter((item) => {
-                console.log(item);
-                return !(item.movieId === filteredCard[0]._id);
+                return !(item.movieId === filteredCard[0].movieId);
               });
-              setCards(cardsFilter);
+              cardsFilter.length > 0
+                ? setCards(cardsFilter)
+                : setIsNotFound(true);
             } else {
+              cardsForRender.length > 0
+                ? setCards(cardsForRender)
+                : setIsNotFound(true);
               setCards(cardsForRender);
             }
           }
