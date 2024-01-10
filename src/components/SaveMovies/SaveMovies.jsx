@@ -8,19 +8,13 @@ import Preloader from '../Preloader/Preloader.jsx';
 import ErrorSearch from '../ErrorSearch/ErrorSearch.jsx';
 import { DURATION_SHORT_MOVIE } from '../../constants/config.js';
 
-function SaveMovies({
-  isLoggedIn,
-  bedInternet,
-  isLoading,
-  cards,
-  isShortSaveFilms,
-  setIsShortSaveFilms,
-  setCards,
-  isSearchSaveMovies,
-  setIsSearchSaveMovies,
-}) {
+function SaveMovies({ isLoggedIn, bedInternet, isLoading }) {
+  const [cards, setCards] = useState([]);
+  const [isShortSaveFilms, setIsShortSaveFilms] = useState(false);
   const [isNotFound, setIsNotFound] = useState(false);
   const [foundMovies, setFoundMovies] = useState([]);
+  const [isSearchSaveMovies, setIsSearchSaveMovies] = useState(false);
+  const [isFormBlock, setIsFormBlock] = useState(false);
 
   function handlerSearchRequest(searchWord) {
     setIsNotFound(false);
@@ -41,11 +35,7 @@ function SaveMovies({
       ) {
         setIsNotFound(true);
       } else {
-        setFoundMovies(
-          foundSaveMovies.filter(
-            (film) => film.duration <= DURATION_SHORT_MOVIE
-          )
-        );
+        setFoundMovies(foundSaveMovies);
         setCards(
           foundSaveMovies.filter(
             (film) => film.duration <= DURATION_SHORT_MOVIE
@@ -56,14 +46,14 @@ function SaveMovies({
       setFoundMovies(foundSaveMovies);
       setCards(foundSaveMovies);
     }
+    setTimeout(setIsFormBlock, 1000, false);
   }
 
   // инициализация страницы
   useEffect(() => {
-    localStorage.setItem('shortSaveFilmStatusSwitch', JSON.parse(false));
+    setIsSearchSaveMovies(false);
     setIsShortSaveFilms(false);
     setIsNotFound(false);
-
     if (
       localStorage.getItem('saveMovies') === 'undefined' ||
       JSON.parse(localStorage.getItem('saveMovies')).length === 0 ||
@@ -73,10 +63,8 @@ function SaveMovies({
     } else {
       console.log(JSON.parse(localStorage.getItem('saveMovies')));
       setCards(JSON.parse(localStorage.getItem('saveMovies')));
+      setIsNotFound(false);
     }
-    setIsSearchSaveMovies(false);
-    setIsShortSaveFilms(false);
-    console.log('render');
   }, []);
 
   useEffect(() => {
@@ -87,6 +75,7 @@ function SaveMovies({
           localStorage.getItem('saveMovies') === 'undefined' ||
           localStorage.getItem('saveMovies').length === 0
         ) {
+          console.log('wtf&');
           setIsNotFound(true);
         } else {
           setCards(JSON.parse(localStorage.getItem('saveMovies')));
@@ -138,6 +127,8 @@ function SaveMovies({
         <SearchForm
           onSearch={handlerSearchRequest}
           setIsShortFilms={setIsShortSaveFilms}
+          isFormBlock={isFormBlock}
+          setIsFormBlock={setIsFormBlock}
           searchWord={JSON.parse(localStorage.getItem('searchWordSaveMovies'))}
         />
         {bedInternet ? (
@@ -157,6 +148,7 @@ function SaveMovies({
               setIsNotFound={setIsNotFound}
               setCards={setCards}
               isSearchSaveMovies={isSearchSaveMovies}
+              isShortFilms={isShortSaveFilms}
             />
           )
         ) : (

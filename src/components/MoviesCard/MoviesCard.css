@@ -62,7 +62,7 @@
   background-image: url(../../images/save-button.svg);
 }
 
-.card__delete-button {
+.card__save-button_delete {
   background: #313131;
   background-image: url('../../images/delete-button.svg');
   padding: 0;
@@ -81,6 +81,9 @@
 .card__delete-button:hover {
   cursor: pointer;
   opacity: 0.6;
+}
+
+.card__save-button_no-active {
 }
 
 @media screen and (max-width: 1150px) {

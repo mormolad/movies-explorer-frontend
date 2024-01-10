@@ -3,7 +3,13 @@ import './SearchForm.css';
 import FilterCheckbox from '../FilterCheckbox/FilterCheckbox.jsx';
 import ErrorSearch from '../ErrorSearch/ErrorSearch';
 
-function SearchForm({ onSearch, setIsShortFilms, searchWord }) {
+function SearchForm({
+  onSearch,
+  setIsShortFilms,
+  searchWord,
+  setIsFormBlock,
+  isFormBlock,
+}) {
   const [value, setValue] = React.useState(searchWord);
   const [inputError, setInputError] = React.useState(false);
 
@@ -17,8 +23,10 @@ function SearchForm({ onSearch, setIsShortFilms, searchWord }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setIsFormBlock(true);
     if (!value) {
       setInputError('поле не может быть пустым');
+      setIsFormBlock(false);
       return;
     }
     setInputError('');
@@ -26,7 +34,7 @@ function SearchForm({ onSearch, setIsShortFilms, searchWord }) {
   };
 
   return (
-    <section className="search">
+    <section className={`search ${isFormBlock ? 'search_no-active' : ''}`}>
       <form className="search__form" onSubmit={handleSubmit} noValidate>
         <label className="search__label" htmlFor="search-input"></label>
         <input

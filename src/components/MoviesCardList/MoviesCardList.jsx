@@ -1,6 +1,7 @@
 import React from 'react';
 import './MoviesCardList.css';
 import MoviesCard from '../MoviesCard/MoviesCard';
+import { useEffect } from 'react';
 
 function MoviesCardList({
   cards,
@@ -9,10 +10,16 @@ function MoviesCardList({
   setCards,
   setIsNotFound,
   isSearchSaveMovies,
+  isShortFilms,
+  makeCollectionCards,
 }) {
   const onClick = (e) => {
     handleMore();
   };
+
+  useEffect(() => {
+    console.log(cards);
+  });
 
   return (
     <section className="cards">
@@ -21,10 +28,11 @@ function MoviesCardList({
           <MoviesCard
             card={card}
             cards={cards}
-            key={card.id}
             setCards={setCards}
             setIsNotFound={setIsNotFound}
             isSearchSaveMovies={isSearchSaveMovies}
+            isShortFilms={isShortFilms}
+            makeCollectionCards={makeCollectionCards}
           />
         ))}
       </ul>

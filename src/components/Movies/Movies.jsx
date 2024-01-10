@@ -10,7 +10,6 @@ import { DURATION_SHORT_MOVIE } from '../../constants/config.js';
 
 function Movies({
   isLoggedIn,
-  parametrsForView,
   bedInternet,
   isLoading,
   makeCollectionCards,
@@ -28,21 +27,20 @@ function Movies({
   isSize,
   setAdditionalMovies,
   setCards,
+  isFormBlock,
+  setIsFormBlock,
 }) {
   useEffect(() => {
+    setIsNotFound(false);
     if (localStorage.getItem('foundMovies') === null) {
       setIsNotFound(true);
     } else {
       !isShortFilms
-        ? makeCollectionCards(
-            JSON.parse(localStorage.getItem('foundMovies')),
-            parametrsForView
-          )
+        ? makeCollectionCards(JSON.parse(localStorage.getItem('foundMovies')))
         : makeCollectionCards(
             JSON.parse(localStorage.getItem('foundMovies')).filter(
               (film) => film.duration <= DURATION_SHORT_MOVIE
-            ),
-            parametrsForView
+            )
           );
     }
   }, [isShortFilms, isSize, additionalMovies]);
@@ -61,15 +59,10 @@ function Movies({
         makeCollectionCards(
           JSON.parse(localStorage.getItem('foundMovies')).filter(
             (film) => film.duration <= DURATION_SHORT_MOVIE
-          ),
-          parametrsForView
+          )
         );
       } else {
-        console.log(JSON.parse(localStorage.getItem('foundMovies')));
-        makeCollectionCards(
-          JSON.parse(localStorage.getItem('foundMovies')),
-          parametrsForView
-        );
+        makeCollectionCards(JSON.parse(localStorage.getItem('foundMovies')));
       }
     }
   }, []);
@@ -82,6 +75,8 @@ function Movies({
           onSearch={handlerSearchRequest}
           setIsShortFilms={setIsShortFilms}
           searchWord={JSON.parse(localStorage.getItem('searchWord'))}
+          isFormBlock={isFormBlock}
+          setIsFormBlock={setIsFormBlock}
         />
         {isFirstSearch ? (
           ''
@@ -100,6 +95,8 @@ function Movies({
               endCollection={endCollection}
               isLoading={isLoading}
               setCards={setCards}
+              isShortFilms={isShortFilms}
+              makeCollectionCards={makeCollectionCards}
             />
           )
         ) : (

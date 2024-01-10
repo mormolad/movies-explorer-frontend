@@ -6,6 +6,11 @@
   border-bottom: 1px solid #ffffff33;
 }
 
+.search_no-active {
+  pointer-events: none;
+  opacity: 0.4;
+}
+
 .search__form {
   display: flex;
   border: 1.5px solid #ffffff33;

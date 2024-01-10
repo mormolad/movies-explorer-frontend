@@ -20,10 +20,8 @@ import { useResize } from '../../hooks/useResize.js';
 import { DEVICE_PARAMS } from '../../constants/constForApi.js';
 import { DURATION_SHORT_MOVIE } from '../../constants/config.js';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
-import { useLocation } from 'react-router';
 
 function App() {
-  const location = useLocation();
   const [loggedIn, setLoggedIn] = useState(false);
   const navigate = useNavigate();
   const [requestError, setRequestError] = useState('');
@@ -46,7 +44,11 @@ function App() {
   const [isFirstSearch, setIsFirstSearch] = useState(true);
   const [isSearchSaveMovies, setIsSearchSaveMovies] = useState(false);
   const [isNotFound, setIsNotFound] = useState(false);
-  const [isShortFilms, setIsShortFilms] = useState(false);
+  const [isShortFilms, setIsShortFilms] = useState(
+    localStorage.getItem('shortFilmStatusSwitch') === null
+      ? false
+      : JSON.parse(localStorage.getItem('shortFilmStatusSwitch'))
+  );
   const [isShortSaveFilms, setIsShortSaveFilms] = useState(
     localStorage.getItem('shortSaveFilmStatusSwitch') === null
       ? false
@@ -58,10 +60,8 @@ function App() {
       ? {}
       : JSON.parse(localStorage.getItem('user'))
   );
+  const [isFormBlock, setIsFormBlock] = useState(false);
 
-  useEffect(() => {
-    console.log(JSON.parse(localStorage.getItem('shortFilmStatusSwitch')));
-  }, [isShortFilms]);
   //проверка токена
   function chekToken(jwt) {
     setIsLoading(true);
@@ -211,7 +211,6 @@ function App() {
     setIsFirstSearch(false);
     setIsNotFound(false);
     localStorage.setItem('searchWord', JSON.stringify(searchWord));
-
     const foundMovies = JSON.parse(localStorage.getItem('cards')).filter(
       (movie) => {
         return (
@@ -240,29 +239,25 @@ function App() {
         parametrsForView
       );
     }
+    setTimeout(setIsFormBlock, 1000, false);
   }
 
   //сделать коллекцию кард для рендера
-  function makeCollectionCards(cardsForCollection, paramsCollection) {
-    if (cardsForCollection === null) {
-      return;
+  function makeCollectionCards(cardsForCollection) {
+    console.log(cardsForCollection, 'cardsForCollection is app');
+    if (cardsForCollection.length === 0) {
+      console.log(isNotFound, 'isNotFound is app');
+      return setIsNotFound(true);
     }
     const arrCards = [];
     setEndCollection(false);
-    for (
-      let i = 0;
-      i <
-      (location.pathname === '/movies'
-        ? paramsCollection.cards.total + additionalMovies
-        : cardsForCollection.length);
-      i++
-    ) {
+    for (let i = 0; i < parametrsForView.cards.total + additionalMovies; i++) {
       if (!cardsForCollection[i]) {
         setEndCollection(true);
         break;
       }
       if (
-        paramsCollection.cards.total + additionalMovies ===
+        parametrsForView.cards.total + additionalMovies ===
         cardsForCollection.length
       ) {
         setEndCollection(true);
@@ -307,12 +302,11 @@ function App() {
     } else {
       setParametrsForView(DEVICE_PARAMS.mobile);
     }
-    console.log(isSize);
   }, [isSize]);
 
   useEffect(() => {
-    console.log(isSize);
-    makeCollectionCards(cards, parametrsForView);
+    setAdditionalMovies(0);
+    makeCollectionCards(JSON.parse(localStorage.getItem('cards')));
   }, [parametrsForView]);
 
   return (
@@ -369,6 +363,8 @@ function App() {
                   isSize={isSize}
                   setAdditionalMovies={setAdditionalMovies}
                   setCards={setCards}
+                  isFormBlock={isFormBlock}
+                  setIsFormBlock={setIsFormBlock}
                 />
               }
             />
@@ -384,14 +380,12 @@ function App() {
                   bedInternet={bedInternetMy}
                   isLoading={isLoading}
                   makeCollectionCards={makeCollectionCards}
-                  cards={cards}
                   isSize={isSize}
                   setIsShortSaveFilms={setIsShortSaveFilms}
                   isShortSaveFilms={isShortSaveFilms}
                   handlerSearchRequest={handlerSearchRequest}
                   endCollection={endCollection}
                   isNotFound={isNotFound}
-                  setCards={setCards}
                   isSearchSaveMovies={isSearchSaveMovies}
                   setIsSearchSaveMovies={setIsSearchSaveMovies}
                   cardsForSaveMovie={cardsForSaveMovie}

@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 import './MoviesCard.css';
 import duration from '../../utils/durationMovie.js';
 import { saveMovie, deleteMovies } from '../../utils/mainAPI.js';
+import { DURATION_SHORT_MOVIE } from '../../constants/config.js';
+import Preloader from '../Preloader/Preloader';
 
 function MoviesCard({
   card,
@@ -11,6 +13,8 @@ function MoviesCard({
   setIsNotFound,
   isSearchSaveMovies,
   cards,
+  isShortFilms,
+  makeCollectionCards,
 }) {
   const location = useLocation();
   const [isLike, setIsLike] = useState(card.like);
@@ -51,7 +55,6 @@ function MoviesCard({
       });
       deleteMovies(filteredCard[0]._id)
         .then((res) => {
-          console.log('delet card yes');
           delLikeLocalStorage(filteredCard[0]);
           setIsLike(false);
           setIsLoading(false);
@@ -69,7 +72,6 @@ function MoviesCard({
       JSON.parse(localStorage.getItem('saveMovies')).length === 0
     ) {
       saveMovieLocalStorage = [card];
-      console.log(saveMovieLocalStorage);
       localStorage.setItem('saveMovies', JSON.stringify(saveMovieLocalStorage));
     } else {
       saveMovieLocalStorage[saveMovieLocalStorage.length] = card;
@@ -95,7 +97,15 @@ function MoviesCard({
       }
     });
     localStorage.setItem('foundMovies', JSON.stringify(foundCardsLocalStorage));
-    setCards(foundCardsLocalStorage);
+    if (isShortFilms) {
+      makeCollectionCards(
+        foundCardsLocalStorage.filter(
+          (film) => film.duration <= DURATION_SHORT_MOVIE
+        )
+      );
+    } else {
+      makeCollectionCards(foundCardsLocalStorage);
+    }
   }
 
   function delLikeLocalStorage(card) {
@@ -125,12 +135,21 @@ function MoviesCard({
       }
     });
     localStorage.setItem('foundMovies', JSON.stringify(foundCardsLocalStorage));
-    setCards(foundCardsLocalStorage);
+    if (isShortFilms) {
+      makeCollectionCards(
+        foundCardsLocalStorage.filter(
+          (film) => film.duration <= DURATION_SHORT_MOVIE
+        )
+      );
+    } else {
+      makeCollectionCards(foundCardsLocalStorage);
+    }
   }
 
   useEffect(() => {
     setIsLike(card.like);
-  }, []);
+    console.log(card.like);
+  });
 
   function handleLikeClick(e) {
     setIsLoading(true);
@@ -140,8 +159,6 @@ function MoviesCard({
   }
 
   function handleDelClick(e) {
-    console.log(cards);
-
     if (!(JSON.parse(localStorage.getItem('saveMovies')) === null)) {
       const filteredCard = JSON.parse(
         localStorage.getItem('saveMovies')
@@ -190,7 +207,6 @@ function MoviesCard({
               cardsForRender.length > 0
                 ? setCards(cardsForRender)
                 : setIsNotFound(true);
-              setCards(cardsForRender);
             }
           }
         })
@@ -201,7 +217,10 @@ function MoviesCard({
   }
 
   return (
-    <li className="card" key={card.id}>
+    <li
+      className="card"
+      key={location.pathname === '/movies' ? card.id : card.movieId}
+    >
       <div className="card__info">
         <h2 className="card__title">{card.nameRU}</h2>
         <span className="card__time">{duration(card.duration)}</span>
@@ -211,14 +230,16 @@ function MoviesCard({
       >
         <img className="card__image" alt={card.nameRU} src={card.image} />
       </Link>
-      {
+      {isLoading ? (
+        <Preloader classNameMod={'button'} />
+      ) : (
         <button
           className={
             location.pathname === '/saved-movies'
-              ? 'card__delete-button'
+              ? `card__save-button_delete`
               : isLike
-              ? 'card__save-button card__save-button_active'
-              : 'card__save-button'
+              ? `card__save-button card__save-button_active`
+              : `card__save-button`
           }
           onClick={
             location.pathname === '/saved-movies'
@@ -227,7 +248,7 @@ function MoviesCard({
           }
           disabled={isLoading}
         ></button>
-      }
+      )}
     </li>
   );
 }

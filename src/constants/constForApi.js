@@ -8,7 +8,7 @@ export const headers = {
 
 export const DEVICE_PARAMS = {
   desktop: {
-    width: 1114,
+    width: 1113,
     cards: {
       total: 12,
       more: 3,

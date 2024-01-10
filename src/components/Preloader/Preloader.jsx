@@ -1,11 +1,21 @@
 import React from 'react';
 import './Preloader.css';
 
-const Preloader = ({ text, className }) => {
+const Preloader = ({ text, classNameMod }) => {
   return (
-    <div className="preloader">
-      <div className="preloader__container">
-        <span className={`preloader__${className ? className : 'round'}`}>
+    <div
+      className={`preloader ${classNameMod ? `preloader_${classNameMod}` : ''}`}
+    >
+      <div
+        className={`preloader__container ${
+          classNameMod ? `preloader__container_${classNameMod}` : ''
+        }`}
+      >
+        <span
+          className={`preloader__round ${
+            classNameMod ? `preloader__round_${classNameMod}` : ''
+          }`}
+        >
           {text}
         </span>
       </div>
