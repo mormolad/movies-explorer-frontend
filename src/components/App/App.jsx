@@ -94,8 +94,8 @@ function App() {
         err === 'Error: 401'
           ? setRequestError('Вы ввели неправильный логин или пароль.')
           : setRequestError('При авторизации произошла ошибка');
-
         console.log(err);
+        setIsFormAuthBlock(false);
       })
       .finally(() => setTimeout(setIsFormAuthBlock, 1000, false));
   }
@@ -111,7 +111,9 @@ function App() {
           ? setRequestError('Пользователь с таким email уже существует.')
           : setRequestError('При регистрации пользователя произошла ошибка.');
         console.log(err);
-      });
+        setIsFormAuthBlock(false);
+      })
+      .finally(() => setTimeout(setIsFormAuthBlock, 1000, false));
   }
   //редактировать профиль
   function handleSubmitEditProfile({ name, email }) {
