@@ -34,7 +34,7 @@ function App() {
   const [parametrsForView, setParametrsForView] = useState(
     DEVICE_PARAMS.desktop
   );
-  const [cards, setCards] = useState([]);
+  const [cards, setCards] = useState([]); //setCards,
   const [cardsForSaveMovie, setCardsForSaveMovie] = useState([]);
   const [bedInternetMy, setBedInternetMy] = useState(false);
   const [endCollection, setEndCollection] = useState(false);
@@ -150,6 +150,14 @@ function App() {
       setIsLoading(false);
     }
   }, []);
+
+  // useEffect(() => { // для более бдительной проверки на наличие jwt на случай случайного удаления токена
+  //   if (localStorage.getItem('jwt')) {
+  //     chekToken(localStorage.jwt);
+  //   } else {
+  //     setIsLoading(false);
+  //   }
+  // });
 
   //
   function getData(searchWord) {
@@ -272,6 +280,7 @@ function App() {
   const logout = () => {
     localStorage.clear();
     setLoggedIn(false);
+
     navigate('/', { replace: true });
   };
 
