@@ -7,6 +7,7 @@ function Form({
   isValid,
   requestError,
   modifierCSS,
+  setIsFormAuthBlock,
 }) {
   let valuesForm = {};
 

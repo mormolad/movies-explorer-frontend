@@ -4,8 +4,16 @@ import Form from '../Form/Form.jsx';
 import { Link, useNavigate } from 'react-router-dom';
 import logo from '../../images/logo.svg';
 import { EMAIL_REGEXP } from '../../constants/regexp';
+import Preloader from '../Preloader/Preloader.jsx';
 
-function Login({ onSubmit, isLoggedIn, requestError, setRequestError }) {
+function Login({
+  onSubmit,
+  isLoggedIn,
+  requestError,
+  setRequestError,
+  isFormAuthBlock,
+  setIsFormAuthBlock,
+}) {
   const navigate = useNavigate();
   const link = '/signup';
   //стайт переменный для страницы логин
@@ -52,6 +60,8 @@ function Login({ onSubmit, isLoggedIn, requestError, setRequestError }) {
 
   return isLoggedIn ? (
     navigate('/movies', { replace: true })
+  ) : isFormAuthBlock ? (
+    <Preloader />
   ) : (
     <div className="login">
       <Link to="/" className="login__logo">
@@ -85,6 +95,7 @@ function Login({ onSubmit, isLoggedIn, requestError, setRequestError }) {
         onSubmit={onSubmit}
         isValid={formValid}
         requestError={requestError}
+        setIsFormAuthBlock={setIsFormAuthBlock}
       />
       <p className="login__text">
         Еще не зарегистрированы?

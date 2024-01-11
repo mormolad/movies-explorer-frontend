@@ -61,7 +61,6 @@ function SaveMovies({ isLoggedIn, bedInternet, isLoading }) {
     ) {
       setIsNotFound(true);
     } else {
-      console.log(JSON.parse(localStorage.getItem('saveMovies')));
       setCards(JSON.parse(localStorage.getItem('saveMovies')));
       setIsNotFound(false);
     }
@@ -75,7 +74,6 @@ function SaveMovies({ isLoggedIn, bedInternet, isLoading }) {
           localStorage.getItem('saveMovies') === 'undefined' ||
           localStorage.getItem('saveMovies').length === 0
         ) {
-          console.log('wtf&');
           setIsNotFound(true);
         } else {
           setCards(JSON.parse(localStorage.getItem('saveMovies')));
@@ -120,6 +118,14 @@ function SaveMovies({ isLoggedIn, bedInternet, isLoading }) {
     }
   }, [isShortSaveFilms]);
 
+  useEffect(() => {
+    if (cards.length > 0) {
+      setIsNotFound(false);
+    } else {
+      setIsNotFound(true);
+    }
+  }, [cards]);
+
   return (
     <>
       <Header isLoggedIn={isLoggedIn} theme="black" />
@@ -149,6 +155,7 @@ function SaveMovies({ isLoggedIn, bedInternet, isLoading }) {
               setCards={setCards}
               isSearchSaveMovies={isSearchSaveMovies}
               isShortFilms={isShortSaveFilms}
+              setFoundMovies={setFoundMovies}
             />
           )
         ) : (

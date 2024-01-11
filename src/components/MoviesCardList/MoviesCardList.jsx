@@ -12,14 +12,11 @@ function MoviesCardList({
   isSearchSaveMovies,
   isShortFilms,
   makeCollectionCards,
+  setFoundMovies,
 }) {
   const onClick = (e) => {
     handleMore();
   };
-
-  useEffect(() => {
-    console.log(cards);
-  });
 
   return (
     <section className="cards">
@@ -33,6 +30,7 @@ function MoviesCardList({
             isSearchSaveMovies={isSearchSaveMovies}
             isShortFilms={isShortFilms}
             makeCollectionCards={makeCollectionCards}
+            setFoundMovies={setFoundMovies}
           />
         ))}
       </ul>

@@ -61,6 +61,7 @@ function App() {
       : JSON.parse(localStorage.getItem('user'))
   );
   const [isFormBlock, setIsFormBlock] = useState(false);
+  const [isFormAuthBlock, setIsFormAuthBlock] = useState(false);
 
   //проверка токена
   function chekToken(jwt) {
@@ -80,6 +81,7 @@ function App() {
 
   //обработчик кнопки логин
   function handleSubmitLogin({ email, password }) {
+    setIsFormAuthBlock(true);
     return authorize(email, password)
       .then((data) => {
         localStorage.setItem('jwt', data.message);
@@ -94,10 +96,12 @@ function App() {
           : setRequestError('При авторизации произошла ошибка');
 
         console.log(err);
-      });
+      })
+      .finally(() => setTimeout(setIsFormAuthBlock, 1000, false));
   }
   // обработчик кнопки зарегисторироваться
   function handleSubmitRegister({ name, email, password }) {
+    setIsFormAuthBlock(true);
     return register(name, email, password)
       .then((res) => {
         handleSubmitLogin({ email, password });
@@ -206,7 +210,7 @@ function App() {
       handlerSearch(searchWord);
     }
   }
-
+  //поиск по movies
   function handlerSearch(searchWord) {
     setIsFirstSearch(false);
     setIsNotFound(false);
@@ -242,11 +246,9 @@ function App() {
     setTimeout(setIsFormBlock, 1000, false);
   }
 
-  //сделать коллекцию кард для рендера
+  //сделать коллекцию кард для рендера movie
   function makeCollectionCards(cardsForCollection) {
-    console.log(cardsForCollection, 'cardsForCollection is app');
-    if (cardsForCollection.length === 0) {
-      console.log(isNotFound, 'isNotFound is app');
+    if (cardsForCollection === null || cardsForCollection.length === 0) {
       return setIsNotFound(true);
     }
     const arrCards = [];
@@ -266,7 +268,7 @@ function App() {
     }
     setCards(arrCards);
   }
-
+  //выход
   const logout = () => {
     localStorage.clear();
     setLoggedIn(false);
@@ -323,6 +325,8 @@ function App() {
                   onSubmit={handleSubmitLogin}
                   requestError={requestError}
                   setRequestError={setRequestError}
+                  isFormAuthBlock={isFormAuthBlock}
+                  setIsFormAuthBlock={setIsFormAuthBlock}
                 />
               }
             />
@@ -334,6 +338,8 @@ function App() {
                   onSubmit={handleSubmitRegister}
                   requestError={requestError}
                   setRequestError={setRequestError}
+                  isFormAuthBlock={isFormAuthBlock}
+                  setIsFormAuthBlock={setIsFormAuthBlock}
                 />
               }
             />
@@ -390,6 +396,8 @@ function App() {
                   setIsSearchSaveMovies={setIsSearchSaveMovies}
                   cardsForSaveMovie={cardsForSaveMovie}
                   setCardsForSaveMovie={setCardsForSaveMovie}
+                  isFormBlock={isFormBlock}
+                  setIsFormBlock={setIsFormBlock}
                 />
               }
             />

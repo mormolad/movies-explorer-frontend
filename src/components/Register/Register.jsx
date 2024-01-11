@@ -1,11 +1,21 @@
 import React, { useEffect } from 'react';
 import './Register.css';
 import Form from '../Form/Form.jsx';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import logo from '../../images/logo.svg';
 import { EMAIL_REGEXP, NAME_REGEXP } from '../../constants/regexp';
+import Preloader from '../Preloader/Preloader.jsx';
+//import {}
 
-function Register({ onSubmit, requestError, setRequestError }) {
+function Register({
+  onSubmit,
+  requestError,
+  setRequestError,
+  isFormAuthBlock,
+  setIsFormAuthBlock,
+  isLoggedIn,
+}) {
+  const navigate = useNavigate();
   const link = '/signin';
   //стайт переменный для страницы
   const [email, setEmail] = React.useState('');
@@ -65,7 +75,11 @@ function Register({ onSubmit, requestError, setRequestError }) {
     setRequestError('');
   }, []);
 
-  return (
+  return isLoggedIn ? (
+    navigate('/movies', { replace: true })
+  ) : isFormAuthBlock ? (
+    <Preloader />
+  ) : (
     <div className="register">
       <Link to="/" className="register__logo">
         <img src={logo} alt="логотип" />
@@ -108,6 +122,7 @@ function Register({ onSubmit, requestError, setRequestError }) {
         onSubmit={onSubmit}
         isValid={formValid}
         requestError={requestError}
+        setIsFormAuthBlock={setIsFormAuthBlock}
       />{' '}
       <p className="register__text">
         Уже зарегистрированы?

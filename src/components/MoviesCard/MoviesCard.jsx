@@ -15,6 +15,7 @@ function MoviesCard({
   cards,
   isShortFilms,
   makeCollectionCards,
+  setFoundMovies,
 }) {
   const location = useLocation();
   const [isLike, setIsLike] = useState(card.like);
@@ -148,7 +149,6 @@ function MoviesCard({
 
   useEffect(() => {
     setIsLike(card.like);
-    console.log(card.like);
   });
 
   function handleLikeClick(e) {
@@ -159,6 +159,7 @@ function MoviesCard({
   }
 
   function handleDelClick(e) {
+    setIsLoading(true);
     if (!(JSON.parse(localStorage.getItem('saveMovies')) === null)) {
       const filteredCard = JSON.parse(
         localStorage.getItem('saveMovies')
@@ -187,13 +188,12 @@ function MoviesCard({
             });
             localStorage.setItem('foundMovies', JSON.stringify(newCollection));
           }
-          const cardsForRender = JSON.parse(
+          const allCardsForRender = JSON.parse(
             localStorage.getItem('saveMovies')
           ).filter((movies) => !(movies.movieId === card.movieId));
-
-          localStorage.setItem('saveMovies', JSON.stringify(cardsForRender));
-
-          if (cardsForRender.length === 0) {
+          setFoundMovies(allCardsForRender);
+          localStorage.setItem('saveMovies', JSON.stringify(allCardsForRender));
+          if (allCardsForRender.length === 0) {
             setIsNotFound(true);
           } else {
             if (isSearchSaveMovies) {
@@ -201,17 +201,31 @@ function MoviesCard({
                 return !(item.movieId === filteredCard[0].movieId);
               });
               cardsFilter.length > 0
-                ? setCards(cardsFilter)
+                ? setCards(
+                    !isShortFilms
+                      ? cardsFilter
+                      : cardsFilter.filter(
+                          (film) => film.duration <= DURATION_SHORT_MOVIE
+                        )
+                  )
                 : setIsNotFound(true);
             } else {
-              cardsForRender.length > 0
-                ? setCards(cardsForRender)
+              allCardsForRender.length > 0
+                ? setCards(
+                    !isShortFilms
+                      ? allCardsForRender
+                      : allCardsForRender.filter(
+                          (film) => film.duration <= DURATION_SHORT_MOVIE
+                        )
+                  )
                 : setIsNotFound(true);
             }
           }
         })
-        .catch((err) => console.log(err));
+        .catch((err) => console.log(err))
+        .finally(() => setIsLoading(false));
     } else {
+      setIsLoading(false);
       setIsNotFound(true);
     }
   }

@@ -72,7 +72,6 @@ function Profile({
   };
 
   const handleSubmit = (valuesForm) => {
-    console.log(valuesForm);
     onSubmit(valuesForm);
   };
 
