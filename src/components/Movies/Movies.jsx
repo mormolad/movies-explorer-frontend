@@ -9,6 +9,7 @@ import ErrorSearch from '../ErrorSearch/ErrorSearch.jsx';
 import { DURATION_SHORT_MOVIE } from '../../constants/config.js';
 
 function Movies({
+<<<<<<< HEAD
   isLoggedIn,
   bedInternet,
   isLoading,
@@ -67,10 +68,19 @@ function Movies({
     }
   }, []);
 
+=======
+  onSearchMovies,
+  movies,
+  isLoggedIn,
+  isSavedFilms,
+  isLoading,
+}) {
+>>>>>>> 0d7fd1aad5739a13e831b4132c0af311662b7bb5
   return (
     <>
       <Header isLoggedIn={isLoggedIn} theme="black" />
       <section className="movies">
+<<<<<<< HEAD
         <SearchForm
           onSearch={handlerSearchRequest}
           setIsShortFilms={setIsShortFilms}
@@ -102,6 +112,14 @@ function Movies({
         ) : (
           <ErrorSearch className="not-found" text="Ничего не найдено" />
         )}
+=======
+        <SearchForm onSearchMovies={onSearchMovies} />
+        <MoviesCardList
+          cards={movies}
+          isSavedFilms={isSavedFilms}
+          isLoading={isLoading}
+        />
+>>>>>>> 0d7fd1aad5739a13e831b4132c0af311662b7bb5
       </section>
       <Footer />
     </>

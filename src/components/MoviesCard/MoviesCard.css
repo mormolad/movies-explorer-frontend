@@ -46,6 +46,7 @@
   overflow: hidden;
 }
 
+<<<<<<< HEAD
 .card__save-button {
   background: #313131;
   background-image: url(../../images/no-save-button.svg);
@@ -53,15 +54,25 @@
   margin: 13px 120px 18px 120px;
   border: none;
   border-radius: 50px;
+=======
+.card__button {
+  margin: 13px 130px 18px 130px;
+  padding: 0;
+>>>>>>> 0d7fd1aad5739a13e831b4132c0af311662b7bb5
   width: 100px;
   height: 29px;
+  border: none;
+  border-radius: 50px;
+  background: #313131;
   cursor: pointer;
 }
 
-.card__save-button_active {
-  background-image: url(../../images/save-button.svg);
+.card__button:hover {
+  cursor: pointer;
+  opacity: 0.6;
 }
 
+<<<<<<< HEAD
 .card__save-button_delete {
   background: #313131;
   background-image: url('../../images/delete-button.svg');
@@ -76,11 +87,18 @@
   margin: 13px 130px 18px 130px;
   background-position: center;
   background-repeat: no-repeat;
+=======
+.card__button_no-saved {
+  background-image: url(../../images/no-save-button.svg);
+>>>>>>> 0d7fd1aad5739a13e831b4132c0af311662b7bb5
 }
 
-.card__delete-button:hover {
-  cursor: pointer;
-  opacity: 0.6;
+.card__button_saved {
+  background-image: url(../../images/save-button.svg);
+}
+
+.card__button_delete {
+  background-image: url(../../images/del-button.svg);
 }
 
 .card__save-button_no-active {
@@ -106,5 +124,10 @@
   .card {
     width: 300px;
     height: 271px;
+  }
+  .card__button {
+    margin: 14px 100px 14px 100px;
+    width: 100px;
+    height: 29px;
   }
 }
