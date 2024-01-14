@@ -79,7 +79,6 @@ function Profile({
     <>
       <Header theme="black" isLoggedIn={true} />{' '}
       <section className="profile">
-<<<<<<< HEAD
         <h3 className="profile__title"> Привет, {currentUser.name}! </h3>{' '}
         {isLoadingInfoUser ? (
           <Preloader />
@@ -136,38 +135,6 @@ function Profile({
           </>
         )}{' '}
       </section>{' '}
-=======
-        <h3 className="profile__title">Привет, Антон!</h3>
-        <form className="profile__form">
-          <label className="profile__field profile__field_border">
-            Имя
-            <input
-              name="name"
-              className="profile__input"
-              type="text"
-              minLength="2"
-              maxLength="40"
-              value="Антон"
-              required
-            />
-          </label>
-          <label className="profile__field">
-            E-mail
-            <input
-              name="email"
-              className="profile__input"
-              type="text"
-              value="paspean@mail.ru"
-              required
-            />
-          </label>
-          <button type="submit" className="profile__button-save">
-            Редактировать
-          </button>
-          <button className="profile__logout">Выйти из аккаунта</button>
-        </form>
-      </section>
->>>>>>> 0d7fd1aad5739a13e831b4132c0af311662b7bb5
     </>
   );
 }

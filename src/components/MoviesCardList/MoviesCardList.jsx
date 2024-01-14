@@ -3,7 +3,6 @@ import './MoviesCardList.css';
 import MoviesCard from '../MoviesCard/MoviesCard';
 import { useEffect } from 'react';
 
-<<<<<<< HEAD
 function MoviesCardList({
   cards,
   handleMore,
@@ -44,27 +43,6 @@ function MoviesCardList({
           ''
         )}
       </div>
-=======
-function MoviesCardList({ cards, isSavedFilms, isLoadingIn }) {
-  return (
-    <section className="cards">
-      {isLoadingIn ? (
-        <Preloader />
-      ) : (
-        <>
-          <ul className="cards__list">
-            {cards.map((card) => (
-              <MoviesCard
-                key={card._id}
-                card={card}
-                isSavedFilms={isSavedFilms}
-              />
-            ))}
-          </ul>
-          {isSavedFilms ? '' : <button className="cards__button">Ещё</button>}
-        </>
-      )}
->>>>>>> 0d7fd1aad5739a13e831b4132c0af311662b7bb5
     </section>
   );
 }

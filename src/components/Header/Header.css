@@ -148,11 +148,7 @@
   opacity: 0.6;
 }
 
-<<<<<<< HEAD
 @media screen and (max-width: 1023px) {
-=======
-@media screen and (max-width: 1150px) {
->>>>>>> 0d7fd1aad5739a13e831b4132c0af311662b7bb5
   .header {
     grid-template-columns: 1fr min-content;
   }

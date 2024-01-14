@@ -325,7 +325,6 @@ function App() {
   return (
     <div className="page">
       <div className="page__content">
-<<<<<<< HEAD
         <CurrentUserContext.Provider value={currentUser}>
           <Routes>
             <Route path="/" element={<UserPage isLoggedIn={loggedIn} />} />
@@ -438,98 +437,6 @@ function App() {
             <Route path="/*" element={<NotFound />} />
           </Routes>
         </CurrentUserContext.Provider>
-=======
-        <Routes>
-          <Route path="/" element={<UserPage isLoggedIn={isLoggedIn} />} />
-          <Route
-            path="/signin"
-            element={
-              <NoAuthPage
-                title="Рады видеть!"
-                form={{
-                  fields: [
-                    {
-                      title: 'E-mail',
-                      type: 'email',
-                      name: 'login',
-                      id: 'signin-field-login',
-                    },
-                    {
-                      title: 'Пароль',
-                      type: 'password',
-                      name: 'pass',
-                      id: 'signin-field-pass',
-                    },
-                  ],
-                  buttonText: 'Войти',
-                }}
-                question="Ещё не зарегистрированы? "
-                linkText="Регистрация"
-                link="/signup"
-              />
-            }
-          />
-
-          <Route
-            path="/signup"
-            element={
-              <NoAuthPage
-                title="Добро пожаловать!"
-                form={{
-                  fields: [
-                    {
-                      title: 'Имя',
-                      type: 'text',
-                      name: 'name',
-                      id: 'signup-field-neme',
-                    },
-                    {
-                      title: 'E-mail',
-                      type: 'email',
-                      name: 'email',
-                      id: 'signup-field-login',
-                    },
-                    {
-                      title: 'Пароль',
-                      type: 'password',
-                      name: 'pass',
-                      id: 'signup-field-pass',
-                    },
-                  ],
-                  buttonText: 'Зарегистрироваться',
-                }}
-                question="Уже зарегистрированы? "
-                linkText="Войти"
-                link="/signin"
-              />
-            }
-          />
-          <Route
-            path="/movies"
-            element={
-              <Movies
-                movies={cards}
-                isLoading={false}
-                isSavedFilms={false}
-                isLoggedIn={isLoggedIn}
-              />
-            }
-          />
-          <Route
-            path="/saved-movies"
-            element={
-              <Movies
-                movies={cards}
-                isLoading={false}
-                isSavedFilms={true}
-                isLoggedIn={isLoggedIn}
-              />
-            }
-          />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/*" element={<NotFound />} />
-        </Routes>
->>>>>>> 0d7fd1aad5739a13e831b4132c0af311662b7bb5
       </div>
     </div>
   );
