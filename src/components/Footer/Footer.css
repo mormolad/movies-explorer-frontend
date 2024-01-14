@@ -1,8 +1,8 @@
 .footer {
-  padding: 79px 70px 20px 70px;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
+  padding: 79px 70px 20px 70px;
 }
 
 .footer__title {
@@ -14,23 +14,23 @@
   font-size: 13px;
   line-height: 16px;
   text-align: center;
-  color: #8b8b8b;
+  color: #8B8B8B;
   border-bottom: 1px solid #424242;
 }
 
 .footer__container {
-  margin-top: 20px;
   display: flex;
+  margin-top: 20px;
 }
 
 .footer__author {
   margin: 0;
   padding: 0;
-  flex: 1 1 auto;
   font-style: normal;
   font-weight: 400;
   font-size: 13px;
   line-height: 16px;
+  flex: 1 1 auto;
 }
 
 .footer__link {
@@ -41,12 +41,12 @@
   font-weight: 400;
   font-size: 13px;
   line-height: 16px;
-  color: #ffffff;
+  color: #FFFFFF;
   text-decoration: none;
 }
 
 .footer__link:hover {
-  color: #a0a0a0;
+  color: #A0A0A0;
 }
 
 @media screen and (max-width: 1023px) {
@@ -73,16 +73,17 @@
   }
 
   .footer__author {
-    margin-top: 18px;
     font-size: 12px;
     line-height: 15px;
     color: #a0a0a0;
+    order: 10;
+    margin-top: 18px;
   }
 
   .footer__link {
     margin-left: 0px;
-    margin-bottom: 12px;
     font-size: 12px;
     line-height: 15px;
+    margin-bottom: 12px;
   }
 }

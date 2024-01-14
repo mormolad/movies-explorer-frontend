@@ -48,22 +48,18 @@
 
 .card__save-button {
   background: #313131;
-  background-image: url('../../images/no-save-button.svg');
+  background-image: url(../../images/no-save-button.svg);
   padding: 0;
   margin: 13px 120px 18px 120px;
   border: none;
   border-radius: 50px;
   width: 100px;
   height: 29px;
-  border: none;
-  border-radius: 50px;
-  background: #313131;
   cursor: pointer;
 }
 
-.card__button:hover {
-  cursor: pointer;
-  opacity: 0.6;
+.card__save-button_active {
+  background-image: url(../../images/save-button.svg);
 }
 
 .card__save-button_delete {
@@ -82,12 +78,9 @@
   background-repeat: no-repeat;
 }
 
-.card__button_saved {
-  background-image: url('../../images/save-button.svg');
-}
-
-.card__button_delete {
-  background-image: url('../../images/del-button.svg');
+.card__delete-button:hover {
+  cursor: pointer;
+  opacity: 0.6;
 }
 
 .card__save-button_no-active {
@@ -113,10 +106,5 @@
   .card {
     width: 300px;
     height: 271px;
-  }
-  .card__button {
-    margin: 14px 100px 14px 100px;
-    width: 100px;
-    height: 29px;
   }
 }

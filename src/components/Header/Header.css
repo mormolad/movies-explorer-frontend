@@ -23,6 +23,7 @@
 }
 
 .header__links-films {
+  /* align-content: center; */
   margin-top: 0;
 }
 
@@ -80,7 +81,6 @@
 }
 
 .header__accoutn-title {
-  margin: 0;
   align-items: center;
   height: 16px;
   color: #ffffff;
@@ -89,11 +89,12 @@
   font-size: 14px;
   line-height: 16px;
   text-decoration: none;
+  margin: 0;
 }
 
 .header__img-account-button {
-  margin: 9.5px auto 9.5px auto;
   display: block;
+  margin: 9.5px auto 9.5px auto;
 }
 
 .header__ico-account-button {
@@ -120,10 +121,10 @@
 }
 
 .header__menu-button {
-  width: 44px;
-  height: 44px;
   background-color: #073042;
   border: none;
+  width: 44px;
+  height: 44px;
   display: none;
 }
 
@@ -132,8 +133,8 @@
 }
 
 .header__button_green {
-  margin-top: -3px;
   color: #000;
+  margin-top: -3px;
   background-color: #3ddc84;
   width: 76px;
   height: 32px;
@@ -155,15 +156,12 @@
   .header__logo {
     margin-left: 30px;
   }
-
   .header__links-films {
     display: none;
   }
-
   .header__account-button {
     display: none;
   }
-
   .header__menu-button {
     display: flex;
     margin-right: 30px;
@@ -174,17 +172,14 @@
   .header__logo {
     margin: auto auto auto 14px;
   }
-
   .header__button-container {
     gap: 14px;
   }
-
   .header__button {
     min-height: 26px;
     font-size: 10px;
     line-height: 16px;
   }
-
   .header__menu-button {
     margin-right: 14px;
   }

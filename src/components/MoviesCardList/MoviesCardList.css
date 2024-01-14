@@ -1,6 +1,6 @@
 .cards {
-  display: flex;
   flex: 1 1 auto;
+  display: flex;
   flex-direction: column;
 }
 
@@ -14,6 +14,14 @@
   justify-content: center;
 }
 
+.cards__button-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 50px 0 80px;
+  min-height: 140px;
+}
+
 .cards__button {
   box-sizing: border-box;
   width: 90%;
@@ -25,9 +33,10 @@
   font-style: normal;
   font-weight: 500;
   font-size: 12px;
-  line-height: 14.5px;
-  background: #2f2f2f;
-  color: #ffffff;
+  line-height: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .cards__button:hover {
@@ -42,9 +51,6 @@
     grid-template-columns: repeat(auto-fit, 339px);
     gap: 36px 30px;
   }
-  .cards__button {
-    margin: 50px 30px 80px 30px;
-  }
 }
 
 @media screen and (max-width: 576px) {
@@ -54,6 +60,6 @@
     gap: 20px;
   }
   .cards__button {
-    margin: 30px 10px 80px 10px;
+    width: 240px;
   }
 }

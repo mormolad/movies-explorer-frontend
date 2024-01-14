@@ -2,7 +2,7 @@
   display: none;
 }
 
-@media screen and (max-width: 1055px) {
+@media screen and (max-width: 1023px) {
   .navigation__overlay {
     width: 100%;
     top: 0;
