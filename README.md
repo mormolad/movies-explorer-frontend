@@ -1,5 +1,6 @@
 # movies-explorer-frontend
-___
+
+
 ## Фронтенд дипломной работы Movies Explorer
 
 Ссылка на проект: https://filmissio.nomoredomainsmonster.ru
