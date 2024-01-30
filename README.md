@@ -1,12 +1,12 @@
 # movies-explorer-frontend
-___
+===
 ## Фронтенд дипломной работы Movies Explorer:
 Ссылка на проект: https://filmissio.nomoredomainsmonster.ru
 Ссылка на API: https://api.filmissio.nomoredomainsmonster.ru
 Ссылка на PR: https://github.com/mormolad/movies-explorer-frontend/pull/24
-___
+---
 ### Дипломная работа по созданию интерактивной страницы, на которой пользователи могут искать фильмы по ключевым словам и добавлять их в избранное в личном кабинете.
-___
+
 #### Функционал:
 Авторизация и регистрация пользователей
 Редактирование профиля
@@ -24,7 +24,7 @@ Grid Layout
 Позиционирование
 Псевдоклассы
 Webpack
-___
+
 #### Установка и запуск проекта:
 Клонировать репозиторий: git clone https://github.com/Andryuha-Nikolaev/movies-explorer-frontend.git
 Установить зависимости: npm install 
