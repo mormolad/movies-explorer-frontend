@@ -42,7 +42,7 @@
 * Webpack
 
 #### Установка и запуск проекта:
-Клонировать репозиторий: git clone https://github.com/Andryuha-Nikolaev/movies-explorer-frontend.git
+Клонировать репозиторий: git clone https://github.com/mormolad/movies-explorer-frontend.git
 
 Установить зависимости: npm install 
 
